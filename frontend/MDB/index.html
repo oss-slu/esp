@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>ORCA to Word</title>
     <!-- MDB icon -->
     <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -20,6 +20,7 @@
 
     <!-- MDB -->
     <link rel="stylesheet" href="css/mdb.min.css" />
+
   </head>
   <body>
     <!-- Start your project here-->
@@ -32,44 +33,90 @@
       
       <div class="align-items-center justify-content-center">
         <label class="form-label" for="customFile" style="width:300px;">Select your file</label>
-        <input type="file" class="form-control" id="customFile" />
-      </div>
-  
-      <div class="align-items-center justify-content-center d-flex">
-        <select class="select" multiple data-mdb-filter="true" style="height:300px; width:400px; margin:50px;">
-          <optgroup label="Cartesian Coordinates (A.U.)">
-            <option value="1">#1</option>
-            <option value="2">#2</option>
-            <option value="3">#3</option>
-            <option value="4">#4</option>
-            <option value="5">#5</option>
-            <option value="6">#6</option>
-            <option value="7">#7</option>
-          </optgroup>
-          <optgroup label="Cartesian Coordinates (Angstroem)">
-            <option value="1">#1</option>
-            <option value="2">#2</option>
-            <option value="3">#3</option>
-          </optgroup>
-          <optgroup label="Internal Coordinates (A.U.)">
-            <option value="1">#1</option>
-            <option value="2">#2</option>
-          </optgroup>
-          <optgroup label="Entropy">
-            <option value="1">#1</option>
-          </optgroup>
-        </select>
+        <input type="file" class="form-control" id="customFile" name="files[]"/>
       </div>
 
       <div class="align-items-center justify-content-center d-flex">
+        <button id="uploadButton" value="upload" onclick="uploadORCA()" type="button" class="btn btn-primary btn-rounded" style="margin-top:20px;">Upload ORCA file</button>
+      </div>
+  
+      <div class="align-items-center justify-content-center d-flex">
+        <select class="select" id="sectionSelect" multiple data-mdb-filter="true" style="height:300px; width:400px; margin:50px;">
+          <optgroup label="Cartesian Coordinates (A.U.)">
+            <option value="CCAU1">#1</option>
+            <option value="CCAU2">#2</option>
+            <option value="CCAU3">#3</option>
+            <option value="CCAU4">#4</option>
+            <option value="CCAU5">#5</option>
+            <option value="CCAU6">#6</option>
+            <option value="CCAU7">#7</option>
+          </optgroup>
+          <optgroup label="Cartesian Coordinates (Angstroem)">
+            <option value="CCAN1">#1</option>
+            <option value="CCAN2">#2</option>
+            <option value="CCAN3">#3</option>
+          </optgroup>
+          <optgroup label="Internal Coordinates (A.U.)">
+            <option value="ICAU1">#1</option>
+            <option value="ICAU2">#2</option>
+          </optgroup>
+          <optgroup label="Entropy">
+            <option value="ENTRO1">#1</option>
+          </optgroup>
+        </select>
+        <button onclick="var el = document.getElementById('sectionSelect'); alert(getSelectValues(el));">Show selected values</button>
+      </div>
+
+      <h4>Section selection:</h4>
+      <div class="d-flex align-items-start bg-light mb-3">
+        <div class="form-check" style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check" style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+        <div class="form-check"style="margin-right: 10px;">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+          <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+        </div>
+      </div>
+
+
+      <div class="align-items-center justify-content-center d-flex" style="margin-top: 50px;">
         <div class="form-outline">
-          <input type="text" id="typeText" class="form-control" />
+          <input type="text" id="fileNameInput" class="form-control" />
           <label class="form-label" for="typeText">Enter file name</label>
         </div>
       </div>
 
       <div class="align-items-center justify-content-center d-flex">
-        <button type="button" class="btn btn-primary btn-rounded" style="margin-top:20px;">Download</button>
+        <button id="downloadButton" value="Download" onclick="downloadWord()" type="button" class="btn btn-primary btn-rounded" style="margin-top:20px;">Download Word Document</button>
       </div>
     </div>
      
@@ -78,6 +125,7 @@
     <!-- MDB -->
     <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
-    <script type="text/javascript"></script>
+    <script type="text/javascript" src="js/orca.js">
+    </script>
   </body>
 </html>
