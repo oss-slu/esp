@@ -57,4 +57,4 @@ function getSelectValues(select) {
       }
     }
     return result;
-  }
+}
