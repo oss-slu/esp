@@ -21,8 +21,8 @@
     <!-- MDB -->
     <link rel="stylesheet" href="css/mdb.min.css" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
   </head>
   <body>
@@ -39,7 +39,7 @@
         <input type="file" class="form-control" id="customFile" name="files[]"/>
       </div>
   
-      <div class="align-items-center justify-content-center d-flex">
+      <!-- <div class="align-items-center justify-content-center d-flex">
         <select class="select" id="sectionSelect" multiple data-mdb-filter="true" style="height:300px; width:400px; margin:50px;">
           <optgroup label="Cartesian Coordinates (Angstroem)">
             <option value="CCAN1">Section 1</option>
@@ -87,20 +87,33 @@
           </optgroup>
         </select>
         <button onclick="var el = document.getElementById('sectionSelect'); alert(getSelectValues(el));">Show selected values</button>
+      </div> -->
+
+      <div class="text-center">
+        <h3 class="mb-4" style="margin-top: 15px; margin-bottom: 7px;">Section selection</h3>
       </div>
 
-      <input list="brow" style="margin-bottom:20px;">
-      <datalist id="brow">
-        <option value="Cartesian Coordinates (Angstroem)"/>
-        <option value="Cartesian Coordinates (A.U.)"/>
-        <option value="Internal Coordinate (Angstroem)"/>
-        <option value="Internal Coordinates (A.U.)"/>
-        <option value="Basis Set Information"/>
-        <option value="Orbital Energies"/>
-        <option value="Mulliken Atomic Charges"/>
-        <option value="Mulliken Reduced Orbital Charges"/>
-        <option value="Loewdin Atomic Charges"/>
-      </datalist>
+      <div class="align-items-center justify-content-center d-flex" style="margin-bottom: 15px;">
+        <select class="selectpicker" multiple data-live-search="true">
+          <option>Cartesian Coordinates (Angstroem)</option>
+          <option>Cartesian Coordinates (A.U.)</option>
+          <option>Internal Coordinates (Angstroem)</option>
+          <option>Internal Coordinates (A.U.)</option>
+          <option>Basis Set Information</option>
+          <option>Orbital Energies</option>
+          <option>Mulliken Atomic Charges</option>
+          <option>Mulliken Reduced Orbital Charges</option>
+          <option>Loewdin Atomic Charges</option>
+          <option>Timings</option>
+          <option>Vibrational Frequencies</option>
+        </select>        
+      </div>
+
+      <hr>
+
+      <div class="text-center">
+        <h3 class="mb-4" style="margin-top: 15px; margin-bottom: 7px;">Precise section and line selection</h3>
+      </div>
 
       <div class="align-items-center justify-content-center d-flex">
         <h6>For each selected section heading, enter, in order of the list, which numbered sections you would like to include in the following format: (1,4) (3) (1,2)</h6>
@@ -128,7 +141,7 @@
       </div>
 
       <div class="align-items-center justify-content-center d-flex">
-        <button id="downloadButton" value="Download" onclick="downloadWord()" type="button" class="btn btn-primary btn-rounded" style="margin-top:20px;">Convert and Download</button>
+        <button id="downloadButton" value="Download" onclick="downloadWord()" type="button" class="btn btn-dark btn-rounded" style="margin-top:20px;">Convert and Download</button>
       </div>
     </div>
      
@@ -137,7 +150,9 @@
     <!-- MDB -->
     <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
-    <script type="text/javascript" src="js/orca.js">
-    </script>
+    <script type="text/javascript" src="js/orca.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
   </body>
 </html>
