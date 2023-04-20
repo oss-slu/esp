@@ -1,0 +1,10 @@
+{
+  "name": "mdb-standard-app",
+  "version": "6.2.0",
+  "homepage": "https://mdbootstrap.com/docs/standard/",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "primeng": "^13.4.2-lts"
+  }
+}
