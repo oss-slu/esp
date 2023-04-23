@@ -8,19 +8,19 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public options = [
     {
-      label: 'Category-1',
+      label: 'Cartesian Coordinates (Angstroem)',
       value: {
         label: 'Category-1',
         childOptions: [
           {
-            label: 'Sub-Category-1-1',
+            label: 'Section 1',
             value: {
               label: 'Sub-Category-1-1',
               childOptions: []
             }
           },
           {
-            label: 'Sub-Category-1-2',
+            label: 'Section 2',
             value: {
               label: 'Sub-Category-1-2',
               childOptions: []
@@ -31,7 +31,7 @@ export class AppComponent {
       }
     },
     {
-      label: 'Category-2',
+      label: 'Cartesian Coordinates (A.U.)',
       value: {
         label: 'Category-2',
         childOptions: [
