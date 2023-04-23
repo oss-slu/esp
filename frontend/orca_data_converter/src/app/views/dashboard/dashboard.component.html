@@ -1,0 +1,16 @@
+<h2 style="color: blue;">
+	Orca Data Converter
+</h2>
+<h5></h5>
+
+<p-multiSelect
+	class="custom-ms"
+	[group]="true"
+	[options]="brandGroups"
+	[(ngModel)]="selectedBrands"
+	display="chip"
+	optionLabel="name"
+	optionGroupLabel="groupName"
+	optionGroupChildren="brands"
+	defaultLabel="Select Software(s)">
+</p-multiSelect>

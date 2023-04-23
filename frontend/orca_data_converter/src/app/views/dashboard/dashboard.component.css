@@ -1,0 +1,4 @@
+:host ::ng-deep .custom-ms 
+            .p-multiselect-label {
+            width: 300px !important;
+        }
