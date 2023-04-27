@@ -98,7 +98,7 @@ def find_sections():
 
     try:
         # Save the document
-        document.save("data_conversion.docx")
+        document.save("docs/data_conversion.docx")
     except Exception as e:
         return f'Error saving document: {e}', 500
 
