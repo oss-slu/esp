@@ -2,3 +2,60 @@
             .p-multiselect-label {
             width: 300px !important;
         }
+
+        #whole {
+            font-family: 'Calibri';
+            font-size: 20px;
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        #customFile {
+            display: none;
+        }
+
+        .form-label {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 18px;
+            transition-duration: 0.7s;
+        }
+
+        .form-label:hover {
+            background-color: black;
+            color:white;
+        }
+
+        #fileNameInput {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px 12px;
+            width: 210x;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+
+        #fileNameInput:focus {
+            border: 2px solid #555;
+        }
+
+        #downloadButton {
+            font-family: 'Calibri';
+            font-size: 18px;
+            color: black;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 25px;
+            padding: 20px;
+            transition-duration: 0.7s;
+            cursor: pointer;
+        }
+
+        #downloadButton:hover {
+            background-color: black;
+            color:white;
+        }
