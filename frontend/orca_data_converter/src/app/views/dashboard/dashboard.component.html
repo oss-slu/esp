@@ -10,7 +10,6 @@
 			for="customFile">Select your file</label>
 		<input 
 			type="file" 
-			class="form-control" 
 			id="customFile" 
 			accept=".txt"
 		/>
@@ -39,18 +38,17 @@
 		<input 
 			type="text"
 			id="fileNameInput"
-			class="form-control"
+			[(ngModel)]="fileName"
 			/>
 		</div>
 	</div>
-
-
 	
 	<div>
 		<button 
 			id="downloadButton"
 			value="Download"
 			type="button"
+			(click)="runBackend()"
 			>Convert and Download</button>
 	</div>
 </div>
