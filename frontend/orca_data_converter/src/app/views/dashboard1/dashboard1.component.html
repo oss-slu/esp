@@ -1,1 +1,32 @@
-<p>dashboard1 works! 123</p>
+<p>dashboard1 works!</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Convert ORCA files to Word documents</title>
+  </head>
+  <body>
+    <h1>Convert ORCA files to Word documents</h1>
+    <form action="/convert" method="POST" enctype="multipart/form-data">
+      <label for="file">Choose a file:</label>
+      <input type="file" id="file" name="file" accept=".txt">
+      <br><br>
+      <div id="search-targets">
+        <h2>Choose your search targets</h2>
+        <div class="search-target">
+          <label for="vocabulary-1">Please enter the vocabulary you want to choose:</label>
+          <input type="text" id="vocabulary-1" name="vocabulary-1">
+          <br><br>
+          <label for="choice-1">Which one did you choose:</label>
+          <input type="text" id="choice-1" name="choice-1">
+          <br><br>
+          <label for="lines-1">The number of lines you chose:</label>
+          <input type="number" id="lines-1" name="lines-1">
+        </div>
+      </div>
+      <br>
+      <button type="button" id="add-search-target">+</button>
+      <br><br>
+      <input type="submit" value="Convert">
+    </form>
+  </body>
+</html>
