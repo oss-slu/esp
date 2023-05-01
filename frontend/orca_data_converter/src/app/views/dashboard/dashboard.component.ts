@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
 
@@ -7,7 +8,7 @@ interface Brand {
   sections: number;
   specifyLines: string;
   use_total_lines: boolean;
-  total_lines: number;
+  lines: number;
 }
 
 interface BrandsGroup {
@@ -27,7 +28,7 @@ export class DashboardComponent implements OnInit{
   selectedBrands: Brand[] = [];
   public fileName: string;
 
-  constructor() { }
+  constructor(private readonly http: HttpClient) { }
 
     ngOnInit() {
       this.brandGroups = [
@@ -40,7 +41,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 2",
@@ -48,7 +49,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 3",
@@ -56,7 +57,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 4",
@@ -64,7 +65,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 5",
@@ -72,7 +73,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 6",
@@ -80,7 +81,7 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 7",
@@ -88,7 +89,7 @@ export class DashboardComponent implements OnInit{
                     sections: 7,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
               ]
           },
@@ -101,7 +102,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 2",
@@ -109,7 +110,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 3",
@@ -117,7 +118,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 4",
@@ -125,7 +126,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 5",
@@ -133,7 +134,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 6",
@@ -141,7 +142,7 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 7",
@@ -149,7 +150,7 @@ export class DashboardComponent implements OnInit{
                     sections: 7,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   }
                   
               ]
@@ -163,7 +164,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 2",
@@ -171,7 +172,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 3",
@@ -179,7 +180,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 4",
@@ -187,7 +188,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 5",
@@ -195,7 +196,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 6",
@@ -203,7 +204,7 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   },
                   {
                     name: "Section 7",
@@ -211,7 +212,7 @@ export class DashboardComponent implements OnInit{
                     sections: 7,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                   }
               ]
           },
@@ -224,7 +225,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -232,7 +233,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -240,7 +241,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 4",
@@ -248,7 +249,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 5",
@@ -256,7 +257,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 6",
@@ -264,7 +265,7 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 7",
@@ -272,7 +273,7 @@ export class DashboardComponent implements OnInit{
                     sections: 7,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -285,7 +286,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -293,7 +294,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -301,7 +302,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 4",
@@ -309,7 +310,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -322,7 +323,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -330,7 +331,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -343,7 +344,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -351,7 +352,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -364,7 +365,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -372,7 +373,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -385,7 +386,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -393,7 +394,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -406,7 +407,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -414,7 +415,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -422,7 +423,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 4",
@@ -430,7 +431,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 5",
@@ -438,7 +439,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 6",
@@ -446,7 +447,7 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 7",
@@ -454,7 +455,7 @@ export class DashboardComponent implements OnInit{
                     sections: 7,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 8",
@@ -462,7 +463,7 @@ export class DashboardComponent implements OnInit{
                     sections: 8,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -475,7 +476,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -483,7 +484,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -491,7 +492,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -504,7 +505,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -512,7 +513,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -520,7 +521,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -533,7 +534,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -541,7 +542,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -549,7 +550,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -562,7 +563,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -570,7 +571,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -578,7 +579,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -591,7 +592,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -599,7 +600,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -607,7 +608,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -620,7 +621,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -628,7 +629,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -636,7 +637,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -649,7 +650,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -657,7 +658,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -665,7 +666,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -678,7 +679,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -686,7 +687,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -694,7 +695,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
@@ -707,7 +708,7 @@ export class DashboardComponent implements OnInit{
                     sections: 1,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 2",
@@ -715,7 +716,7 @@ export class DashboardComponent implements OnInit{
                     sections: 2,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 3",
@@ -723,7 +724,7 @@ export class DashboardComponent implements OnInit{
                     sections: 3,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 4",
@@ -731,7 +732,7 @@ export class DashboardComponent implements OnInit{
                     sections: 4,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 5",
@@ -739,7 +740,7 @@ export class DashboardComponent implements OnInit{
                     sections: 5,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 },
                 {
                     name: "Section 6",
@@ -747,17 +748,35 @@ export class DashboardComponent implements OnInit{
                     sections: 6,
                     specifyLines: "WHOLE",
                     use_total_lines: false,
-                    total_lines: 0
+                    lines: 0
                 }
             ]
           },
       ];
   }
 
-  
+  checkEmpty(){
+    var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
+    var inputValueFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value;
+    if (inputValueFileName === ""){
+        alert("One or more inputs are empty.")
+        return 0;
+    }
+
+    if (inputValueFile === 0) {
+        alert("One or more inputs are empty.");
+        return 0;
+    }
+
+    else{
+        return 1;
+    }
+}
 
   runBackend(){
-    console.log(this.fileName + '.docx');
+    this.checkEmpty();
+    this.http.post('https://github.com/oss-slu/orca_converter/blob/main/Backend/Backend/API.py', null).subscribe();
+    console.log(this.fileName);
     console.log(this.selectedBrands);
     return this.selectedBrands, this.fileName;
   }
