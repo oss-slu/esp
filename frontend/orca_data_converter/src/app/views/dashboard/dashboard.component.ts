@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit{
   selectedBrands: Brand[] = [];
   public fileName: string;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
     ngOnInit() {
       this.brandGroups = [
@@ -774,11 +774,19 @@ export class DashboardComponent implements OnInit{
 }
 
   runBackend(){
-    this.checkEmpty();
-    this.http.post('https://github.com/oss-slu/orca_converter/blob/main/Backend/Backend/API.py', null).subscribe();
-    console.log(this.fileName);
-    console.log(this.selectedBrands);
-    return this.selectedBrands, this.fileName;
+    var empty = this.checkEmpty();
+    if (empty === 1){
+        this.http.post('http://127.0.0.1:5000', this.selectedBrands)
+            .subscribe((res) => { console.log(res); });
+        this.http.post('http://127.0.0.1:5000', this.fileName)
+            .subscribe((res) => { console.log(res); });
+        return this.selectedBrands, this.fileName;
+    }
+    else{
+        console.log('fields were found empty');
+        return 0;
+    }
+    
   }
 }
 

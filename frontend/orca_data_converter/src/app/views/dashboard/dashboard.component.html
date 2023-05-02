@@ -13,6 +13,7 @@
 			type="file" 
 			id="customFile" 
 			accept=".txt"
+			name="customFile"
 		/>
 		</form>
 	</div>
@@ -24,6 +25,7 @@
 	<form action="localhost:4200" method="POST">
 		<p-multiSelect
 			class="custom-ms"
+			name="muliselect"
 			[group]="true"
 			[options]="brandGroups"
 			[(ngModel)]="selectedBrands"
@@ -44,6 +46,7 @@
 			type="text"
 			id="fileNameInput"
 			[(ngModel)]="fileName"
+			name="fileName"
 			/>
 		</form>
 		</div>
