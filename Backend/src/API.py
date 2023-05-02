@@ -1,6 +1,7 @@
 from flask import Flask, request
 from docx import Document
 
+
 app = Flask(__name__)
 
 @app.route('/find-sections', methods=['POST'])
@@ -98,7 +99,7 @@ def find_sections():
 
     try:
         # Save the document
-        document.save("docs/data_conversion.docx")
+        document.save("/Users/samsam/orca_converter/Backend/docs/data_conversion.docx")
     except Exception as e:
         return f'Error saving document: {e}', 500
 

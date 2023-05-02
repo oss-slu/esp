@@ -1,6 +1,12 @@
+import sys
+sys.path.insert(0, '/Users/samsam/orca_converter/Backend/src')
+
 import unittest
 import json
 from API import app
+
+
+
 
 class TestFindSections(unittest.TestCase):
 
