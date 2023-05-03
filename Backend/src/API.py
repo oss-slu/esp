@@ -1,10 +1,18 @@
 from flask import Flask, request
+from flask_cors import cross_origin
 from docx import Document
 
 
 app = Flask(__name__)
 
+api_v2_cors_config = {
+    "origins": ["http://localhost:4200"],
+    "methods": ["OPTIONS", "POST"],
+    "allow_headers": ["Authorization", "Content-Type"]
+}
+
 @app.route('/find-sections', methods=['POST'])
+@cross_origin(**api_v2_cors_config)
 def find_sections():
     # Check for missing request data
     if 'file_path' not in request.json:

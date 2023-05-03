@@ -8,12 +8,21 @@
 		<label 
 			class="form-label" 
 			for="customFile">Select your file</label>
-		<form action="localhost:4200" method="POST">
+		<form action="http://localhost:4200" method="POST">
 		<input 
 			type="file" 
 			id="customFile" 
 			accept=".txt"
 			name="customFile"
+		/>
+		</form>
+
+		<form action="http://localhost:4200" method="POST">
+			<input
+			type="text"
+			id="uploadFileName"
+			name="uploadFileName"
+			placeholder="Paste your file path here..."
 		/>
 		</form>
 	</div>
@@ -22,7 +31,7 @@
 		<h3>Section selection</h3>
 	</div>
 
-	<form action="localhost:4200" method="POST">
+	<form action="http://localhost:4200" method="POST">
 		<p-multiSelect
 			class="custom-ms"
 			name="muliselect"
@@ -41,7 +50,7 @@
 	<div>
 		<h3>Choose a file name:</h3>
 		<div class="form-outline">
-		<form action="localhost:4200/" method="POST">
+		<form action="http://localhost:4200" method="POST">
 		<input 
 			type="text"
 			id="fileNameInput"
@@ -57,7 +66,7 @@
 			id="downloadButton"
 			value="Download"
 			type="button"
-			(click)="runBackend()"
+			(click)="convert()"
 			>Convert and Download</button>
 	</div>
 </div>
