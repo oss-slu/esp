@@ -23,15 +23,23 @@ class TestFindSections(unittest.TestCase):
     def test_valid_request(self):
         # Test a valid request
         data = {
-            'file_path': '/Users/samsam/Desktop/EXAMPLE.txt',
-            'search_terms': ["CARTESIAN COORDINATES (A.U.)"],
-            'sections': [1],
-            'specifyLines': ['LAST 5'],
-            'use_total_lines': False,
-            'lines': 10
+        'file_path': '/Users/samsam/Desktop/EXAMPLE.txt',
+        'search_terms': [
+        "CARTESIAN COORDINATES (A.U.)",
+        "MULLIKEN ATOMIC CHARGES",
+        "LOEWDIN ATOMIC CHARGES",
+        "LOEWDIN REDUCED ORBITAL CHARGES"
+        ],
+        'sections': [
+        [1, 2, 3],
+        [1],
+        [1],
+        [1]
+        ]
         }
         response = self.app.post('/find-sections', data=json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()
