@@ -35,7 +35,7 @@ class TestFindSections(unittest.TestCase):
         [1],
         [1]
         ],
-        'CustomFileName' :["DataOrca"]
+        'CustomFileName' :"DataOrca"
         }
         response = self.app.post('/find-sections', data=json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
