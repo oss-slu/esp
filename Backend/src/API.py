@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import cross_origin
 from docx import Document
-
+import os
 
 app = Flask(__name__)
 
@@ -21,6 +21,8 @@ def find_sections():
         return 'Missing search_terms field', 400
     if 'sections' not in request.json:
         return 'Missing sections field', 400
+    if 'CustomFileName' not in request.json:
+        return 'Missing sections field', 400
    # if 'specifyLines' not in request.json:
     #    return 'Missing specifyLines field', 400
     #if 'use_total_lines' not in request.json:
@@ -38,6 +40,7 @@ def find_sections():
     # Get the search terms, sections, and lines from the request
     search_terms = request.json['search_terms']
     sections = request.json['sections']
+    CustomFileName = request.json['CustomFileName']
     #specifyLines = request.json['specifyLines']
     #use_total_lines = request.json['use_total_lines']
     #total_lines = request.json['lines']
@@ -115,7 +118,11 @@ def find_sections():
 
     try:
         # Save the document
-        document.save("/Users/samsam/orca_converter/Backend/docs/data_conversion.docx")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        output_directory = os.path.join(current_dir, '..', 'docs')
+        output_file = f"{CustomFileName}.docx"
+        output_path = os.path.join(output_directory, output_file)
+        document.save(output_path)
     except Exception as e:
         return f'Error saving document: {e}', 500
 

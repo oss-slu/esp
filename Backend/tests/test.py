@@ -1,6 +1,5 @@
 import sys
-sys.path.insert(0, '/Users/samsam/orca_converter/Backend/src')
-
+sys.path.insert(0, '../src')
 import unittest
 import json
 from API import app
@@ -35,7 +34,8 @@ class TestFindSections(unittest.TestCase):
         [1],
         [1],
         [1]
-        ]
+        ],
+        'CustomFileName' :["DataOrca"]
         }
         response = self.app.post('/find-sections', data=json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 200)
