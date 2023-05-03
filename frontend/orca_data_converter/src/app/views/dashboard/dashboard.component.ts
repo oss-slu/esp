@@ -786,11 +786,12 @@ export class DashboardComponent implements OnInit{
     if (empty === 1){
 
         var file_path = (<HTMLInputElement>document.getElementById("uploadFileName")).value.toString();
+        var CustomFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value.toString();
         //var file_path: string[] = [];
         //file_path.push(path);
         var search_terms: string[] = [];
         var sections: Array<Array<number>> = [];
-        var data = {file_path, search_terms, sections}
+        var data = {file_path, search_terms, sections, CustomFileName}
 
         let CCAN: number[] = [];
         let CCAU: number[] = [];
@@ -917,6 +918,7 @@ export class DashboardComponent implements OnInit{
         console.log(file_path);
         console.log(search_terms);
         console.log(sections);
+        console.log(CustomFileName);
 
         this.http.post('http://127.0.0.1:5000/find-sections', data)
             .subscribe((res) => { console.log(res); });
