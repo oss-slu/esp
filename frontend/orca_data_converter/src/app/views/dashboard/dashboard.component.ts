@@ -760,17 +760,28 @@ export class DashboardComponent implements OnInit{
     var uploadFileName = (<HTMLInputElement>document.getElementById("uploadFileName")).value;
     var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
     var inputValueFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value;
+
+    let invalidCount = 0;
+
     if (inputValueFileName === ""){
-        alert("One or more inputs are empty.")
-        return 0;
+        let inputBox = <HTMLInputElement>document.getElementById("fileNameInput");
+        inputBox.style.borderColor = 'red';
+        invalidCount += 1;
     }
 
     if (uploadFileName === ""){
-        alert("One or more inputs are empty.")
-        return 0;
+        let inputBox = <HTMLInputElement>document.getElementById("uploadFileName");
+        inputBox.style.borderColor = 'red';
+        invalidCount  += 1;
     }
 
     if (inputValueFile === 0) {
+        let inputBox = document.getElementById("file-label")
+        inputBox!.style.borderColor = 'red';
+        invalidCount += 1;
+    }
+
+    if (invalidCount > 0){
         alert("One or more inputs are empty.");
         return 0;
     }

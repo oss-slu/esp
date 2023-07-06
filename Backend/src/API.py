@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import cross_origin
 from docx import Document
+from docx.shared import Pt
 import os
 
 app = Flask(__name__)
@@ -67,6 +68,9 @@ def find_sections():
             while line_empty == 0:
                 if Lines[start_line] != "\n":
                     section = document.add_paragraph(Lines[start_line])
+                    section_format = section.paragraph_format
+                    section_format.space_before = Pt(0)
+                    section_format.space_after = Pt(0)
                     start_line += 1
                 else:
                     line_empty = 1

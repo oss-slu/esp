@@ -7,6 +7,7 @@
 	<div>
 		<label 
 			class="form-label" 
+			id="file-label"
 			for="customFile">Select your file</label>
 		<form action="http://localhost:4200" method="POST">
 		<input 
@@ -14,6 +15,7 @@
 			id="customFile" 
 			accept=".txt"
 			name="customFile"
+			multiple="multiple"
 		/>
 		</form>
 
@@ -44,6 +46,18 @@
 			optionGroupChildren="brands"
 			defaultLabel="Select section(s)">
 		</p-multiSelect>
+	</form>
+
+	<div>
+		<h3>Line selection</h3>
+	</div>
+
+	<form action="http://localhost:4200" method="POST">
+		<input
+		type="text"
+		id="lineSelect"
+		placeholder="e.g., WHOLE, FIRST 3, LAST 6, 3 5 12"
+		/>
 	</form>
 
 

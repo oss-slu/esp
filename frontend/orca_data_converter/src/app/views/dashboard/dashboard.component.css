@@ -1,5 +1,5 @@
 :host ::ng-deep .custom-ms 
-            .p-multiselect-label {
+            .p-multiselect {
             width: 300px !important;
         }
 
@@ -23,6 +23,7 @@
             box-sizing: border-box;
             font-family: 'Calibri';
             font-size: 18px;
+            transition-duration: 0.7s;
         }
 
         #uploadFileName:focus {
@@ -41,11 +42,27 @@
             cursor: pointer;
             font-size: 18px;
             transition-duration: 0.7s;
+            background-color: #ffffff;
         }
 
         .form-label:hover {
             background-color: black;
             color:white;
+        }
+
+        #lineSelect {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px 12px;
+            width: 300px;
+            box-sizing: border-box;
+            font-size: 18px;
+            font-family: 'Calibri';
+            transition-duration: 0.7s;
+        }
+
+        #lineSelect::placeholder{
+            color: #a8a8a8
         }
 
         #fileNameInput {
@@ -56,6 +73,7 @@
             box-sizing: border-box;
             font-size: 18px;
             font-family: 'Calibri';
+            transition-duration: 0.7s;
         }
 
         #fileNameInput:focus {
