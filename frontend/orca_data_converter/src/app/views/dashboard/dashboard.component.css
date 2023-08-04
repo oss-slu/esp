@@ -97,3 +97,7 @@
             background-color: black;
             color:white;
         }
+
+        #lineSelectTitle {
+            font-size: 14px;
+        }

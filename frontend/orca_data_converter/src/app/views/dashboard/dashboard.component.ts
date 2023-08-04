@@ -1,5 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpEventType, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { catchError, map } from 'rxjs/operators'
+import { UploadService } from 'src/app/upload.service';
 import {SelectItem} from 'primeng/api';
 
 interface Brand {
@@ -23,13 +25,15 @@ interface BrandsGroup {
 })
 
 export class DashboardComponent implements OnInit{
+    @ViewChild("fileUpload", {static: false}) fileUpload: ElementRef;
+    public files: any[]
   private _options = {headers: new HttpHeaders ({ 'Content-Type' : 'application/json' })}
 
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private uploadService: UploadService) { }
 
     ngOnInit() {
       this.brandGroups = [
@@ -756,6 +760,37 @@ export class DashboardComponent implements OnInit{
       ];
   }
 
+  sendFile(file: { data: string | Blob; inProgress: boolean;}) {
+    const formData = new FormData();
+    formData.append('file', file.data);
+    file.inProgress = true;
+    this.uploadService.sendFormData(formData).subscribe((event: any) => {
+        if (typeof (event) === 'object') {
+            console.log(event.body);
+        }
+    });
+  }
+
+  private sendFiles() {
+    this.fileUpload.nativeElement.value = ''
+    this.files.forEach(file => {
+        this.sendFile(file);
+    });
+  }
+
+  onClick() {
+    const fileUpload = this.fileUpload.nativeElement;
+    fileUpload.onchange = () => {
+        for (let index = 0; index < fileUpload.files.length; index++)
+        {
+            const file = fileUpload.files[index];
+            this.files.push({ data: file, inProgress: false, progress: 0});
+        }
+    this.sendFiles();
+    };
+    fileUpload.click();
+    }
+
   checkEmpty(){
     var uploadFileName = (<HTMLInputElement>document.getElementById("uploadFileName")).value;
     var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
@@ -798,12 +833,13 @@ export class DashboardComponent implements OnInit{
 
         var file_path = (<HTMLInputElement>document.getElementById("uploadFileName")).value;
         var CustomFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value;
+        var lineSelect = (<HTMLInputElement>document.getElementById("lineSelect")).value;
 
         //var file_path: string[] = [];
         //file_path.push(path);
         var search_terms: string[] = [];
         var sections: Array<Array<number>> = [];
-        var data = {file_path, search_terms, sections, CustomFileName}
+        var data = {file_path, search_terms, sections, CustomFileName, lineSelect}
 
         let CCAN: number[] = [];
         let CCAU: number[] = [];
@@ -931,6 +967,7 @@ export class DashboardComponent implements OnInit{
         console.log(search_terms);
         console.log(sections);
         console.log(CustomFileName);
+        console.log(lineSelect)
         console.log(data);
 
         this.http.post('http://127.0.0.1:5000/find-sections', data, {responseType: 'text'})

@@ -4,7 +4,23 @@
 	</h2>
 	<h3>Upload your ORCA data file (.txt only)</h3>
 
-	<div>
+	<div id="upload">
+		<ul>
+			<li *ngFor="let file of files">
+				
+				<span id="file-label">
+					{{file.data.name}}
+				</span>
+			</li>
+		</ul>
+	
+		<button (click)="onClick()">
+			Upload
+		</button>
+		<input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="text/*" style="display:none;" />
+	</div>
+
+	<!-- <div>
 		<label 
 			class="form-label" 
 			id="file-label"
@@ -27,7 +43,7 @@
 			placeholder="Paste your file path here..."
 		/>
 		</form>
-	</div>
+	</div> -->
 
 	<div>
 		<h3>Section selection</h3>
@@ -52,11 +68,20 @@
 		<h3>Line selection</h3>
 	</div>
 
+	<div id="lineSelectTitle">
+		<p>For each selected section in the dropdown menu, in order, <br> enter the data to select in one
+			of the following formats separated by commas: </p>
+		<p>For a whole section: <em>WHOLE</em></p>
+		<p>For the first X lines of a section: <em>FIRST X</em></p>
+		<p>For the last X lines of a section: <em>LAST X</em></p>
+		<p>For specific lines of a section: <em>SPECIFIC X, Y, Z, A, B, ...</em></p>
+	</div>
+
 	<form action="http://localhost:4200" method="POST">
 		<input
 		type="text"
 		id="lineSelect"
-		placeholder="e.g., WHOLE, FIRST 3, LAST 6, 3 5 12"
+		placeholder="e.g., WHOLE, FIRST #, LAST #, # # #"
 		/>
 	</form>
 
