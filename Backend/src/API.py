@@ -67,12 +67,10 @@ def find_sections():
             line_empty = 0
             while line_empty == 0:
                 if Lines[start_line] != "\n":
-                    section = document.add_paragraph(Lines[start_line])
-                    section_format = section.paragraph_format
-                    section_format.space_before = Pt(0)
-                    section_format.space_after = Pt(0)
+                    section = document.add_paragraph(Lines[start_line].rstrip("\n"))
                     start_line += 1
                 else:
+                    document.add_paragraph()
                     line_empty = 1
 
 
@@ -81,41 +79,46 @@ def find_sections():
            ## if section_lines[0] == 'WHOLE' and use_total_lines == False:
               ##  while line_empty == 0:
                  ##   if Lines[start_line] != "\n":
-                ##        section = document.add_paragraph(Lines[start_line])
+                ##        section = document.add_paragraph(Lines[start_line].rstrip("\n"))
               ##          start_line += 1
             ##        else:
+          ##              document.add_paragraph()
           ##              line_empty = 1
 
            ## if section_lines[0] == 'WHOLE' and use_total_lines == True:
                ## for _ in range(total_lines - start_line + termLineNo[i-1]):
-                   ## section = document.add_paragraph(Lines[start_line])
+                   ## section = document.add_paragraph(Lines[start_line].rstrip("\n"))
                    ## start_line += 1
                  ##   line_empty = 1
                ## else:
+              #       document.add_paragraph()
              ##       start_line += 1
            ##         line_empty = 1
 
             ##elif section_lines[0] == 'FIRST':
                 ##line_count = -1
                 ##while line_count < int(section_lines[1]):
-                ##    section = document.add_paragraph(Lines[start_line])
+                ##    section = document.add_paragraph(Lines[start_line].rstrip("\n"))
                   ##  start_line += 1
               ##      line_count += 1
+              #   document.add_paragraph()
 
             ##elif section_lines[0] == 'LAST':
                ## line_count = -1
                ## document.add_paragraph(Lines[start_line])
                ## document.add_paragraph(Lines[start_line + 1])
              ##   while line_count < int(section_lines[1]):
-                    ##section = document.add_paragraph(Lines[start_line+10])
+                    ##section = document.add_paragraph(Lines[start_line+10].rstrip("\n"))
                   ##  start_line += 1
                 ##    line_count += 1
+              #   document.add_paragraph()
 
       ##      elif section_lines[0] == 'SPECIFIC':
-        ##        specific_lines = [int(l) for l in section_lines[1].split(",")]
+        ##        specific_lines = [int(l) for l in section_lines[1].split(",").rstrip("\n")]
           ##      document.add_paragraph(Lines[start_line])
             ##    for l in specific_lines:
-              ##      section = document.add_paragraph(Lines[start_line + l + 1])
+              #       section = document.add_paragraph(Lines[start_line + l + 1])
+              #   document.add_paragraph()
 
    
 
