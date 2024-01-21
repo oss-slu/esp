@@ -1,4 +1,5 @@
-# Orca Data Converter Documentation
+# Electronic Structure Parser
+Electronic structure parser was previously referred to as Orca Data Converter (or Orca Converter).
 
 ## Purpose
 Orca Data Converter is a open-source quantum chemistry software package that can simulate molecular properties using quantum mechanical calculations. It is a web application that allows users to select their desired text file containing information regarding quantum chemistry software data. Then select the required fields from a multi select dropdown that is provided on UI. After conversion, user can download the file in .docx format, which contains the desired output. By using Orca Data  Converter, researchers can easily share data with collaborators who use different quantum chemistry software.
