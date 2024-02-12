@@ -1,3 +1,8 @@
+/* This code is near identical to the code located at 
+C:\Users\seala\csci4961\esp\frontend\orca_data_converter\src\app\views\dashboard\dashboard.component.ts
+To see this view, replace the files located at that file location with the files in this location. Be certain
+to save the original files in order to not corrupt them. */
+
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
@@ -36,7 +41,7 @@ export class DashboardComponent implements OnInit{
               groupName: "Cartesian Coordinates (Angstroem)",
               brands: [
                   {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -44,7 +49,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -52,7 +57,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -60,7 +65,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -68,7 +73,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -76,7 +81,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -84,7 +89,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 7",
+                    name: "Row 7",
                     search_terms: "cartesian coordinates (angstroem)",
                     sections: 7,
                     specifyLines: "WHOLE",
@@ -97,7 +102,7 @@ export class DashboardComponent implements OnInit{
               groupName: "Cartesian Coordinates (A.U.)",
               brands: [
                   {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -105,7 +110,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -113,7 +118,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -121,7 +126,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -129,7 +134,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -137,7 +142,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -145,7 +150,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 7",
+                    name: "Row 7",
                     search_terms: "cartesian coordinates (a.u.)",
                     sections: 7,
                     specifyLines: "WHOLE",
@@ -159,7 +164,7 @@ export class DashboardComponent implements OnInit{
               groupName: "Internal Coordinates (Angstroem)",
               brands: [
                   {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -167,7 +172,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -175,7 +180,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -183,7 +188,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -191,7 +196,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -199,7 +204,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -207,7 +212,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                   },
                   {
-                    name: "Section 7",
+                    name: "Row 7",
                     search_terms: "internal coordinates (angstroem)",
                     sections: 7,
                     specifyLines: "WHOLE",
@@ -220,7 +225,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Internal Coordinates (A.U.)",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -228,7 +233,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -236,7 +241,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -244,7 +249,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -252,7 +257,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -260,7 +265,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -268,7 +273,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 7",
+                    name: "Row 7",
                     search_terms: "internal coordinates (a.u.)",
                     sections: 7,
                     specifyLines: "WHOLE",
@@ -281,7 +286,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Basis Set Information",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "basis set information",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -289,7 +294,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "basis set information",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -297,7 +302,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "basis set information",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -305,7 +310,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "basis set information",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -318,7 +323,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Orbital Energies",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "orbital energies",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -326,7 +331,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "orbital energies",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -339,7 +344,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Mulliken Atomic Charges",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "mulliken atomic charges",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -347,7 +352,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "mulliken atomic charges",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -360,7 +365,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Mulliken Reduced Orbital Charges",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "mulliken reduced orbital charges",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -368,7 +373,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "mulliken reduced orbital charges",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -381,7 +386,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Loewdin Atomic Charges",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "loewdin atomic charges",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -389,7 +394,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "loewdin atomic charges",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -402,7 +407,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Timings",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "timings",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -410,7 +415,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "timings",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -418,7 +423,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "timings",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -426,7 +431,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "timings",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -434,7 +439,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "timings",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -442,7 +447,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "timings",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -450,7 +455,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 7",
+                    name: "Row 7",
                     search_terms: "timings",
                     sections: 7,
                     specifyLines: "WHOLE",
@@ -458,7 +463,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 8",
+                    name: "Row 8",
                     search_terms: "timings",
                     sections: 8,
                     specifyLines: "WHOLE",
@@ -471,7 +476,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Vibrational Frequencies",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "vibrational frequencies",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -479,7 +484,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "vibrational frequencies",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -487,7 +492,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "vibrational frequencies",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -500,7 +505,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Normal Modes",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "normal modes",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -508,7 +513,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "normal modes",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -516,7 +521,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "normal modes",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -529,7 +534,7 @@ export class DashboardComponent implements OnInit{
             groupName: "IR Spectrum",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "ir spectrum",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -537,7 +542,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "ir spectrum",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -545,7 +550,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "ir spectrum",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -558,7 +563,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Thermochemistry at 298.15K",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "thermochemsitry at 298.15k",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -566,7 +571,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "thermochemistry at 298.15k",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -574,7 +579,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "thermochemistry at 298.15k",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -587,7 +592,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Inner Energy",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "inner energy",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -595,7 +600,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "inner energy",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -603,7 +608,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "inner energy",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -616,7 +621,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Enthalpy",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "enthalpy",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -624,7 +629,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "enthalpy",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -632,7 +637,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "enthalpy",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -645,7 +650,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Entropy",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "entropy",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -653,7 +658,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "entropy",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -661,7 +666,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "entropy",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -674,7 +679,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Gibbs Free Energy",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "gibbs free energy",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -682,7 +687,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "gibbs free energy",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -690,7 +695,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "gibbs free energy",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -703,7 +708,7 @@ export class DashboardComponent implements OnInit{
             groupName: "Cartesian Gradient",
             brands: [
                 {
-                    name: "Section 1",
+                    name: "Row 1",
                     search_terms: "cartesian gradient",
                     sections: 1,
                     specifyLines: "WHOLE",
@@ -711,7 +716,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 2",
+                    name: "Row 2",
                     search_terms: "cartesian gradient",
                     sections: 2,
                     specifyLines: "WHOLE",
@@ -719,7 +724,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 3",
+                    name: "Row 3",
                     search_terms: "cartesian gradient",
                     sections: 3,
                     specifyLines: "WHOLE",
@@ -727,7 +732,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 4",
+                    name: "Row 4",
                     search_terms: "cartesian gradient",
                     sections: 4,
                     specifyLines: "WHOLE",
@@ -735,7 +740,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 5",
+                    name: "Row 5",
                     search_terms: "cartesian gradient",
                     sections: 5,
                     specifyLines: "WHOLE",
@@ -743,7 +748,7 @@ export class DashboardComponent implements OnInit{
                     lines: 0
                 },
                 {
-                    name: "Section 6",
+                    name: "Row 6",
                     search_terms: "cartesian gradient",
                     sections: 6,
                     specifyLines: "WHOLE",
@@ -781,4 +786,12 @@ export class DashboardComponent implements OnInit{
     return this.selectedBrands, this.fileName;
   }
 }
+
+
+
+
+
+
+
+
 

@@ -1,8 +1,8 @@
-<<div id="whole">
+div id="whole">
 	<h2>
 		Convert ORCA files to Word documents
 	</h2>
-	<h3>Upload your ORCA data file (.txt only)</h3>
+	<h3>Upload your ORCA data file </h3>
 
 	<div>
 		<label 
@@ -12,7 +12,7 @@
 		<input 
 			type="file" 
 			id="customFile" 
-			accept=".txt"
+			accept=".txt, .log"
 		/>
 		</form>
 	</div>
@@ -35,6 +35,17 @@
 		</p-multiSelect>
 	</form>
 
+	<div>
+		<h3>Enter key words/terms/figures to look for (txt only): </h3>
+		<div class="keyterms-search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="keyTerms-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
 
 	<div>
 		<h3>Choose a file name:</h3>
