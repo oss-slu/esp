@@ -1,8 +1,3 @@
-/* This code is near identical to the code located at 
-C:\Users\seala\csci4961\esp\frontend\orca_data_converter\src\app\views\dashboard\dashboard.component.ts
-To see this view, replace the files located at that file location with the files in this location. Be certain
-to save the original files in order to not corrupt them. */
-
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
