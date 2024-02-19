@@ -1,12 +1,14 @@
 from flask import Flask, request
 from docx import Document
+import sys 
 
 
-app = Flask(__name__)
 
-@app.route('/find-sections', methods=['POST'])
+
+#@app.route('/find-sections', methods=['POST'])
 def find_sections():
     # Check for missing request data
+    """
     if 'file_path' not in request.json:
         return 'Missing file_path field', 400
     if 'search_terms' not in request.json:
@@ -19,20 +21,41 @@ def find_sections():
         return 'Missing use_total_lines field', 400
     if 'lines' not in request.json:
         return 'Missing lines field', 400
+    """
 
     # Get the file path from the request
-    file_path = request.json['file_path']
+    
+    file_path = sys.argv[0]
+    search_terms = sys.argv[1]
+    sections  =sys.argv[2]
+    specifyLines = sys.argv[3]
+    use_total_lines = sys.argv[4]
+    total_lines = sys.argv[5]
+    
+
+    
+
+    print(file_path)
+    print(search_terms)
+    print(sections)
+    print(specifyLines)
+    print(use_total_lines)
+    print(total_lines)
+    
+    """file_path = request.json['file_path']"""
 
     # Read the file
     with open(file_path, 'r') as f:
         Lines = f.readlines()
 
     # Get the search terms, sections, and lines from the request
+    """
     search_terms = request.json['search_terms']
     sections = request.json['sections']
     specifyLines = request.json['specifyLines']
     use_total_lines = request.json['use_total_lines']
     total_lines = request.json['lines']
+    """
 
     # Create a new document
     document = Document()
@@ -99,12 +122,20 @@ def find_sections():
 
     try:
         # Save the document
-        document.save("/Users/samsam/orca_converter/Backend/docs/data_conversion.docx")
+        document.save("/Users/seala/csci4961/outputData/data_conversion.docx")
     except Exception as e:
         return f'Error saving document: {e}', 500
 
     return 'OK'
 
-if __name__ == '__main__':
+    """
+    if __name__ == '__main__':
     app.run(debug=True)
+    """
+
+
+result = find_sections()
+print(result)
+
+
 
