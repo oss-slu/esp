@@ -10,6 +10,7 @@ import {firstValueFrom} from 'rxjs';
 export class AppComponent implements OnInit {
   dashboard:any;
   
+  
   constructor(private http: HttpClient) {
     this.dashboard = window.location.pathname
   }

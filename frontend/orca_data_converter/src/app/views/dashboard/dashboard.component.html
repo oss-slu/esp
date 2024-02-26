@@ -35,7 +35,7 @@
 		</p-multiSelect>
 	</form>
 
-
+<!--
 	<div>
 		<h3>Choose a file name:</h3>
 		<div class="form-outline">
@@ -56,5 +56,25 @@
 			type="button"
 			(click)="runBackend()"
 			>Convert and Download</button>
+	</div>
+-->
+	<div>
+		<h3>Choose input:</h3>
+		<div class="form-outline">
+		<form action="localhost:4200/" method="POST">
+		<input 
+			type="text"
+			/>
+		</form>
+		</div>
+	</div>
+	
+	<div>
+		<button 
+			id="downloadButton"
+			value="Download"
+			type="button"
+			(click)="runBackend()"
+			>Output</button>
 	</div>
 </div>
