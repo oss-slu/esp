@@ -1,16 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {HttpClient} from '@angular/common/http'; 
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   dashboard:any;
   
-  constructor() {
+  
+  constructor(private http: HttpClient) {
     this.dashboard = window.location.pathname
   }
+
+  async ngOnInit(): Promise<void> {
+    await this.fetchData(); 
+  }
+
+  async fetchData(): Promise<void>{
+    try {
+      const data = await firstValueFrom(this.http.get<any>('http://localhost:5000/api/data'));
+      console.log('Data from Flask:', data);
+      //assuming Flask endpoint returns options data
+      this.options = data.options;  
+    } catch (error){
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  async sendMessage(message: string): Promise<void>{
+    try {
+      const response = await firstValueFrom(this.http.post<any>('http://localhost:4200/api/message', {message})); 
+      console.log('Response from Flask:', response);
+    }catch (error){
+      console.error('Error sending message:', error); 
+    }
+  }
+  
   public options = [
     {
       label: 'Category-1',

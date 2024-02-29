@@ -24,7 +24,7 @@
             transition-duration: 0.7s;
         }
 
-        .form-label:hover {
+        .form-label:hover,.inputlabel button:hover {
             background-color: black;
             color:white;
         }
@@ -36,6 +36,23 @@
             width: 210x;
             box-sizing: border-box;
             font-size: 18px;
+        }
+
+        .inputlabel {
+            margin-top: 20px;
+        }
+
+        .inputlabel input[type="text"] {
+            padding: 0.4rem;
+        }
+
+        .inputlabel button {
+            margin-left: 10px;
+            padding: 0.5rem;
+            border: none;
+            background-color: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         #fileNameInput:focus {

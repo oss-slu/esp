@@ -94,9 +94,6 @@ def find_sections():
                 for l in specific_lines:
                     section = document.add_paragraph(Lines[start_line + l + 1])
 
-   
-
-
     try:
         # Save the document
         document.save("/Users/samsam/orca_converter/Backend/docs/data_conversion.docx")
