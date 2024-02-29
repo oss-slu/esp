@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit{
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
+  message: string; 
 
   constructor(private readonly http: HttpClient) { }
 
@@ -780,6 +781,8 @@ export class DashboardComponent implements OnInit{
     console.log(this.selectedBrands);
     return this.selectedBrands, this.fileName;
   }
+
+  
 }
 
 
