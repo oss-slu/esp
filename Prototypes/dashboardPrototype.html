@@ -1,0 +1,71 @@
+<div id="whole">
+	<h2>
+		Convert ORCA files to Word documents
+	</h2>
+	<h3>Upload your ORCA data file </h3>
+
+	<div>
+		<label 
+			class="form-label" 
+			for="customFile">Select your file</label>
+		<form action="localhost:4200" method="POST">
+		<input 
+			type="file" 
+			id="customFile" 
+			accept=".txt, .log"
+		/>
+		</form>
+	</div>
+
+	<div>
+		<h3>Section selection</h3>
+	</div>
+
+	<form action="localhost:4200" method="POST">
+		<p-multiSelect
+			class="custom-ms"
+			[group]="true"
+			[options]="brandGroups"
+			[(ngModel)]="selectedBrands"
+			display="chip"
+			optionLabel="name"
+			optionGroupLabel="groupName"
+			optionGroupChildren="brands"
+			defaultLabel="Select section(s)">
+		</p-multiSelect>
+	</form>
+
+	<div>
+		<h3>Enter key words/terms/figures to look for (txt only): </h3>
+		<div class="keyterms-search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="keyTerms-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+
+	<div>
+		<h3>Choose a file name:</h3>
+		<div class="form-outline">
+		<form action="localhost:4200/" method="POST">
+		<input 
+			type="text"
+			id="fileNameInput"
+			[(ngModel)]="fileName"
+			/>
+		</form>
+		</div>
+	</div>
+	
+	<div>
+		<button 
+			id="downloadButton"
+			value="Download"
+			type="button"
+			(click)="runBackend()"
+			>Convert and Download</button>
+	</div>
+</div>
