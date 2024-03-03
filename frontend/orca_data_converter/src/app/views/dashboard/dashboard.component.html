@@ -1,8 +1,8 @@
-<<div id="whole">
+<div id="whole">
 	<h2>
 		Convert ORCA files to Word documents
 	</h2>
-	<h3>Upload your ORCA data file (.txt only)</h3>
+	<h3>Upload your ORCA data file </h3>
 
 	<div>
 		<label 
@@ -12,29 +12,72 @@
 		<input 
 			type="file" 
 			id="customFile" 
-			accept=".txt"
+			accept=".txt, .log"
 		/>
 		</form>
 	</div>
 
 	<div>
-		<h3>Section selection</h3>
+		<h3>Enter the terms you wish to search for (txt only): </h3>
+		<div class="keyterms-search"> 
+			<form action="localhost:4200/" method="POST">
+			<input
+				type="text"
+				id="keyTerms-toSearch"
+				/>
+			</form>
+			</div>
 	</div>
 
-	<form action="localhost:4200" method="POST">
-		<p-multiSelect
-			class="custom-ms"
-			[group]="true"
-			[options]="brandGroups"
-			[(ngModel)]="selectedBrands"
-			display="chip"
-			optionLabel="name"
-			optionGroupLabel="groupName"
-			optionGroupChildren="brands"
-			defaultLabel="Select section(s)">
-		</p-multiSelect>
-	</form>
+	
 
+	<div>
+		<h3>Enter how you want the lines specified(txt only): </h3>
+		<div class="linesSpecified_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="linesSpecified-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+
+	<div>
+		<h3>Number of sections? (input as num): </h3>
+		<div class="sections_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="sections-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+
+	<div>
+		<h3>Use total lines?(True/False): </h3>
+		<div class="useTotalLines_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="useTotalLines-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+
+	<div>
+		<h3>Total number of lines for output doc? (input as num): </h3>
+		<div class="totalLines_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text"
+			id="totalLines-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
 
 	<div>
 		<h3>Choose a file name:</h3>

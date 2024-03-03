@@ -29,16 +29,6 @@
             color:white;
         }
 
-        #keyTerms-toSearch {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 8px 12px;
-            width: 210x;
-            box-sizing: border-box;
-            font-size: 18px;
-        }
-
-
         #fileNameInput {
             border: 1px solid #ccc;
             border-radius: 5px;
