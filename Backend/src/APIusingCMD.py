@@ -1,12 +1,12 @@
 from flask import Flask, request
 from docx import Document
+from pathlib import Path
+import sys 
 
-#  will work with this flask for sprint 3
-app = Flask(__name__)
-
-@app.route('/find-sections', methods=['POST'])
+#@app.route('/find-sections', methods=['POST'])
 def find_sections():
     # Check for missing request data
+    """
     if 'file_path' not in request.json:
         return 'Missing file_path field', 400
     if 'search_terms' not in request.json:
@@ -19,20 +19,46 @@ def find_sections():
         return 'Missing use_total_lines field', 400
     if 'lines' not in request.json:
         return 'Missing lines field', 400
+    """
 
     # Get the file path from the request
-    file_path = request.json['file_path']
+    
+    file_path = sys.argv[1]
+    tempSearch_terms = sys.argv[2]
+    tempSections  = sys.argv[3]
+    tempSpecifyLines = sys.argv[4]
+    tempUse_total_lines = sys.argv[5]
+    tempTotal_lines = sys.argv[6]
+
+    
+    search_terms = [tempSearch_terms]
+    use_total_lines = bool(tempUse_total_lines)
+    total_lines = int(tempTotal_lines)
+
+    tempSections = list(tempSections)
+    sections = [int(val) for val in tempSections]
+
+    specifyLines = []
+    num = 0
+    while num <= len(sections):
+        specifyLines.append(tempSpecifyLines)
+        num += num + 1
+
+    
+    """file_path = request.json['file_path']"""
 
     # Read the file
     with open(file_path, 'r') as f:
         Lines = f.readlines()
 
     # Get the search terms, sections, and lines from the request
+    """
     search_terms = request.json['search_terms']
     sections = request.json['sections']
     specifyLines = request.json['specifyLines']
     use_total_lines = request.json['use_total_lines']
     total_lines = request.json['lines']
+    """
 
     # Create a new document
     document = Document()
@@ -46,10 +72,14 @@ def find_sections():
             if term in line:
                 termLineNo.append(lineNo)
                 termsNum += 1
-                print(termsNum, term)
+                #print(termsNum, term)
             lineNo += 1
 
+        
+
         # Add the sections to the document
+        
+        
         for i in sections:
             section_lines = specifyLines[i-1].split()
             start_line = termLineNo[i-1]
@@ -94,13 +124,26 @@ def find_sections():
                 for l in specific_lines:
                     section = document.add_paragraph(Lines[start_line + l + 1])
 
+   
+
+
     try:
         # Save the document
-        document.save("/Users/samsam/orca_converter/Backend/docs/data_conversion.docx")
+        final_location = Path("../../../esp/outputData/data_conversion.docx")
+        final_location = final_location.resolve()
+        document.save(final_location)
     except Exception as e:
         return f'Error saving document: {e}', 500
 
     return 'OK'
+    
+    
 
-if __name__ == '__main__':
+    """
+    if __name__ == '__main__':
     app.run(debug=True)
+    """
+
+
+result = find_sections()
+print(result)
