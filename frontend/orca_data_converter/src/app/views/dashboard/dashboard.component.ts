@@ -836,7 +836,4 @@ export class DashboardComponent implements OnInit {
     }
 }
 
-<<<<<<< HEAD
 }
-=======
->>>>>>> main
