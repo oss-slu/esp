@@ -835,6 +835,29 @@ export class DashboardComponent implements OnInit {
     } else {
         console.warn('Message is undefined or empty. Skipping send.');
     }
-}
+  }
+
+  async uploadFile(){
+    const formData = new FormData(); 
+    formData.append('file', this.newFileName);
+
+    //send POST request
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    if(!response.ok){
+      console.error('Error message');
+      return
+    }
+
+    const data = await response.json();
+    this.displaySuccessMessage(data.message);
+  }
+
+  displaySuccessMessage(message: string){
+    console.log('Success');
+  }
 
 }

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -8,7 +9,7 @@ def create_app():
 
     #make sure uploads directory exists
     uploads_dir = os.path.join(app.instance_path, 'uploads')
-    os.makedirs(upload_dir, exist_ok=True)
+    os.makedirs(uploads_dir, exist_ok=True)
 
     @app.route('/api/data', methods=['GET'])
     def get_data():
@@ -37,6 +38,10 @@ def create_app():
 
         if file.filename == '':
             return jsonify({"status": "error", "message": "No selected file"})
+
+        # Validate file 
+        if uploaded_file.mimetype != 'text/plain':
+            return jsonify({'error': 'Only text files allowed'}), 400
 
         filename = os.path.join(uploads_dir, file.filename)
         file.save(filename)
