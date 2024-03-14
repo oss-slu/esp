@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   fileName: string;
+  newFileName: string;
   message: string;
 
   constructor(private readonly http: HttpClient, private fb: FormBuilder) {
