@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
 import os
-from werkzeug.utils import secure_filename
 
 def create_app():
     app = Flask(__name__)
@@ -29,26 +28,30 @@ def create_app():
     @app.route('/api/upload', methods=['POST'])
     def file_upload():
         if 'file' not in request.files:
+            logging.error('No file part in request')
             return {'message': 'No file part'}, 400
-    
+        
         file = request.files['file']
-    
+        
         if file.filename == '':
+            logging.error('No selected file')
             return {'message': 'No selected file'}, 400
-    
+        
         if file and file.mimetype == 'text/plain':
             # Process the file here
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(uploads_dir, filename))
-            return {'message': 'File uploaded successfully'}, 200
+            filename = os.path.join(uploads_dir, file.filename)
+            file.save(filename)
+            print('File received successfully')
+            return {'message': 'Success'}, 200  # Return a generic success message
         else:
+            logging.error('Invalid file type')
             return {'message': 'Invalid file type'}, 400
 
     @app.route('/api/submit', methods=['POST'])
     def submit_data():
         data = request.json
         filename = data.get('fileName')
-        return jsonify({"status": "success", "message": "Data submitted"})
+        return jsonify({"status": "success", "message": "Data submitted successfully!"})
 
     return app
 

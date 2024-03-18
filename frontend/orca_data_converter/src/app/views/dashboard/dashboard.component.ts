@@ -779,25 +779,31 @@ export class DashboardComponent implements OnInit {
 
   async onSubmitFile(event: any){
     const file = event.target.files[0];
-
+  
     if (!file){
       console.error('No file selected.');
       return; 
     }
-
+  
     const formData = new FormData();
     formData.append('file', file);
-
+  
     try {
       const response = await firstValueFrom(this.http.post<any>('http://localhost:5000/api/upload', formData));
-
+  
       console.log('Response from Flask:', response);
-
-      this.fileName = response.fileName;
+  
+      if (response && response.message === 'File received successfully') {
+        this.fileName = file.name;
+        console.log('File received successfully:', this.fileName);
+      } else {
+        console.error('Error uploading file:', response);
+      }
     } catch (error){
       console.error('Error uploading file:', error);
     }
   }
+  
 
   async submitForm() {
     // Check for empty inputs or handle validation here
