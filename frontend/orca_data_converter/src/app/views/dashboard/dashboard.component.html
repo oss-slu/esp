@@ -81,15 +81,25 @@
 		</div>
 	</div>
 
-        <div>
-            <h3>Choose a file name:</h3>
-            <div class="form-outline">
-                <input type="text" id="fileNameInput" name="fileName" [(ngModel)]="fileName" [ngModelOptions]="{standalone: true}">
-            </div>
-        </div>
-
-        <div>
-            <button id="downloadButton" value="Download" type="button" (click)="runBackend()">Convert and Download</button>
-        </div>
-    </form>
+	<div>
+		<h3>Choose a file name:</h3>
+		<div class="form-outline">
+		<form action="localhost:4200/" method="POST">
+		<input 
+			type="text"
+			id="fileNameInput"
+			[(ngModel)]="fileName"
+			/>
+		</form>
+		</div>
+	</div>
+	
+	<div>
+		<button 
+			id="downloadButton"
+			value="Download"
+			type="button"
+			(click)="runBackend()"
+			>Convert and Download</button>
+	</div>
 </div>
