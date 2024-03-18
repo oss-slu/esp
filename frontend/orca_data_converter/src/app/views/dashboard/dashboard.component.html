@@ -4,6 +4,8 @@
 	</h2>
 	<h3>Upload your ORCA data file </h3>
 
+	<div class="background-image"></div>
+
 	<div>
 		<label 
 			class="form-label" 
@@ -22,7 +24,7 @@
 		<div class="keyterms-search"> 
 			<form action="localhost:4200/" method="POST">
 			<input
-				type="text"
+				type="text" placeholder="E.g., CARTESIAN COORDINATES"
 				id="keyTerms-toSearch"
 				/>
 			</form>
@@ -32,11 +34,11 @@
 	
 
 	<div>
-		<h3>Enter how you want the lines specified(txt only): </h3>
+		<h3>Enter how you want the lines specified: </h3>
 		<div class="linesSpecified_search"> 
 		<form action="localhost:4200/" method="POST">
 		<input
-			type="text"
+			type="text" placeholder="E.g., WHOLE, FIRST X, LAST X"
 			id="linesSpecified-toSearch"
 			/>
 		</form>
@@ -44,11 +46,11 @@
 	</div>
 
 	<div>
-		<h3>Number of sections? (input as num): </h3>
+		<h3>Number of sections? </h3>
 		<div class="sections_search"> 
 		<form action="localhost:4200/" method="POST">
 		<input
-			type="text"
+			type="text" placeholder="Input as number..."
 			id="sections-toSearch"
 			/>
 		</form>
@@ -56,11 +58,11 @@
 	</div>
 
 	<div>
-		<h3>Use total lines?(True/False): </h3>
+		<h3>Use total lines? </h3>
 		<div class="useTotalLines_search"> 
 		<form action="localhost:4200/" method="POST">
 		<input
-			type="text"
+			type="text" placeholder="TRUE/FALSE"
 			id="useTotalLines-toSearch"
 			/>
 		</form>
@@ -68,11 +70,11 @@
 	</div>
 
 	<div>
-		<h3>Total number of lines for output doc? (input as num): </h3>
+		<h3>Total number of lines for output doc? </h3>
 		<div class="totalLines_search"> 
 		<form action="localhost:4200/" method="POST">
 		<input
-			type="text"
+			type="text" placeholder="Input as number..."
 			id="totalLines-toSearch"
 			/>
 		</form>
