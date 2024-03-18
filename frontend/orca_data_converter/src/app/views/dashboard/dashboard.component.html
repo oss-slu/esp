@@ -4,16 +4,10 @@
 
     <div>
         <label class="form-label" for="customFile">Select your file</label>
-        <form action="localhost:4200" method="POST">
-            <input type="file" id="customFile" accept=".txt" [(ngModel)]="fileName" [ngModelOptions]="{standalone: true}" style="display: none;">
-        </form>
+        <input type="file" id="customFile" accept=".txt" (change) = "onSubmitFile($event)">
     </div>
-
     <div>
-        <label class="form-label" for="customFile2">Upload file</label>
-        <form action="localhost:4200" method="POST">
-            <input type="file" id="customFile2" accept=".txt" [(ngModel)]="newFileName" [ngModelOptions]="{standalone: true}" style="display: none;">
-        </form>
+        <button id="submitButton" type="button" (click)="submitForm()">Submit</button>
     </div>
 
     <div>

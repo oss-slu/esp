@@ -59,7 +59,7 @@
             border: 2px solid #555;
         }
 
-        #downloadButton {
+        #downloadButton, #submitButton {
             font-family: 'Calibri';
             font-size: 18px;
             color: black;

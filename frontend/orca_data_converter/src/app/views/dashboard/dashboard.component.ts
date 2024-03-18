@@ -1,6 +1,7 @@
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 
 interface Brand {
   name: string;
@@ -27,7 +28,6 @@ export class DashboardComponent implements OnInit {
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   fileName: string;
-  newFileName: string;
   message: string;
 
   constructor(private readonly http: HttpClient, private fb: FormBuilder) {
@@ -777,13 +777,98 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  async onSubmitFile(event: any){
+    const file = event.target.files[0];
+
+    if (!file){
+      console.error('No file selected.');
+      return; 
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await firstValueFrom(this.http.post<any>('http://localhost:5000/api/upload', formData));
+
+      console.log('Response from Flask:', response);
+
+      this.fileName = response.fileName;
+    } catch (error){
+      console.error('Error uploading file:', error);
+    }
+  }
+
+  async submitForm() {
+    // Check for empty inputs or handle validation here
+    const isEmpty = await this.checkEmpty();
+    if(!isEmpty){
+      console.error('One or more inputs are empty.');
+      return; 
+    }
+
+    const formData = this.myForm.value;
+    formData.fileName = this.fileName; 
+    
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    try {
+      const response = await firstValueFrom(this.http.post<any>('http://localhost:5000/api/submit', formData,{headers}));
+
+      console.log('Response from Flask:', response);
+
+      this.fileName = ''; 
+    } catch (error) {
+      console.error('Error submitting form data:', error); 
+    }
+  }
+
   async runBackend() {
     const isEmpty = await this.checkEmpty();
 
-    if (isEmpty === 0) {
-      return; // Stop further execution if inputs are empty
+    if (!isEmpty) {
+      console.error('One or more inputs are empty.');
     }
 
+    const formData = new FormData(); 
+    const fileInput = document.getElementById("customFile") as HTMLInputElement | null;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      formData.append('file', fileInput.files[0]);
+    } else {
+      console.error('File input element not found or no files selected.');
+      return;
+    }
+
+    const uploadResponse = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!uploadResponse.ok){
+      console.error('Error uploading file:', uploadResponse.statusText);
+      return;
+    }
+
+    const uploadData = await uploadResponse.json(); 
+
+    if(uploadData.status !== 'success') {
+      console.error('Error uploading file:', uploadData.message);
+      return; 
+    }
+
+    const formDataForSubmit = this.myForm.value; 
+    formDataForSubmit.fileName = this.fileName; 
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json'});
+    
+    this.http.post('http://localhost:5000/api/submit', formDataForSubmit, {headers})
+      .subscribe(
+        (response) => {
+          console.log('Submission successful:', response);
+        },
+        (error) => {
+          console.error('Error submitting data:', error);
+        }
+      );
     // Update the URL to your backend API endpoint
     this.http.post('http://localhost:5000/api/data', null).subscribe(response => {
       console.log('Backend response:', response);
@@ -791,29 +876,6 @@ export class DashboardComponent implements OnInit {
 
     console.log(this.fileName);
     console.log(this.selectedBrands);
-  }
-
-  async submitForm() {
-    // Check for empty inputs or handle validation here
-    const isEmpty = await this.checkEmpty();
-  
-    if (isEmpty) {
-      // Get form values
-      const formData = this.myForm.value;
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json', 
-      });
-  
-      // Update the URL to your backend API endpoint
-      this.http.post('http://localhost:5000/api/message', formData,{headers}).subscribe(
-        (response) => {
-          console.log('Success:', response);
-        },
-        (error) => {
-          console.error('Error:', error);
-        }
-      );
-    }
   }
   
   sendMessage() {
@@ -839,7 +901,7 @@ export class DashboardComponent implements OnInit {
 
   async uploadFile(){
     const formData = new FormData(); 
-    formData.append('file', this.newFileName);
+    formData.append('file', this.fileName);
 
     //send POST request
     const response = await fetch('/api/upload', {
