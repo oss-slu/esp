@@ -5,27 +5,13 @@ import os
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, origins="*")
+    CORS(app)
 
     # Make sure uploads directory exists
     uploads_dir = os.path.join(app.instance_path, 'uploads')
     os.makedirs(uploads_dir, exist_ok=True)
 
-    @app.route('/api/data', methods=['GET'])
-    def get_data():
-        data = {"message": "Hello from Flask!"}
-        return jsonify(data)
-
-    @app.route('/api/message', methods=['POST'])
-    def receive_message():
-        message_data = request.json
-        message = message_data.get('message', '')
-        logging.basicConfig(level=logging.DEBUG)
-        logging.debug(f"Received message: {message}")
-        print(f"Received message: {message}")
-        return jsonify({"status": "success", "message": "Message received successfully!"})
-
-    @app.route('/api/upload', methods=['POST'])
+    @app.route('/upload', methods=['POST'])
     def file_upload():
         if 'file' not in request.files:
             logging.error('No file part in request')
@@ -47,11 +33,17 @@ def create_app():
             logging.error('Invalid file type')
             return {'message': 'Invalid file type'}, 400
 
-    @app.route('/api/submit', methods=['POST'])
-    def submit_data():
-        data = request.json
-        filename = data.get('fileName')
-        return jsonify({"status": "success", "message": "Data submitted successfully!"})
+    @app.route('/api/data', methods=['GET'])
+    def get_data():
+        # Replace this with your logic to fetch data from your data source
+        data = {
+            'options': [
+                {'label': 'Option 1', 'value': 1},
+                {'label': 'Option 2', 'value': 2},
+                {'label': 'Option 3', 'value': 3}
+            ]
+        }
+        return jsonify(data), 200
 
     return app
 

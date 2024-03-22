@@ -1,49 +1,83 @@
 <div id="whole">
-	<h2>Convert ORCA files to Word documents</h2>
-	<h3>Upload your ORCA data file (.txt only)</h3>
+	<h2>
+		Convert ORCA files to Word documents
+	</h2>
+	<h3>Upload your ORCA data file </h3>
 
-    <div>
-        <label class="form-label" for="customFile">Select your file</label>
-        <input type="file" id="customFile" accept=".txt" (change) = "onSubmitFile($event)">
-    </div>
-    <div>
-        <button id="submitButton" type="button" (click)="submitForm()">Submit</button>
-    </div>
+	<div class="background-image"></div>
 
-    <div>
-        <h3>Section selection</h3>
-    </div>
+	<div>
+		<input type="file" (change)="onFileSelected($event)" accept=".txt">
+  		<button class="Submit" (click)="onUpload()">Submit</button>
+	</div>
 
-    <form (submit)="submitForm()" [formGroup]="myForm">
-        <p-multiSelect
-            class="custom-ms"
-            [group]="true"
-            [options]="brandGroups"
-            formControlName="selectedBrands"
-            display="chip"
-            optionLabel="name"
-            optionGroupLabel="groupName"
-            optionGroupChildren="brands"
-            defaultLabel="Select section(s)"
-        ></p-multiSelect>
+	<div>
+		<h3>Enter the terms you wish to search for (txt only): </h3>
+		<div class="keyterms-search"> 
+			<form action="localhost:4200/" method="POST">
+			<input
+				type="text" placeholder="E.g., CARTESIAN COORDINATES"
+				id="keyTerms-toSearch"
+				/>
+			</form>
+			</div>
+	</div>
 
-        <div class="inputlabel">
-            <label for="messageInput">Enter your message:</label>
-            <input [(ngModel)]="message" type="text" id="messageInput" formControlName="message">
-            <button type="button" (click)="sendMessage()">Send Message</button>
-        </div>
+	
 
-        <div>
-            <h3>Choose a file name:</h3>
-            <div class="form-outline">
-                <input type="text" id="fileNameInput" name="fileName" [(ngModel)]="fileName" [ngModelOptions]="{standalone: true}">
-            </div>
-        </div>
+	<div>
+		<h3>Enter how you want the lines specified: </h3>
+		<div class="linesSpecified_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text" placeholder="E.g., WHOLE, FIRST X, LAST X"
+			id="linesSpecified-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
 
-        <div>
-            <button id="downloadButton" value="Download" type="button" (click)="runBackend()">Convert and Download</button>
-        </div>
+	<div>
+		<h3>Number of sections? </h3>
+		<div class="sections_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text" placeholder="Input as number..."
+			id="sections-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
 
-       
-    </form>
+	<div>
+		<h3>Use total lines? </h3>
+		<div class="useTotalLines_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text" placeholder="TRUE/FALSE"
+			id="useTotalLines-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+
+	<div>
+		<h3>Total number of lines for output doc? </h3>
+		<div class="totalLines_search"> 
+		<form action="localhost:4200/" method="POST">
+		<input
+			type="text" placeholder="Input as number..."
+			id="totalLines-toSearch"
+			/>
+		</form>
+		</div>
+	</div>
+	<div>
+		<button 
+			id="downloadButton"
+			value="Download"
+			type="button"
+			(click)="runBackend()"
+			>Convert</button>
+	</div>
 </div>
