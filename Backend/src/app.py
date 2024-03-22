@@ -7,7 +7,6 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # Make sure uploads directory exists
     uploads_dir = os.path.join(app.instance_path, 'uploads')
     os.makedirs(uploads_dir, exist_ok=True)
 
@@ -24,18 +23,16 @@ def create_app():
             return {'message': 'No selected file'}, 400
         
         if file and file.mimetype == 'text/plain':
-            # Process the file here
             filename = os.path.join(uploads_dir, file.filename)
             file.save(filename)
             print('File received successfully')
-            return {'message': 'Success'}, 200  # Return a generic success message
+            return {'message': 'Success'}, 200  
         else:
             logging.error('Invalid file type')
             return {'message': 'Invalid file type'}, 400
 
     @app.route('/api/data', methods=['GET'])
     def get_data():
-        # Replace this with your logic to fetch data from your data source
         data = {
             'options': [
                 {'label': 'Option 1', 'value': 1},
