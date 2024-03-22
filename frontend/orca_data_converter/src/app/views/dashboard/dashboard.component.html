@@ -7,16 +7,8 @@
 	<div class="background-image"></div>
 
 	<div>
-		<label 
-			class="form-label" 
-			for="customFile">Select your file</label>
-		<form action="localhost:4200" method="POST">
-		<input 
-			type="file" 
-			id="customFile" 
-			accept=".txt, .log"
-		/>
-		</form>
+		<input type="file" (change)="onFileSelected($event)" accept=".txt">
+  		<button class="Submit" (click)="onUpload()">Submit</button>
 	</div>
 
 	<div>
@@ -80,26 +72,12 @@
 		</form>
 		</div>
 	</div>
-
-	<div>
-		<h3>Choose a file name:</h3>
-		<div class="form-outline">
-		<form action="localhost:4200/" method="POST">
-		<input 
-			type="text"
-			id="fileNameInput"
-			[(ngModel)]="fileName"
-			/>
-		</form>
-		</div>
-	</div>
-	
 	<div>
 		<button 
 			id="downloadButton"
 			value="Download"
 			type="button"
 			(click)="runBackend()"
-			>Convert and Download</button>
+			>Convert</button>
 	</div>
 </div>

@@ -1,7 +1,6 @@
 from flask import Flask, request
 from docx import Document
 
-
 app = Flask(__name__)
 
 @app.route('/find-sections', methods=['POST'])

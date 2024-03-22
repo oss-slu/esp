@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
       const response = await firstValueFrom(this.http.post<any>('http://localhost:4200/api/message', {message})); 
       console.log('Response from Flask:', response);
     }catch (error){
-      console.error('Error sending message:', error); 
+      console.error('Error sending message:', error);
     }
   }
   
