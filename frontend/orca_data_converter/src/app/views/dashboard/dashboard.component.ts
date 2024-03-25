@@ -775,7 +775,22 @@ export class DashboardComponent implements OnInit{
 
   runBackend(){
     this.checkEmpty();
-    this.http.post('https://github.com/oss-slu/orca_converter/blob/main/Backend/Backend/API.py', null).subscribe();
+
+    const requestData = {
+        fileName: this.fileName,
+        selectedBrands: this.selectedBrands,
+    };
+
+
+    this.http.post('http://127.0.0.1:5000/find-sections', requestData).subscribe({
+        next: (response) => {
+            console.log('Response from backend:', response);
+        },
+        error: (error) => {
+            console.error('Error from backend:', error);
+        }
+    });
+
     console.log(this.fileName);
     console.log(this.selectedBrands);
     return this.selectedBrands, this.fileName;
