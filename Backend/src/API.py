@@ -1,39 +1,66 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from docx import Document
 from pathlib import Path
+from flask_cors import CORS
+import json
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/find-sections', methods=['POST'])
 def find_sections():
+    print(request.files)
+    print(request.form)
+
     # Check for missing request data
-    if 'file_path' not in request.json:
-        return 'Missing file_path field', 400
-    if 'search_terms' not in request.json:
-        return 'Missing search_terms field', 400
-    if 'sections' not in request.json:
-        return 'Missing sections field', 400
-    if 'specifyLines' not in request.json:
-        return 'Missing specifyLines field', 400
-    if 'use_total_lines' not in request.json:
-        return 'Missing use_total_lines field', 400
-    if 'lines' not in request.json:
-        return 'Missing lines field', 400
+    if 'file' not in request.files:
+        return 'No file part', 400
+    
 
     # Get the file path from the request
-    file_path = request.json['file_path']
+    file = request.files['file']
+
+
+    # if user does not select file, browser submits an empty file without a filename.
+    if file.filename == '':
+        return 'No selected file', 400
+    
+
+    
+    #Ensures the additional data sent is properly received. 
+    data_str = request.form.get('data', None)
+    if data_str is None:
+        return 'Missing additional data', 400    
+    try:
+        print(data_str)
+        data_json = json.loads(data_str)
+        print(data_json)
+    except json.JSONDecodeError:
+        return 'Invalid JSON data', 400
+        
+    # Get the search terms, sections, and lines from the request
+    required_fields = ['search_terms', 'sections', 'specifyLines', 'use_total_lines', 'total_lines']  
+    if not all(field in data_json for field in required_fields):
+        return 'Missing one or more required fields', 400
+    
+    search_terms = data_json.get('search_terms')
+    sections = data_json.get('sections')
+    specifyLines = data_json.get('specifyLines')
+    use_total_lines = data_json.get('use_total_lines')
+    total_lines = data_json.get('total_lines')
+
+    print(search_terms)
+    print(sections)
+    print(specifyLines)
+    print(use_total_lines)
+    print(total_lines)
+
 
     # Read the file
-    with open(file_path, 'r') as f:
-        Lines = f.readlines()
-
-    # Get the search terms, sections, and lines from the request
-    search_terms = request.json['search_terms']
-    sections = request.json['sections']
-    specifyLines = request.json['specifyLines']
-    use_total_lines = request.json['use_total_lines']
-    total_lines = request.json['lines']
+    file_content = file.read().decode('utf-8') #File content is in utf-8
+    Lines = file_content.splitlines()
+    
 
     # Create a new document
     document = Document()
@@ -50,50 +77,50 @@ def find_sections():
                 print(termsNum, term)
             lineNo += 1
 
-        # Add the sections to the document
-        for i in sections:
-            section_lines = specifyLines[i-1].split()
-            start_line = termLineNo[i-1]
-            line_empty = 0
+    # Add the sections to the document
+    for i in sections:
+        section_lines = specifyLines[i-1].split()
+        start_line = termLineNo[i-1]
+        line_empty = 0
 
-            if section_lines[0] == 'WHOLE' and use_total_lines == False:
-                while line_empty == 0:
-                    if Lines[start_line] != "\n":
-                        section = document.add_paragraph(Lines[start_line])
-                        start_line += 1
-                    else:
-                        line_empty = 1
-
-            if section_lines[0] == 'WHOLE' and use_total_lines == True:
-                for _ in range(total_lines - start_line + termLineNo[i-1]):
+        if section_lines[0] == 'WHOLE' and use_total_lines == False:
+            while line_empty == 0:
+                if Lines[start_line] != "\n":
                     section = document.add_paragraph(Lines[start_line])
                     start_line += 1
-                    line_empty = 1
                 else:
-                    start_line += 1
                     line_empty = 1
 
-            elif section_lines[0] == 'FIRST':
-                line_count = -1
-                while line_count < int(section_lines[1]):
-                    section = document.add_paragraph(Lines[start_line])
-                    start_line += 1
-                    line_count += 1
+        if section_lines[0] == 'WHOLE' and use_total_lines == True:
+            for _ in range(total_lines - start_line + termLineNo[i-1]):
+                section = document.add_paragraph(Lines[start_line])
+                start_line += 1
+                line_empty = 1
+            else:
+                start_line += 1
+                line_empty = 1
 
-            elif section_lines[0] == 'LAST':
-                line_count = -1
-                document.add_paragraph(Lines[start_line])
-                document.add_paragraph(Lines[start_line + 1])
-                while line_count < int(section_lines[1]):
-                    section = document.add_paragraph(Lines[start_line+10])
-                    start_line += 1
-                    line_count += 1
+        elif section_lines[0] == 'FIRST':
+            line_count = -1
+            while line_count < int(section_lines[1]):
+                section = document.add_paragraph(Lines[start_line])
+                start_line += 1
+                line_count += 1
 
-            elif section_lines[0] == 'SPECIFIC':
-                specific_lines = [int(l) for l in section_lines[1].split(",")]
-                document.add_paragraph(Lines[start_line])
-                for l in specific_lines:
-                    section = document.add_paragraph(Lines[start_line + l + 1])
+        elif section_lines[0] == 'LAST':
+            line_count = -1
+            document.add_paragraph(Lines[start_line])
+            document.add_paragraph(Lines[start_line + 1])
+            while line_count < int(section_lines[1]):
+                section = document.add_paragraph(Lines[start_line+10])
+                start_line += 1
+                line_count += 1
+
+        elif section_lines[0] == 'SPECIFIC':
+            specific_lines = [int(l) for l in section_lines[1].split(",")]
+            document.add_paragraph(Lines[start_line])
+            for l in specific_lines:
+                section = document.add_paragraph(Lines[start_line + l + 1])
 
    
 
@@ -106,7 +133,9 @@ def find_sections():
     except Exception as e:
         return f'Error saving document: {e}', 500
 
-    return 'OK'
+    return 'File processed successfully'
+    
+
 
 if __name__ == '__main__':
     app.run(debug=True)

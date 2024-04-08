@@ -774,20 +774,42 @@ export class DashboardComponent implements OnInit{
 }
 
   runBackend(){
-    this.checkEmpty();
+    if (this.checkEmpty() == 0) {
+        return;
+    }
 
-    const requestData = {
-        fileName: this.fileName,
-        selectedBrands: this.selectedBrands,
-    };
+    
 
+    const inputFileElement = document.getElementById("customFile") as HTMLInputElement;
+        if (!inputFileElement || !inputFileElement.files || inputFileElement.files.length == 0) {
+            console.error('File input not found or no files selected.');
+            alert('Please select a file to upload.');
+            return;
+        }
+    
+    const inputFile = inputFileElement.files[0]; 
+        
+    const formData = new FormData();
+    formData.append('file', inputFile);
+    formData.append('data', JSON.stringify({
+        search_terms: "CARTESIAN COORDINATES",
+        sections: "3",
+        specifyLines: "WHOLE",
+        use_Total_Lines: "FALSE",
+        total_lines: "200",
+    }));
 
-    this.http.post('http://127.0.0.1:5000/find-sections', requestData).subscribe({
+    // this.selectedBrands.map(brand => brand.lines) --- hard coded brand above, work on fixing this next sprint.
+    
+
+    this.http.post('http://127.0.0.1:5000/find-sections', formData).subscribe({
         next: (response) => {
             console.log('Response from backend:', response);
+            alert('Data sent to backend successfully.');
         },
         error: (error) => {
             console.error('Error from backend:', error);
+            alert('Failed to send data to backend.');
         }
     });
 
