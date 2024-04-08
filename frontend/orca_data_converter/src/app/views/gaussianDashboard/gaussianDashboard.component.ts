@@ -19,7 +19,7 @@ interface BrandsGroup {
 @Component({
   selector: 'app-gaussianDashboard',
   templateUrl: './gaussianDashboard.component.html',
-  styleUrls: ['./gaussianDashboard.component.css']
+  styleUrls: ['./dashboardView.component.css']
 })
 
 export class GaussianDashboardComponent implements OnInit{
