@@ -6,7 +6,7 @@ import { BrowserAnimationsModule }
     from "@angular/platform-browser/animations";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GDashboardComponent } from './views/gaussianDashboard/gdashboard.component';
+import { GaussianDashboardComponent } from './views/gaussianDashboard/gaussianDashboard.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { MultiSelectModule } from "primeng/multiselect";
 import { Dashboard1Component } from './views/dashboard1/dashboard1.component';
@@ -15,7 +15,7 @@ import { HttpClientModule } from "@angular/common/http";
 @NgModule({
   declarations: [
     AppComponent,
-    GDashboardComponent,
+    GaussianDashboardComponent,
     DashboardComponent,
     Dashboard1Component
   ],

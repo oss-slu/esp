@@ -18,11 +18,11 @@ interface BrandsGroup {
 
 @Component({
   selector: 'app-gaussianDashboard',
-  templateUrl: './gdashboard.component.html',
-  styleUrls: ['./gdashboard.component.css']
+  templateUrl: './gaussianDashboard.component.html',
+  styleUrls: ['./gaussianDashboard.component.css']
 })
 
-export class GDashboardComponent implements OnInit{
+export class GaussianDashboardComponent implements OnInit{
 
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
