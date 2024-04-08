@@ -10,10 +10,12 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { MultiSelectModule } from "primeng/multiselect";
 import { Dashboard1Component } from './views/dashboard1/dashboard1.component';
 import { HttpClientModule } from "@angular/common/http";
+import { GDashboardComponent } from './views/gaussianDashboard/gdashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    GDashboardComponent,
     DashboardComponent,
     Dashboard1Component
   ],
