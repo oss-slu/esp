@@ -18,12 +18,14 @@ interface BrandsGroup {
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboardView.component.css']
+  templateUrl: '../dashboardView/dashboardView.component.html',
+  styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
 export class DashboardComponent implements OnInit{
 
+  fileType = 'ORCA';
+  fileExtension = '.txt';
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;

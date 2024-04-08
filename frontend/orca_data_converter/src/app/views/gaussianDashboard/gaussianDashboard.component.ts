@@ -18,12 +18,14 @@ interface BrandsGroup {
 
 @Component({
   selector: 'app-gaussianDashboard',
-  templateUrl: './gaussianDashboard.component.html',
-  styleUrls: ['./dashboardView.component.css']
+  templateUrl: '../dashboardView/dashboardView.component.html',
+  styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
 export class GaussianDashboardComponent implements OnInit{
 
+  fileType = 'Gaussian';
+  fileExtension = '.log';
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
