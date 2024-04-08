@@ -8,11 +8,11 @@ import {firstValueFrom} from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  dashboard:any;
+  gaussianDashboard:any;
   
   
   constructor(private http: HttpClient) {
-    this.dashboard = window.location.pathname
+    this.gaussianDashboard = window.location.pathname
   }
 
   async ngOnInit(): Promise<void> {

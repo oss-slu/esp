@@ -1,6 +1,6 @@
-<div class="filter-wrapper row" *ngIf="dashboard == '/' ">
+<div class="filter-wrapper row" *ngIf="gaussianDashboard == '/' ">
   <div class="col-md-3 offset-md-3">
-      <app-dashboard appendTo="body" [options]="options" (onPanelHide)="onPanelHide($event)"></app-dashboard>
+      <app-gaussianDashboard appendTo="body" [options]="options" (onPanelHide)="onPanelHide($event)"></app-gaussianDashboard>
   </div>
 </div>
 <router-outlet></router-outlet>
