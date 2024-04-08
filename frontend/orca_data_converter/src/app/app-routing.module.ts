@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GDashboardComponent } from './views/gaussianDashboard/gdashboard.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: 'home1', component: GDashboardComponent }
+  { path: 'home1', component: DashboardComponent }
 ];
 
 @NgModule({

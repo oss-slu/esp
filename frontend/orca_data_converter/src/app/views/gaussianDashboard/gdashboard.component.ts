@@ -17,7 +17,7 @@ interface BrandsGroup {
 }
 
 @Component({
-  selector: 'app-gdashboard',
+  selector: 'app-gaussianDashboard',
   templateUrl: './gdashboard.component.html',
   styleUrls: ['./gdashboard.component.css']
 })
