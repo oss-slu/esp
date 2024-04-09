@@ -4,7 +4,6 @@ from pathlib import Path
 from flask_cors import CORS
 import json
 
-
 app = Flask(__name__)
 CORS(app)
 
@@ -121,9 +120,6 @@ def find_sections():
             document.add_paragraph(Lines[start_line])
             for l in specific_lines:
                 section = document.add_paragraph(Lines[start_line + l + 1])
-
-   
-
 
     try:
         # Save the document

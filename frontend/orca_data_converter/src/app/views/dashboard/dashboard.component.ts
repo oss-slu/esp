@@ -27,9 +27,14 @@ export class DashboardComponent implements OnInit{
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
+  selectedFile: File | null = null;
 
   constructor(private readonly http: HttpClient) { }
 
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+  
     ngOnInit() {
       this.brandGroups = [
           {
@@ -817,5 +822,23 @@ export class DashboardComponent implements OnInit{
     console.log(this.selectedBrands);
     return this.selectedBrands, this.fileName;
   }
-}
 
+  onUpload() {
+    if (!this.selectedFile) {
+      console.error('No file selected');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this.http.post<any>('http://localhost:5000/upload', formData).subscribe(
+      (response) => {
+        console.log('File uploaded successfully:', response);
+      },
+      (error) => {
+        console.error('Error uploading file:', error);
+      }
+    );
+  }
+}
