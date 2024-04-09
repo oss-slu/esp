@@ -17,15 +17,15 @@ interface BrandsGroup {
 }
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-gaussianDashboard',
   templateUrl: '../dashboardView/dashboardView.component.html',
   styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
-export class DashboardComponent implements OnInit{
+export class GaussianDashboardComponent implements OnInit{
 
-  fileType = 'ORCA';
-  fileExtension = '.txt';
+  fileType = 'Gaussian';
+  fileExtension = '.log';
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
