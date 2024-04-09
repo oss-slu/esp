@@ -90,7 +90,7 @@ export class DashboardComponent {
 
     const data = {
       file_path: this.fileName.toString(),
-      search_terms: this.searchTerms,
+      search_terms: [this.searchTerms],
       sections: this.sections,
       specifyLines: this.specifyLines.toString(),
       use_total_lines: this.useTotalLines,
@@ -114,16 +114,16 @@ export class DashboardComponent {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   
-    this.http.post<any>('http://localhost:5000/find-sections', data, { headers })
-      .subscribe(
-        (response) => {
-          const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-          this.downloadDocument(blob); // Call function to download
-        },
-        (error) => {
-          console.error('Error:', error);
-        }
-      );
+    this.http.post('http://localhost:5000/find-sections', data, { headers, responseType: 'blob' })
+    .subscribe(
+      (response) => {
+        const blob = response; // Already a Blob object
+        this.downloadDocument(blob); // Call function to download
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
   downloadDocument(blob: Blob) {
     saveAs(blob, 'output.docx'); // Specify filename
