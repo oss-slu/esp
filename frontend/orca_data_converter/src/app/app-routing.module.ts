@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Dashboard1Component } from './views/dashboard1/dashboard1.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { GaussianDashboardComponent } from './views/gaussianDashboard/gaussianDashboard.component';
 
 const routes: Routes = [
-  { path: 'home1', component: Dashboard1Component }
+  { path: 'orca', component: DashboardComponent },
+  { path: 'gaussian', component: GaussianDashboardComponent },
+  { path: '', redirectTo: 'orca', pathMatch: 'full' }
 ];
 
 @NgModule({

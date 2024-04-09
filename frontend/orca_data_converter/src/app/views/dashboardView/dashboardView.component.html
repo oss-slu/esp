@@ -1,9 +1,9 @@
 <div id="whole">
-    <h2>Convert ORCA files to Word documents</h2>
-    <h3>Upload your ORCA data file</h3>
+    <h2>Convert {{ fileType }} files to Word documents</h2>
+    <h3>Upload your {{ fileType }} data file</h3>
     <div class="background-image"></div>
     <div>
-      <input type="file" (change)="onFileSelected($event)" accept=".txt">
+      <input type="file" (change)="onFileSelected($event)" [accept]="fileExtension">
       <button class="Upload" (click)="onUpload()">Upload</button>
     </div>
     <div>

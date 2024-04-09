@@ -19,11 +19,14 @@ interface BrandsGroup {
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  templateUrl: '../dashboardView/dashboardView.component.html',
+  styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
-export class DashboardComponent {
+export class DashboardComponent{
+
+  fileType = 'ORCA';
+  fileExtension = '.txt';
   brandGroups: BrandsGroup[] = [];
   selectedBrands: Brand[] = [];
   public fileName: string;
@@ -96,21 +99,6 @@ export class DashboardComponent {
       use_total_lines: this.useTotalLines,
       total_lines: this.totalLines.toString(),
     };
-  
-    // const formData = new FormData();
-    // formData.append('file_path', JSON.stringify(this.fileName));
-    // console.log("filename", this.fileName);
-    // formData.append('search_terms', this.searchTerms);
-    // console.log(this.searchTerms);
-    // formData.append('sections', JSON.stringify(this.sections)); // Convert array to string
-    // console.log(this.sections);
-    // formData.append('specifyLines', JSON.stringify(this.specifyLines));
-    // console.log(this.specifyLines);
-    // formData.append('use_total_lines', JSON.stringify(this.useTotalLines)); // Convert boolean to string
-    // console.log(this.useTotalLines);
-    // formData.append('total_lines', JSON.stringify(this.totalLines)); // Convert number to string
-    // console.log(this.totalLines);
-    // console.log("formData", formData)
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   
