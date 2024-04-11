@@ -34,24 +34,19 @@ def find_sections():
     try:
         print(data_str)
         data_json = json.loads(data_str)
-        print(data_json)
+        print(data_json[1])
     except json.JSONDecodeError:
         return 'Invalid JSON data', 400
         
-    # Get the search terms, sections, and lines from the request
-    required_fields = ['search_terms', 'sections', 'specifyLines', 'use_total_lines', 'total_lines']  
-    if not all(field in data_json for field in required_fields):
+    # Get the search terms, sections, and lines from the request 
+    if len(data_json) != 5:
         return 'Missing one or more required fields', 400
     
-    search_terms = data_json.get('search_terms')
-    sections = data_json.get('sections')
-    specifyLines = data_json.get('specifyLines')
-    use_total_lines = data_json.get('use_total_lines')
-    total_lines = data_json.get('total_lines')
+    search_terms, sections, specify_lines, use_total_lines, total_lines = data_json
 
     print(search_terms)
     print(sections)
-    print(specifyLines)
+    print(specify_lines)
     print(use_total_lines)
     print(total_lines)
 
@@ -78,7 +73,7 @@ def find_sections():
 
     # Add the sections to the document
     for i in sections:
-        section_lines = specifyLines[i-1].split()
+        section_lines = specify_lines[i-1].split()
         start_line = termLineNo[i-1]
         line_empty = 0
 

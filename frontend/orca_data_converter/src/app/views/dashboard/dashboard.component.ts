@@ -3,19 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
 import { saveAs } from 'file-saver';
 
-interface Brand {
-  name: string;
-  search_terms: string;
-  sections: number[];
-  specifyLines: string;
-  use_total_lines: boolean;
-  total_lines: number;
-}
 
-interface BrandsGroup {
-  groupName: string;
-  brands: Brand[];
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -27,12 +15,10 @@ export class DashboardComponent{
 
   fileType = 'ORCA';
   fileExtension = '.txt';
-  brandGroups: BrandsGroup[] = [];
-  selectedBrands: Brand[] = [];
   public fileName: string;
   selectedFile: File | null = null;
   searchTerms: string = '';
-  specifyLines: string = '';
+  specify_lines: string = '';
   sections: number[] = [];
   useTotalLines: boolean = false;
   totalLines: number = 0;
@@ -95,7 +81,7 @@ export class DashboardComponent{
       file_path: this.fileName.toString(),
       search_terms: [this.searchTerms],
       sections: this.sections,
-      specifyLines: this.specifyLines.toString(),
+      specify_lines: this.specify_lines.toString(),
       use_total_lines: this.useTotalLines,
       total_lines: this.totalLines.toString(),
     };
