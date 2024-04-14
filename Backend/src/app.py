@@ -47,37 +47,39 @@ def create_app():
     @app.route('/find-sections', methods=['POST'])
     def find_sections():
         # Check for missing request data
-        if 'file_path' not in request.json:
-            return 'Missing file_path field', 400
-        if 'search_terms' not in request.json:
-            return 'Missing search_terms field', 400
-        if 'sections' not in request.json:
-            return 'Missing sections field', 400
-        if 'specifyLines' not in request.json:
-            return 'Missing specifyLines field', 400
-        if 'use_total_lines' not in request.json:
-            return 'Missing use_total_lines field', 400
-        if 'total_lines' not in request.json:
-            return 'Missing total_lines field', 400
+        if 'file' not in request.files:
+            return 'No file part', 400
+    
 
-        # Get the data from the request
-        file_path = request.json['file_path']
-        search_terms = request.json['search_terms']
-        sections_string = request.json['sections']
-        sections = json.loads(sections_string)
-        tempSpecifyLines = request.json['specifyLines']
-        use_total_lines = bool(request.json['use_total_lines'])
-        total_lines = int(request.json['total_lines'])
+        # Get the file path from the request
+        file = request.files['file']
 
-        specifyLines = []
-        num = 0
-        while num <= len(sections):
-            specifyLines.append(tempSpecifyLines)
-            num += num + 1
+
+        # if user does not select file, browser submits an empty file without a filename.
+        if file.filename == '':
+            return 'No selected file', 400
+    
+
+    
+        #Ensures the additional data sent is properly received. 
+        data_str = request.form.get('data', None)
+        if data_str is None:
+            return 'Missing additional data', 400    
+        try:
+            data_json = json.loads(data_str)
+        except json.JSONDecodeError:
+            return 'Invalid JSON data', 400
+        
+        # Get the search terms, sections, and lines from the request 
+        if len(data_json) != 5:
+            return 'Missing one or more required fields', 400
+    
+        search_terms, sections, specify_lines, use_total_lines, total_lines = data_json
+
 
         # Read the file
-        with open(file_path, 'r') as f:
-            Lines = f.readlines()
+        file_content = file.read().decode('utf-8') #File content is in utf-8
+        Lines = file_content.splitlines()
 
         # Create a new document
         document = Document()
@@ -95,7 +97,7 @@ def create_app():
 
         # Add the sections to the document
         for i in sections:
-            section_lines = specifyLines[i-1].split()
+            section_lines = specify_lines[i-1].split()
             start_line = termLineNo[i-1]
             line_empty = 0
 

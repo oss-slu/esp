@@ -9,13 +9,13 @@
     <div>
       <h3>Enter the terms you wish to search for (txt only):</h3>
       <div class="keyterms-search">
-          <input type="text" placeholder="E.g., CARTESIAN COORDINATES" id="keyTerms-toSearch" [(ngModel)]="searchTerms" />
+          <input type="text" placeholder="E.g., CARTESIAN COORDINATES" id="keyTerms-toSearch" [(ngModel)]="searchTerms" (input)="searchTerms = searchTerms.toUpperCase()"/>
       </div>
     </div>
     <div>
       <h3>Enter how you want the lines specified:</h3>
       <div class="linesSpecified_search">
-          <input type="text" placeholder="E.g., WHOLE, FIRST X, LAST X" id="linesSpecified-toSearch" [(ngModel)]="specify_lines" />
+          <input type="text" placeholder="E.g., WHOLE, FIRST X, LAST X" id="linesSpecified-toSearch" [(ngModel)]="specify_lines" (input)="specify_lines = specify_lines.toUpperCase()"/>
       </div>
     </div>
     <div>

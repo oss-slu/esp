@@ -19,7 +19,7 @@ export class DashboardComponent{
   selectedFile: File | null = null;
   searchTerms: string = '';
   specify_lines: string = '';
-  sections: number[] = [];
+  sections: string = '';
   useTotalLines: boolean = false;
   totalLines: number = 0;
 
@@ -77,10 +77,15 @@ export class DashboardComponent{
       return;
     }
 
+    // code to trim sections string to just numbers to send to backend.
+    const sectionsArray = this.sections.split(',')
+                        .map(s => s.trim())
+                        .filter(s => !isNaN(Number(s)))
+                        .map(Number);
+
     const data = {
-      file_path: this.fileName.toString(),
       search_terms: [this.searchTerms],
-      sections: this.sections,
+      sections: sectionsArray,
       specify_lines: this.specify_lines.toString(),
       use_total_lines: this.useTotalLines,
       total_lines: this.totalLines.toString(),

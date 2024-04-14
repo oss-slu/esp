@@ -9,8 +9,7 @@ CORS(app)
 
 @app.route('/find-sections', methods=['POST'])
 def find_sections():
-    print(request.files)
-    print(request.form)
+    
 
     # Check for missing request data
     if 'file' not in request.files:
@@ -32,9 +31,7 @@ def find_sections():
     if data_str is None:
         return 'Missing additional data', 400    
     try:
-        print(data_str)
         data_json = json.loads(data_str)
-        print(data_json[1])
     except json.JSONDecodeError:
         return 'Invalid JSON data', 400
         
@@ -43,12 +40,6 @@ def find_sections():
         return 'Missing one or more required fields', 400
     
     search_terms, sections, specify_lines, use_total_lines, total_lines = data_json
-
-    print(search_terms)
-    print(sections)
-    print(specify_lines)
-    print(use_total_lines)
-    print(total_lines)
 
 
     # Read the file
