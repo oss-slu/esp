@@ -46,40 +46,33 @@ def create_app():
 
     @app.route('/find-sections', methods=['POST'])
     def find_sections():
-        # Check for missing request data
-        if 'file' not in request.files:
-            return 'No file part', 400
-    
-
-        # Get the file path from the request
-        file = request.files['file']
-
-
-        # if user does not select file, browser submits an empty file without a filename.
-        if file.filename == '':
-            return 'No selected file', 400
-    
-
-    
-        #Ensures the additional data sent is properly received. 
-        data_str = request.form.get('data', None)
-        if data_str is None:
-            return 'Missing additional data', 400    
-        try:
-            data_json = json.loads(data_str)
-        except json.JSONDecodeError:
-            return 'Invalid JSON data', 400
         
-        # Get the search terms, sections, and lines from the request 
-        if len(data_json) != 5:
-            return 'Missing one or more required fields', 400
-    
-        search_terms, sections, specify_lines, use_total_lines, total_lines = data_json
+        #Ensures the additional data sent is properly received. 
+        data = request.get_json(force=True)
+        
 
+        # Extracting each piece of data from the JSON object
+        file_path = data['file_path']
+        search_terms = data['search_terms']
+        sections = list(map(int, data['sections']))
+        temp_specify_lines = data['specify_lines']
+        
+        use_total_lines = data.get('use_total_lines', False)
+        total_lines = data.get('total_lines', 2000)
+
+        # Check for missing request data
+        if not all([file_path, search_terms, sections, temp_specify_lines]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        specify_lines = []
+        num = 0
+        while num <= len(sections):
+            specify_lines.append(temp_specify_lines)
+            num += 1
 
         # Read the file
-        file_content = file.read().decode('utf-8') #File content is in utf-8
-        Lines = file_content.splitlines()
+        with open(file_path, 'r') as f:
+            Lines = f.readlines()
 
         # Create a new document
         document = Document()

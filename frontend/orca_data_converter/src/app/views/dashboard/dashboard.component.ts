@@ -76,21 +76,23 @@ export class DashboardComponent{
       alert('Please select a file.');
       return;
     }
-
-    // code to trim sections string to just numbers to send to backend.
-    const sectionsArray = this.sections.split(',')
-                        .map(s => s.trim())
-                        .filter(s => !isNaN(Number(s)))
-                        .map(Number);
-
-    const data = {
-      search_terms: [this.searchTerms],
-      sections: sectionsArray,
+    
+    const data: any ={
+      file_path: this.fileName.toString(),
+      search_terms: this.searchTerms.split(","),
+      sections: this.sections.split(','),
       specify_lines: this.specify_lines.toString(),
-      use_total_lines: this.useTotalLines,
-      total_lines: this.totalLines.toString(),
     };
 
+    if (this.useTotalLines) {
+      data.use_total_lines = this.useTotalLines;
+    }
+
+    if (this.totalLines) {
+      data.total_lines = this.totalLines;
+    }
+    
+    
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   
     this.http.post('http://localhost:5000/find-sections', data, { headers, responseType: 'blob' })
