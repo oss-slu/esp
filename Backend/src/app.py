@@ -47,16 +47,14 @@ def create_app():
     @app.route('/find-sections', methods=['POST'])
     def find_sections():
         
-        #Ensures the additional data sent is properly received. 
+        # Ensures the additional data sent is properly received. 
         data = request.get_json(force=True)
-        
-
-        # Extracting each piece of data from the JSON object
-        file_path = data['file_path']
-        search_terms = data['search_terms']
-        sections = list(map(int, data['sections']))
-        temp_specify_lines = data['specify_lines']
-        
+    
+        # Extracting each piece of data from the JSON object using .get()
+        file_path = data.get('file_path')
+        search_terms = data.get('search_terms')
+        sections = data.get('sections')
+        temp_specify_lines = data.get('specify_lines')
         use_total_lines = data.get('use_total_lines', False)
         total_lines = data.get('total_lines', 2000)
 
@@ -64,11 +62,8 @@ def create_app():
         if not all([file_path, search_terms, sections, temp_specify_lines]):
             return jsonify({'error': 'Missing required fields'}), 400
 
-        specify_lines = []
-        num = 0
-        while num <= len(sections):
-            specify_lines.append(temp_specify_lines)
-            num += 1
+        sections = list(map(int, sections))  # Convert sections to int here after checking for existence
+        specify_lines = [temp_specify_lines] * len(sections)
 
         # Read the file
         with open(file_path, 'r') as f:
@@ -152,6 +147,10 @@ def create_app():
 
     return app
 
+app_instance = None
+
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
+    app_instance = create_app()
+    app_instance.run(debug=True)
+else:
+    app_instance = create_app()
