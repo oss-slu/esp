@@ -6,10 +6,11 @@
 	<h3>Upload your ORCA data file </h3>
 
 	<div class="background-image"></div>
+	<div *ngIf="fileName">Selected File: {{fileName}}</div>
 
 	<div>
 		<input type="file" (change)="onFileSelected($event)" accept=".txt">
-  		<button class="Submit" (click)="onUpload()">Submit</button>
+  		<button class="Submit" (click)="onUpload()">Upload</button>
 	</div>
 
 	<div>

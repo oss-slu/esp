@@ -33,6 +33,8 @@ export class DashboardComponent implements OnInit{
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
+    this.fileName = this.selectedFile ? this.selectedFile.name : '';
+    
   }
   
     ngOnInit() {
