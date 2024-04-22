@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
+import {MatChipInputEvent} from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
 
 interface Brand {
   name: string;
@@ -28,13 +31,40 @@ export class DashboardComponent implements OnInit{
   selectedBrands: Brand[] = [];
   public fileName: string;
   selectedFile: File | null = null;
+  visible = true;
+  selectable = true;
+  removable = true;
+  Tags: string[] = [];
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    if ((value || '').trim()) {
+      this.Tags.push(value.trim());
+    }
+
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(tag: string): void {
+    const index = this.Tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.Tags.splice(index, 1);
+    }
+  }
+  
 
   constructor(private readonly http: HttpClient) { }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
     this.fileName = this.selectedFile ? this.selectedFile.name : '';
-    
   }
   
     ngOnInit() {
@@ -806,4 +836,6 @@ export class DashboardComponent implements OnInit{
       }
     );
   }
+
+  
 }
