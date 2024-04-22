@@ -1,4 +1,3 @@
-<!-- need to edit for issue #42 -->
 <div id="whole">
 	<h2>
 		Convert ORCA files to Word documents
@@ -14,11 +13,11 @@
 	</div>
 
 	<div>
-		<h3>Enter the terms you wish to search for (txt only): </h3>
+		<h3>Search terms </h3>
 		<div class="keyterms-search"> 
 			<form action="localhost:4200/" method="POST">
 			<input
-				type="text" placeholder="E.g., CARTESIAN COORDINATES"
+				type="text" placeholder="Type in or select the search criteria"
 				id="keyTerms-toSearch"
 				/>
 			</form>
@@ -28,11 +27,11 @@
 	
 
 	<div>
-		<h3>Enter how you want the lines specified: </h3>
+		<h3>Cycles </h3>
 		<div class="linesSpecified_search"> 
 		<form action="localhost:4200/" method="POST">
 		<input
-			type="text" placeholder="E.g., WHOLE, FIRST X, LAST X"
+			type="text" placeholder="ex: 1-5 or 1,2,5"
 			id="linesSpecified-toSearch"
 			/>
 		</form>
@@ -40,46 +39,37 @@
 	</div>
 
 	<div>
-		<h3>Number of sections? </h3>
-		<div class="sections_search"> 
+		<h3>Data to be extracted</h3>
+		<div class="data_search"> 
 		<form action="localhost:4200/" method="POST">
-		<input
-			type="text" placeholder="Input as number..."
-			id="sections-toSearch"
-			/>
+		<select id = "Select how much data to be extracted">
+			<option value="First">First</option>
+			<option value="Last">Last</option>
+			<option value="Whole">Whole</option>
+		</select>
 		</form>
 		</div>
 	</div>
 
 	<div>
-		<h3>Use total lines? </h3>
-		<div class="useTotalLines_search"> 
+		<h3>Lines</h3>
+		<div class="lines_search"> 
 		<form action="localhost:4200/" method="POST">
-		<input
-			type="text" placeholder="TRUE/FALSE"
-			id="useTotalLines-toSearch"
-			/>
+		<select id = "Lines">
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+		</select>
 		</form>
 		</div>
 	</div>
-
-	<div>
-		<h3>Total number of lines for output doc? </h3>
-		<div class="totalLines_search"> 
-		<form action="localhost:4200/" method="POST">
-		<input
-			type="text" placeholder="Input as number..."
-			id="totalLines-toSearch"
-			/>
-		</form>
-		</div>
-	</div>
+	
 	<div>
 		<button 
 			id="downloadButton"
 			value="Download"
 			type="button"
 			(click)="runBackend()"
-			>Convert</button>
+			>Download Output</button>
 	</div>
 </div>

@@ -761,7 +761,7 @@ export class DashboardComponent implements OnInit{
           },
       ];
   }
-
+  
   checkEmpty(){
     var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
     var inputValueFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value;
