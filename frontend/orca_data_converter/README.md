@@ -25,3 +25,10 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Client's Request for Gaussian Webpage
+
+The ORCA and Gaussian websites should be very similar or perhaps even merged if possible. 
+The types of data needed are going to be very similar, the only difference will be the formatting of the text in the output files. 
+The suggestion would be to try and duplicate the orca website with the gaussian website. 
+It might be easier to select the output file type (ORCA or Gaussian) on the same page, and then use the same code to do the text extraction.

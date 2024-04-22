@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http'; 
 import {firstValueFrom} from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +9,11 @@ import {firstValueFrom} from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  dashboard:any;
+  dashboard:string;
   
   
-  constructor(private http: HttpClient) {
-    this.dashboard = window.location.pathname
+  constructor(private http: HttpClient, private router: Router) {
+    this.dashboard = this.router.url;
   }
 
   async ngOnInit(): Promise<void> {
