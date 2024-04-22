@@ -1,23 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {SelectItem} from 'primeng/api';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { saveAs } from 'file-saver';
 
 
-interface Brand {
-  name: string;
-  search_terms: string;
-  sections: number;
-  specifyLines: string;
-  use_total_lines: boolean;
-  lines: number;
-}
 
-interface BrandsGroup {
-  groupName: string;
-  brands: Brand[];
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -25,14 +14,13 @@ interface BrandsGroup {
   styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
-export class DashboardComponent implements OnInit{
+export class DashboardComponent{
 
   fileType = 'ORCA';
   fileExtension = '.txt';
-  brandGroups: BrandsGroup[] = [];
-  selectedBrands: Brand[] = [];
   public fileName: string;
   selectedFile: File | null = null;
+
   visible = true;
   selectable = true;
   removable = true;
@@ -62,10 +50,18 @@ export class DashboardComponent implements OnInit{
   }
   
 
+  searchTerms: string = '';
+  specify_lines: string = '';
+  sections: string = '';
+  useTotalLines: boolean = false;
+  totalLines: number = 0;
+
+
   constructor(private readonly http: HttpClient) { }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
+
     this.fileName = this.selectedFile ? this.selectedFile.name : '';
   }
   
@@ -794,6 +790,13 @@ export class DashboardComponent implements OnInit{
       ];
   }
   
+
+    // console.log("file name full:", event.target.value);
+    // if(this.selectedFile){
+    //   this.fileName = this.selectedFile.name;
+    //  } // Store filename for display
+  }
+
   checkEmpty(){
     var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
     var inputValueFileName = (<HTMLInputElement>document.getElementById("fileNameInput")).value;
@@ -810,16 +813,8 @@ export class DashboardComponent implements OnInit{
     else{
         return 1;
     }
-}
-
-  runBackend(){
-    this.checkEmpty();
-    this.http.post('https://github.com/oss-slu/orca_converter/blob/main/Backend/Backend/API.py', null).subscribe();
-    console.log(this.fileName);
-    console.log(this.selectedBrands);
-    return this.selectedBrands, this.fileName;
   }
-
+ 
   onUpload() {
     if (!this.selectedFile) {
       console.error('No file selected');
@@ -832,6 +827,7 @@ export class DashboardComponent implements OnInit{
     this.http.post<any>('http://localhost:5000/upload', formData).subscribe(
       (response) => {
         console.log('File uploaded successfully:', response);
+        this.fileName = response.filename;
       },
       (error) => {
         console.error('Error uploading file:', error);
@@ -839,5 +835,43 @@ export class DashboardComponent implements OnInit{
     );
   }
 
+
+  onSubmit() {
+    if (!this.selectedFile) {
+      alert('Please select a file.');
+      return;
+    }
+    
+    const data: any ={
+      file_path: this.fileName.toString(),
+      search_terms: this.searchTerms.split(","),
+      sections: this.sections.split(','),
+      specify_lines: this.specify_lines.toString(),
+    };
+
+    if (this.useTotalLines) {
+      data.use_total_lines = this.useTotalLines;
+    }
+
+    if (this.totalLines) {
+      data.total_lines = this.totalLines;
+    }
+    
+    
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   
+    this.http.post('http://localhost:5000/find-sections', data, { headers, responseType: 'blob' })
+    .subscribe(
+      (response) => {
+        const blob = response; // Already a Blob object
+        this.downloadDocument(blob); // Call function to download
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+  downloadDocument(blob: Blob) {
+    saveAs(blob, 'output.docx'); // Specify filename
+  }
 }
