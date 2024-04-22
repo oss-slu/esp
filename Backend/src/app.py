@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
+from docx import Document
+from pathlib import Path
 import logging
 import os
+import json
 
 def create_app():
     app = Flask(__name__)
@@ -25,8 +28,7 @@ def create_app():
         if file and file.mimetype == 'text/plain':
             filename = os.path.join(uploads_dir, file.filename)
             file.save(filename)
-            print('File received successfully')
-            return {'message': 'Success'}, 200  
+            return {'message': 'Success', 'filename':filename}, 200  
         else:
             logging.error('Invalid file type')
             return {'message': 'Invalid file type'}, 400
@@ -41,6 +43,112 @@ def create_app():
             ]
         }
         return jsonify(data), 200
+
+    @app.route('/find-sections', methods=['POST'])
+    def find_sections():
+        
+        #Ensures the additional data sent is properly received. 
+        data = request.get_json(force=True)
+        
+
+        # Extracting each piece of data from the JSON object
+        file_path = data['file_path']
+        search_terms = data['search_terms']
+        sections = list(map(int, data['sections']))
+        temp_specify_lines = data['specify_lines']
+        
+        use_total_lines = data.get('use_total_lines', False)
+        total_lines = data.get('total_lines', 2000)
+
+        # Check for missing request data
+        if not all([file_path, search_terms, sections, temp_specify_lines]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        specify_lines = []
+        num = 0
+        while num <= len(sections):
+            specify_lines.append(temp_specify_lines)
+            num += 1
+
+        # Read the file
+        with open(file_path, 'r') as f:
+            Lines = f.readlines()
+
+        # Create a new document
+        document = Document()
+
+        # Iterate over the search terms and find the corresponding sections
+        for term in search_terms:
+            lineNo = 0
+            termLineNo = []
+            termsNum = 0
+            for line in Lines:
+                if term in line:
+                    termLineNo.append(lineNo)
+                    termsNum += 1
+                lineNo += 1
+
+        # Add the sections to the document
+        for i in sections:
+            section_lines = specify_lines[i-1].split()
+            start_line = termLineNo[i-1]
+            line_empty = 0
+
+            if section_lines[0].upper() == 'WHOLE' and not use_total_lines:
+                while line_empty == 0:
+                    if Lines[start_line] != "\n":
+                        section = document.add_paragraph(Lines[start_line])
+                        start_line += 1
+                    else:
+                        line_empty = 1
+
+            if section_lines[0].upper() == 'WHOLE' and use_total_lines:
+                for _ in range(total_lines - start_line + termLineNo[i-1]):
+                    section = document.add_paragraph(Lines[start_line])
+                    start_line += 1
+                    line_empty = 1
+                else:
+                    start_line += 1
+                    line_empty = 1
+
+            elif section_lines[0].upper() == 'FIRST':
+                line_count = -1
+                while line_count < int(section_lines[1]):
+                    section = document.add_paragraph(Lines[start_line])
+                    start_line += 1
+                    line_count += 1
+
+            elif section_lines[0].upper() == 'LAST':
+                line_count = -1
+                document.add_paragraph(Lines[start_line])
+                document.add_paragraph(Lines[start_line + 1])
+                while line_count < int(section_lines[1]):
+                    section = document.add_paragraph(Lines[start_line+10])
+                    start_line += 1
+                    line_count += 1
+
+            elif section_lines[0].upper() == 'SPECIFIC':
+                specific_lines = [int(l) for l in section_lines[1].split(",")]
+                document.add_paragraph(Lines[start_line])
+                for l in specific_lines:
+                    section = document.add_paragraph(Lines[start_line + l + 1])
+
+        # Convert the document to bytes and return it as a response
+        try:
+            docx_bytes = save_document_to_bytes(document)
+            response = make_response(docx_bytes)
+            response.headers.set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response.headers.set('Content-Disposition', 'attachment', filename='output.docx')
+            return response
+        except Exception as e:
+            return f'Error saving document: {e}', 500
+
+    def save_document_to_bytes(document):
+        """Save the Word document to a byte string."""
+        from io import BytesIO
+        file_stream = BytesIO()
+        document.save(file_stream)
+        return file_stream.getvalue()
 
     return app
 
