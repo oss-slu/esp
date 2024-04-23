@@ -1,14 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {SelectItem} from 'primeng/api';
-import {MatChipInputEvent} from '@angular/material/chips';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, inject } from '@angular/core';
 import { saveAs } from 'file-saver';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
+export interface SearchTerms {
+  searchTerm: string;
+}
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: '../dashboardView/dashboardView.component.html',
+  templateUrl: '../dashboard/dashboard.component.html',
   styleUrls: ['../dashboardView/dashboardView.component.css']
 })
 
@@ -18,16 +23,20 @@ export class DashboardComponent{
   fileExtension = '.txt';
   public fileName: string;
   selectedFile: File | null = null;
-  searchTerms: string = '';
+  //searchTerms: { term: string, cycles?: string[], data?: string[], lines?: string[] }[] = [];
   specify_lines: string = '';
   sections: string = '';
   useTotalLines: boolean = false;
   totalLines: number = 0;
-
-  visible = true;
-  selectable = true;
-  removable = true;
-  Tags: string[] = [];
+  searchTermDisabled: boolean = false;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  announcer = inject(LiveAnnouncer);
+  // visible = true;
+  // selectable = true;
+  // removable = true;
+  //tags: string[] = [];
+  searchTerms: SearchTerms[] = [];
 
 
   constructor(private readonly http: HttpClient) { }
@@ -40,6 +49,7 @@ export class DashboardComponent{
     //  } // Store filename for display
     this.fileName = this.selectedFile ? this.selectedFile.name : '';
   }
+  
 
   checkEmpty(){
     var inputValueFile = (<HTMLInputElement>document.getElementById("customFile")).files?.length;
@@ -79,6 +89,50 @@ export class DashboardComponent{
     );
   }
 
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    
+    if (value) {
+      this.searchTerms.push({searchTerm:value}); // Add to tags array for chip creation
+    }
+    
+    // Clear the input value after adding the chip
+     // Clear the input value
+     event.chipInput!.clear();
+  }
+
+  remove(searchTerm: SearchTerms): void {
+    const index = this.searchTerms.indexOf(searchTerm);
+    if (index >= 0) {
+      this.searchTerms.splice(index, 1);
+      this.announcer.announce(`Removed ${searchTerm}`);
+    }
+  }
+
+  trackBySearchTerm(index: number, searchTag: SearchTerms): string {
+    return searchTag.searchTerm; // Use a unique identifier for tracking, here assuming 'name' is unique
+  }
+
+  edit(searchTag: SearchTerms, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    // Remove fruit if it no longer has a name
+    if (!value) {
+      this.remove(searchTag);
+      return;
+    }
+
+    // Edit existing fruit
+    const index = this.searchTerms.indexOf(searchTag);
+    if (index >= 0) {
+      this.searchTerms[index].searchTerm = value;
+    }
+  }
+
+  // disableSearchTerm() {
+  //   this.searchTermDisabled = true;
+  // }
+
   onSubmit() {
     if (!this.selectedFile) {
       alert('Please select a file.');
@@ -87,7 +141,7 @@ export class DashboardComponent{
     
     const data: any ={
       file_path: this.fileName.toString(),
-      search_terms: this.searchTerms.split(","),
+      //search_terms: this.searchTerms.map(item => item.term),
       sections: this.sections.split(','),
       specify_lines: this.specify_lines.toString(),
     };
@@ -118,26 +172,6 @@ export class DashboardComponent{
     saveAs(blob, 'output.docx'); // Specify filename
   }
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    if ((value || '').trim()) {
-      this.Tags.push(value.trim());
-    }
-
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  remove(tag: string): void {
-    const index = this.Tags.indexOf(tag);
-
-    if (index >= 0) {
-      this.Tags.splice(index, 1);
-    }
-  }
+  // readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+ 
 }

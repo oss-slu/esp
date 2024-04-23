@@ -12,13 +12,41 @@
   		<button class="Submit" (click)="onUpload()">Upload</button>
 	</div>
 
-	 <div>
+	<div>
 		<h3>Search terms</h3>
 		<div class="keyterms-search"> 
-			<mat-form-field class="input">
+			<mat-form-field class="example-chip-list">
+				<mat-chip-grid #chipGrid aria-label="Enter Search Terms">
+					<mat-chip-row *ngFor="let searchTerm of searchTerms; trackBy: trackBySearchTerm"
+						(removed)="remove(searchTerm)"
+						
+						>
+						{{searchTerm.searchTerm}}
+						<button matChipRemove [attr.aria-label]="'remove ' + searchTerm.searchTerm">
+						<mat-icon>cancel</mat-icon>
+						</button>
+					</mat-chip-row>
+				</mat-chip-grid>
+			</mat-form-field>
+
+			<mat-form-field class="input-mat-chip">
+					<input placeholder="Type in or select the search criteria"
+					[matChipInputFor]="chipGrid"
+					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+					[matChipInputAddOnBlur]="addOnBlur"
+					(matChipInputTokenEnd)="add($event)"/>
+			</mat-form-field>
+		</div>
+	 </div>
+
+
+
+<!-- 
+
+
 				<mat-chip-list #taglist>
-					<mat-chip *ngFor="let Tag of Tags" [selectable]="selectable" [removable]="removable" (removed)="remove(Tag)">
-						{{Tag}}
+					<mat-chip *ngFor="let tag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(tag)">
+						{{tag}}
 						<mat-icon matChipRemove 
 							*ngIf="removable">cancel
 						</mat-icon>
@@ -29,10 +57,8 @@
 						(matChipInputTokenEnd)="add($event)">
 				</mat-chip-list>
 			</mat-form-field>
-			<form action="http://localhost:4200/" method="POST">
-			</form>
 		</div>
-	</div> 
+	</div>  -->
 	
 	<!-- <div>
 		<h3>Enter the terms you wish to search for (txt only): </h3>
@@ -89,7 +115,7 @@
 			id="downloadButton"
 			value="Download"
 			type="button"
-			(click)="runBackend()"
+			(click)="onSubmit()"
 			>Download Output</button>
 	</div>
 </div>

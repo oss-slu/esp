@@ -11,6 +11,8 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { MultiSelectModule } from "primeng/multiselect";
 import { Dashboard1Component } from './views/dashboard1/dashboard1.component';
 import { HttpClientModule } from "@angular/common/http";
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { HttpClientModule } from "@angular/common/http";
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
