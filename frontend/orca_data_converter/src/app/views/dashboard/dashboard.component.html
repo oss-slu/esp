@@ -17,60 +17,29 @@
 		<div class="keyterms-search"> 
 			<mat-form-field class="example-chip-list">
 				<mat-chip-grid #chipGrid aria-label="Enter Search Terms">
-					<mat-chip-row *ngFor="let searchTerm of searchTerms; trackBy: trackBySearchTerm"
-						(removed)="remove(searchTerm)"
-						
-						>
-						{{searchTerm.searchTerm}}
-						<button matChipRemove [attr.aria-label]="'remove ' + searchTerm.searchTerm">
-						<mat-icon>cancel</mat-icon>
-						</button>
-					</mat-chip-row>
+
 				</mat-chip-grid>
 			</mat-form-field>
 
 			<mat-form-field class="input-mat-chip">
 					<input placeholder="Type in or select the search criteria"
-					[matChipInputFor]="chipGrid"
-					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-					[matChipInputAddOnBlur]="addOnBlur"
-					(matChipInputTokenEnd)="add($event)"/>
+						[matChipInputFor]="chipGrid"
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+						[matChipInputAddOnBlur]="addOnBlur"
+						(matChipInputTokenEnd)="add($event)"/>
 			</mat-form-field>
+		</div>	
+
+		<div style = "margin-top: 10px;">
+			<mat-chip-list>
+				<mat-chip *ngFor = "let searchTerm of searchTerms" class = "search-term-chip">
+					{{searchTerm.searchTerm}}
+					<mat-icon matChipRemove (click) = "remove(searchTerm)">cancel</mat-icon>
+				</mat-chip>
+			</mat-chip-list>
 		</div>
 	 </div>
 
-
-
-<!-- 
-
-
-				<mat-chip-list #taglist>
-					<mat-chip *ngFor="let tag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(tag)">
-						{{tag}}
-						<mat-icon matChipRemove 
-							*ngIf="removable">cancel
-						</mat-icon>
-					</mat-chip>
-					<input type="text" placeholder="Type in or select the search criteria"
-						[matChipInputFor]="taglist"
-						[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-						(matChipInputTokenEnd)="add($event)">
-				</mat-chip-list>
-			</mat-form-field>
-		</div>
-	</div>  -->
-	
-	<!-- <div>
-		<h3>Enter the terms you wish to search for (txt only): </h3>
-		<div class="keyterms-search"> 
-			<form action="localhost:4200/" method="POST">
-			<input
-				type="text" placeholder="E.g., CARTESIAN COORDINATES"
-				id="keyTerms-toSearch"
-				/>
-			</form>
-			</div>
-	</div> -->
 
 	<div>
 		<h3>Cycles </h3>
