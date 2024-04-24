@@ -5,12 +5,12 @@
 	<h3>Upload your ORCA data file </h3>
 
 	<div class="background-image"></div>
-	<div *ngIf="fileName">Selected File: {{fileName}}</div>
 
 	<div>
 		<input type="file" (change)="onFileSelected($event)" accept=".txt">
   		<button class="Submit" (click)="onUpload()">Upload</button>
 	</div>
+	<!--<div *ngIf="fileName">Selected File: {{fileName}}</div> -->
 
 	<div>
 		<h3>Search terms</h3>
@@ -57,7 +57,7 @@
 		<h3>Data to be extracted</h3>
 		<div class="data_search"> 
 		<form action="localhost:4200/" method="POST">
-		<select id = "Select how much data to be extracted">
+		<select id = "Select how much data to be extracted" style="width: calc(200px); height: 40px; font-size: 16px;">
 			<option value="First">First</option>
 			<option value="Last">Last</option>
 			<option value="Whole">Whole</option>
@@ -70,11 +70,7 @@
 		<h3>Lines</h3>
 		<div class="lines_search"> 
 		<form action="localhost:4200/" method="POST">
-		<select id = "Lines">
-			<option value="10">10</option>
-			<option value="20">20</option>
-			<option value="30">30</option>
-		</select>
+			<input type="number" id="Lines" min="0" value="0" style="width: calc(200px); height: 40px; font-size: 16px;">
 		</form>
 		</div>
 	</div>

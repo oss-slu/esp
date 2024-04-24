@@ -21,7 +21,7 @@ export class DashboardComponent{
 
   fileType = 'ORCA';
   fileExtension = '.txt';
-  public fileName: string;
+  public fileName: string | undefined;
   selectedFile: File | null = null;
   //searchTerms: { term: string, cycles?: string[], data?: string[], lines?: string[] }[] = [];
   specify_lines: string = '';
@@ -42,12 +42,12 @@ export class DashboardComponent{
   constructor(private readonly http: HttpClient) { }
 
   onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+    //this.selectedFile = event.target.files[0];
     // console.log("file name full:", event.target.value);
     // if(this.selectedFile){
     //   this.fileName = this.selectedFile.name;
     //  } // Store filename for display
-    this.fileName = this.selectedFile ? this.selectedFile.name : '';
+    //this.fileName = this.selectedFile?.name;
   }
   
 
@@ -134,7 +134,7 @@ export class DashboardComponent{
   // }
 
   onSubmit() {
-    if (!this.selectedFile) {
+    if (!this.selectedFile || !this.fileName) {
       alert('Please select a file.');
       return;
     }
@@ -173,5 +173,6 @@ export class DashboardComponent{
   }
 
   // readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  
  
 }
