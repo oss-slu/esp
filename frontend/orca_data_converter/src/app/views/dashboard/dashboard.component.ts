@@ -42,12 +42,12 @@ export class DashboardComponent{
   constructor(private readonly http: HttpClient) { }
 
   onFileSelected(event: any) {
-    //this.selectedFile = event.target.files[0];
-    // console.log("file name full:", event.target.value);
-    // if(this.selectedFile){
-    //   this.fileName = this.selectedFile.name;
-    //  } // Store filename for display
-    //this.fileName = this.selectedFile?.name;
+    this.selectedFile = event.target.files[0];
+    console.log("file name full:", event.target.value);
+    if(this.selectedFile){
+      this.fileName = this.selectedFile.name;
+     } // Store filename for display
+    this.fileName = this.selectedFile?.name;
   }
   
 
