@@ -10,7 +10,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = os.path.join(current_dir, '..', 'src')
 
 #Add file_path directory
-file_path = os.path.abspath(os.path.join(current_dir, '..', '..', 'inputs', 'working', 'Styrene-ad1.txt'))
+file_path = os.path.abspath(os.path.join(current_dir, '..', '..', 'test-data', 'orca-files', 'Styrene-ad1.txt'))
 
 #Add this path to sys.path to allow script to work universally
 sys.path.insert(0, project_dir)
