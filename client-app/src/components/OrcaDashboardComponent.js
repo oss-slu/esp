@@ -159,3 +159,5 @@ const OrcaDashboardComponent = () => {
 };
 
 export default OrcaDashboardComponent;
+
+//have to edit this file in order to solve issue #51
