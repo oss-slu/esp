@@ -130,3 +130,4 @@ dmypy.json
 
 #other files
 *.DS_Store
+/node_modules
