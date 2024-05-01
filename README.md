@@ -10,31 +10,25 @@ Orca Data Converter is a open-source quantum chemistry software package that can
 
 ## How to Run in Mac
 For Backend (directory: Backend): 
-<br/>
 <code>
 python3 -m venv venv 
 </code> 
-<br/>
 <code>
 source venv/bin/activate
 </code>
-<br/>
 <code>
 pip install -r requirements.txt
 </code>
 
 (Change directory to src):
-<br/>
 <code>
 python3 app.py
 </code>
 
 For Frontend (directory: client-app):
-<br/>
 <code>
 npm install 
 </code>
-<br/>
 <code>
 npm start 
 </code>
