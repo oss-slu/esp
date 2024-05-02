@@ -153,6 +153,7 @@ const OrcaDashboardComponent = () => {
         <button className="btn btn-primary" onClick={onSubmit}>
           Download Output
         </button>
+        <button className="previewButton"> Preview File</button>
       </div>
     </div>
   );
