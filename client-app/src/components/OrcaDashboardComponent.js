@@ -150,7 +150,7 @@ const OrcaDashboardComponent = () => {
             }}
           />
         </div>
-        <button className="btn btn-primary" onClick={onSubmit}>
+        <button className="btn btn-primary" onClick={onSubmit} disabled={!searchTerms}>
           Download Output
         </button>
       </div>
