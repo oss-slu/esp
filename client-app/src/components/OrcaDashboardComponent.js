@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
-import '../styles/DashboardComponent.css'
+import '../styles/DashboardComponent.css';
 
 const OrcaDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('');
-  const [searchTerms, setSearchTerms] = useState('');
-  const [specifyLines, setSpecifyLines] = useState('');
-  const [sections, setSections] = useState('');
+  const [searchTerms, setSearchTerms] = useState([]);
+  const [specifyLines, setSpecifyLines] = useState([]);
+  const [sections, setSections] = useState([]);
   const [useTotalLines, setUseTotalLines] = useState('');
   const [totalLines, setTotalLines] = useState('');
 
@@ -44,9 +44,9 @@ const OrcaDashboardComponent = () => {
 
     const data = {
       file_path: fileName.toString(),
-      search_terms: searchTerms.split(','),
-      sections: sections.split(','),
-      specify_lines: specifyLines.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: specifyLines.join(','),
     };
 
     if (useTotalLines) {
@@ -74,6 +74,25 @@ const OrcaDashboardComponent = () => {
     saveAs(blob, 'output.docx');
   };
 
+  const handleKeyPress = (e, setterFunc) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const term = e.target.value.trim();
+      if (term) {
+        setterFunc((prevTerms) => [...prevTerms, term.toUpperCase()]);
+        e.target.value = '';
+      }
+    }
+  };
+
+  const removeTag = (index, setterFunc) => {
+    setterFunc((prevTerms) => {
+      const updatedTerms = [...prevTerms];
+      updatedTerms.splice(index, 1);
+      return updatedTerms;
+    });
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -95,62 +114,129 @@ const OrcaDashboardComponent = () => {
 
         <div className="mb-3 text-start">
           <span>Enter the terms you wish to search for (txt only):</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="E.g., CARTESIAN COORDINATES"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value.toUpperCase())}
-          />
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="E.g., CARTESIAN COORDINATES"
+              onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
+            />
+            {searchTerms.map((term, index) => (
+              <span
+                key={index}
+                className="badge bg-secondary me-2 mb-2"
+                onClick={() => removeTag(index, setSearchTerms)}
+              >
+                {term}
+                <button
+                  type="button"
+                  className="btn-close ms-1"
+                  aria-label="Remove"
+                ></button>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="mb-3 text-start">
           <span>Enter how you want the lines specified:</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="E.g., WHOLE, FIRST X, LAST X"
-            value={specifyLines}
-            onChange={(e) => setSpecifyLines(e.target.value.toUpperCase())}
-          />
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="E.g., WHOLE, FIRST X, LAST X"
+              onKeyPress={(e) => handleKeyPress(e, setSpecifyLines)}
+            />
+            {specifyLines.map((line, index) => (
+              <span
+                key={index}
+                className="badge bg-secondary me-2 mb-2"
+                onClick={() => removeTag(index, setSpecifyLines)}
+              >
+                {line}
+                <button
+                  type="button"
+                  className="btn-close ms-1"
+                  aria-label="Remove"
+                ></button>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Input as number..."
-            value={sections}
-            onChange={(e) => setSections(e.target.value)}
-          />
+          <span>Number of sections:</span>
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Input as number..."
+              onKeyPress={(e) => handleKeyPress(e, setSections)}
+            />
+            {sections.map((section, index) => (
+              <span
+                key={index}
+                className="badge bg-secondary me-2 mb-2"
+                onClick={() => removeTag(index, setSections)}
+              >
+                {section}
+                <button
+                  type="button"
+                  className="btn-close ms-1"
+                  aria-label="Remove"
+                ></button>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="mb-3 text-start">
-          <span>Use total lines?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="TRUE/FALSE"
-            value={useTotalLines}
-            onChange={(e) => setUseTotalLines(e.target.value.toUpperCase())}
-          />
+          <span>Use total lines:</span>
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="TRUE/FALSE"
+              onKeyPress={(e) => handleKeyPress(e, setUseTotalLines)}
+            />
+            {useTotalLines && (
+              <span className="badge bg-secondary me-2 mb-2">
+                {useTotalLines}
+                <button
+                  type="button"
+                  className="btn-close ms-1"
+                  onClick={() => setUseTotalLines('')}
+                  aria-label="Remove"
+                ></button>
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="mb-3 text-start">
-          <span>Total number of lines for output doc?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Input as number..."
-            value={totalLines}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              setTotalLines(inputValue === '' ? '' : parseInt(inputValue));
-            }}
-          />
+          <span>Total number of lines for output doc:</span>
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Input as number..."
+              onKeyPress={(e) => handleKeyPress(e, setTotalLines)}
+            />
+            {totalLines && (
+              <span className="badge bg-secondary me-2 mb-2">
+                {totalLines}
+                <button
+                  type="button"
+                  className="btn-close ms-1"
+                  onClick={() => setTotalLines('')}
+                  aria-label="Remove"
+                ></button>
+              </span>
+            )}
+          </div>
         </div>
-        <button className="btn btn-primary" onClick={onSubmit} disabled={!searchTerms}>
+
+        <button className="btn btn-primary" onClick={onSubmit} disabled={!searchTerms.length}>
           Download Output
         </button>
       </div>
@@ -160,4 +246,3 @@ const OrcaDashboardComponent = () => {
 
 export default OrcaDashboardComponent;
 
-//have to edit this file in order to solve issue #51
