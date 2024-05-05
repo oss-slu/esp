@@ -11,9 +11,12 @@ const OrcaDashboardComponent = () => {
   const [sections, setSections] = useState([]);
   const [useTotalLines, setUseTotalLines] = useState([]);
   const [totalLines, setTotalLines] = useState([]);
+  const [showCard, setShowCard] = useState(false);
 
   const onFileSelected = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setSelectedFile(selectedFile);
+    setFileName(selectedFile.name.split('/').pop()); 
   };
 
   const onUpload = () => {
@@ -26,14 +29,15 @@ const OrcaDashboardComponent = () => {
     formData.append('file', selectedFile);
 
     axios
-      .post('http://localhost:5000/upload', formData)
-      .then((response) => {
-        console.log('File uploaded successfully:', response);
-        setFileName(response.data.filename);
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error);
-      });
+    .post('http://localhost:5000/upload', formData)
+    .then((response) => {
+      console.log('File uploaded successfully:', response);
+      const uploadedFileName = response.data.filename.split('/').pop();
+      setFileName(uploadedFileName); 
+    })
+    .catch((error) => {
+      console.error('Error uploading file:', error);
+    });
   };
 
   const onSubmit = () => {
@@ -79,7 +83,7 @@ const OrcaDashboardComponent = () => {
       e.preventDefault();
       const value = e.target.value.trim();
       if (value) {
-        const values = value.split(','); // Split only by comma
+        const values = value.split(','); 
         setterFunc(prevValue => [...prevValue, ...values.map(val => val.trim().toUpperCase())]);
         e.target.value = '';
       }
@@ -96,10 +100,8 @@ const OrcaDashboardComponent = () => {
     });
   };
 
-  const [sameCriteria, setSameCriteria] = useState(false);
-
   const handleSameCriteriaChange = (e) => {
-    setSameCriteria(e.target.checked);
+    setShowCard(e.target.checked); 
   };
 
   return (
@@ -151,7 +153,7 @@ const OrcaDashboardComponent = () => {
               className="form-check-input"
               type="checkbox"
               id="sameCriteriaCheckbox"
-              checked={sameCriteria}
+              checked={showCard}
               onChange={handleSameCriteriaChange}
             />
             <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
@@ -160,6 +162,20 @@ const OrcaDashboardComponent = () => {
           </div>
         )}
       </div>
+
+      {showCard && (
+        <div className="card mt-3">
+        <div className="card-body">
+          <h5 className="card-title">Search Query</h5>
+          <p className="card-text">File: {fileName}</p>
+          <p className="card-text">Search Terms: {searchTerms.join(', ')}</p>
+          <p className="card-text">Lines Specified: {specifyLines.join(', ')}</p>
+          <p className="card-text">Sections: {sections.join(', ')}</p>
+          <p className="card-text">Use Total Lines: {useTotalLines.join(', ')}</p>
+          <p className="card-text">Total Output Lines: {totalLines.join(', ')}</p>
+        </div>
+      </div>
+    )}
 
         <div className="mb-3 text-start">
           <span>Enter how you want the lines specified:</span>
