@@ -9,8 +9,8 @@ const OrcaDashboardComponent = () => {
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
   const [sections, setSections] = useState([]);
-  const [useTotalLines, setUseTotalLines] = useState('');
-  const [totalLines, setTotalLines] = useState('');
+  const [useTotalLines, setUseTotalLines] = useState([]);
+  const [totalLines, setTotalLines] = useState([]);
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -77,13 +77,17 @@ const OrcaDashboardComponent = () => {
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      const term = e.target.value.trim();
-      if (term) {
-        setterFunc((prevTerms) => [...prevTerms, term.toUpperCase()]);
+      const value = e.target.value.trim();
+      if (value) {
+        setterFunc((prevValue) => {
+          const values = value.split(/[,\s]+/); // Split by comma or space
+          return [...prevValue, ...values.map(val => val.toUpperCase())];
+        });
         e.target.value = '';
       }
     }
   };
+  
 
   const removeTag = (index, setterFunc) => {
     setterFunc((prevTerms) => {
@@ -199,17 +203,20 @@ const OrcaDashboardComponent = () => {
               placeholder="TRUE/FALSE"
               onKeyPress={(e) => handleKeyPress(e, setUseTotalLines)}
             />
-            {useTotalLines && (
-              <span className="badge bg-secondary me-2 mb-2">
-                {useTotalLines}
+            {useTotalLines.map((line, index) => (
+              <span
+                key={index}
+                className="badge bg-secondary me-2 mb-2"
+                onClick={() => removeTag(index, setUseTotalLines)}
+              >
+                {line}
                 <button
                   type="button"
                   className="btn-close ms-1"
-                  onClick={() => setUseTotalLines('')}
                   aria-label="Remove"
                 ></button>
               </span>
-            )}
+            ))}
           </div>
         </div>
 
@@ -222,17 +229,20 @@ const OrcaDashboardComponent = () => {
               placeholder="Input as number..."
               onKeyPress={(e) => handleKeyPress(e, setTotalLines)}
             />
-            {totalLines && (
-              <span className="badge bg-secondary me-2 mb-2">
-                {totalLines}
+            {totalLines.map((line, index) => (
+              <span
+                key={index}
+                className="badge bg-secondary me-2 mb-2"
+                onClick={() => removeTag(index, setTotalLines)}
+              >
+                {line}
                 <button
                   type="button"
                   className="btn-close ms-1"
-                  onClick={() => setTotalLines('')}
                   aria-label="Remove"
                 ></button>
               </span>
-            )}
+            ))}
           </div>
         </div>
 
