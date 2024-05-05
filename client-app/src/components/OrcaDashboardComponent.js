@@ -79,14 +79,13 @@ const OrcaDashboardComponent = () => {
       e.preventDefault();
       const value = e.target.value.trim();
       if (value) {
-        setterFunc((prevValue) => {
-          const values = value.split(/[,\s]+/); // Split by comma or space
-          return [...prevValue, ...values.map(val => val.toUpperCase())];
-        });
+        const values = value.split(','); // Split only by comma
+        setterFunc(prevValue => [...prevValue, ...values.map(val => val.trim().toUpperCase())]);
         e.target.value = '';
       }
     }
   };
+  
   
 
   const removeTag = (index, setterFunc) => {
@@ -246,7 +245,18 @@ const OrcaDashboardComponent = () => {
           </div>
         </div>
 
-        <button className="btn btn-primary" onClick={onSubmit} disabled={!searchTerms.length}>
+        <button 
+          className="btn btn-primary" 
+          onClick={onSubmit} 
+          disabled={
+            !searchTerms.length ||
+            !specifyLines.length ||
+            !sections.length ||
+            !useTotalLines.length ||
+            !totalLines.length ||
+            !selectedFile
+          }
+        >
           Download Output
         </button>
       </div>
