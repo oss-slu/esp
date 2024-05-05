@@ -96,6 +96,12 @@ const OrcaDashboardComponent = () => {
     });
   };
 
+  const [sameCriteria, setSameCriteria] = useState(false);
+
+  const handleSameCriteriaChange = (e) => {
+    setSameCriteria(e.target.checked);
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -116,30 +122,44 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
-          <div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="E.g., CARTESIAN COORDINATES"
-              onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
-            />
-            {searchTerms.map((term, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSearchTerms)}
-              >
-                {term}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
-              </span>
-            ))}
-          </div>
+        <span>Enter the terms you wish to search for (txt only):</span>
+        <div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="E.g., CARTESIAN COORDINATES"
+            onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
+          />
+          {searchTerms.map((term, index) => (
+            <span
+              key={index}
+              className="badge bg-secondary me-2 mb-2"
+              onClick={() => removeTag(index, setSearchTerms)}
+            >
+              {term}
+              <button
+                type="button"
+                className="btn-close ms-1"
+                aria-label="Remove"
+              ></button>
+            </span>
+          ))}
         </div>
+        {searchTerms.length > 1 && ( // Conditional rendering for the checkbox
+          <div className="form-check mt-2">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="sameCriteriaCheckbox"
+              checked={sameCriteria}
+              onChange={handleSameCriteriaChange}
+            />
+            <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
+              Is the search criteria same for all search terms
+            </label>
+          </div>
+        )}
+      </div>
 
         <div className="mb-3 text-start">
           <span>Enter how you want the lines specified:</span>
