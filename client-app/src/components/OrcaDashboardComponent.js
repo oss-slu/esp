@@ -147,7 +147,7 @@ const OrcaDashboardComponent = () => {
             </span>
           ))}
         </div>
-        {searchTerms.length > 1 && ( // Conditional rendering for the checkbox
+        {searchTerms.length > 1 && ( 
           <div className="form-check mt-2">
             <input
               className="form-check-input"
@@ -163,125 +163,71 @@ const OrcaDashboardComponent = () => {
         )}
       </div>
 
+      
+      <div className="mb-3 text-start">
+        <span>Enter how you want the lines specified:</span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="E.g., WHOLE, FIRST X, LAST X"
+          value={specifyLines.join(' ')} 
+          onChange={(e) => setSpecifyLines(e.target.value.split(/,\s*|\s+/).map(val => val.trim().toUpperCase()))} 
+        />
+      </div>
+
+      <div className="mb-3 text-start">
+        <span>Number of sections?</span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Input as number..."
+          value={sections.join(', ')} 
+          onChange={(e) => setSections(e.target.value.split(',').map(val => val.trim()))} 
+        />
+      </div>
+
+      <div className="mb-3 text-start">
+        <span>Use total lines?</span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="TRUE/FALSE"
+          value={useTotalLines.join(', ')} 
+          onChange={(e) => setUseTotalLines(e.target.value.split(',').map(val => val.trim().toUpperCase()))} 
+        />
+      </div>
+
+      <div className="mb-3 text-start">
+        <span>Total number of lines for output doc?</span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Input as number..."
+          value={totalLines.join(', ')} 
+          onChange={(e) => setTotalLines(e.target.value.split(',').map(val => val.trim()))}
+        />
+      </div>
+
+      <button className="btn btn-primary" onClick={onSubmit}>
+          Submit Search Query 
+      </button>
+
       {showCard && (
         <div className="card mt-3">
-        <div className="card-body">
-          <h5 className="card-title">Search Query</h5>
-          <p className="card-text">File: {fileName}</p>
-          <p className="card-text">Search Terms: {searchTerms.join(', ')}</p>
-          <p className="card-text">Lines Specified: {specifyLines.join(', ')}</p>
-          <p className="card-text">Sections: {sections.join(', ')}</p>
-          <p className="card-text">Use Total Lines: {useTotalLines.join(', ')}</p>
-          <p className="card-text">Total Output Lines: {totalLines.join(', ')}</p>
-        </div>
-      </div>
-    )}
-
-        <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
-          <div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="E.g., WHOLE, FIRST X, LAST X"
-              onKeyPress={(e) => handleKeyPress(e, setSpecifyLines)}
-            />
-            {specifyLines.map((line, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSpecifyLines)}
-              >
-                {line}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
-              </span>
-            ))}
+          <div className="card-body">
+            <h5 className="card-title">Search Query</h5>
+            <p className="card-text">Search Terms: {searchTerms.join(', ')}</p>
+            <p className="card-text">Lines Specified: {specifyLines.join(', ')}</p>
+            <p className="card-text">Sections: {sections.join(', ')}</p>
+            <div className="d-flex justify-content-end">
+              <button className="btn btn-primary me-2">Edit</button>
+              <button className="btn btn-danger">Delete</button>
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="mb-3 text-start">
-          <span>Number of sections:</span>
-          <div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Input as number..."
-              onKeyPress={(e) => handleKeyPress(e, setSections)}
-            />
-            {sections.map((section, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSections)}
-              >
-                {section}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-3 text-start">
-          <span>Use total lines:</span>
-          <div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="TRUE/FALSE"
-              onKeyPress={(e) => handleKeyPress(e, setUseTotalLines)}
-            />
-            {useTotalLines.map((line, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setUseTotalLines)}
-              >
-                {line}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-3 text-start">
-          <span>Total number of lines for output doc:</span>
-          <div>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Input as number..."
-              onKeyPress={(e) => handleKeyPress(e, setTotalLines)}
-            />
-            {totalLines.map((line, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setTotalLines)}
-              >
-                {line}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <button 
+      <button 
           className="btn btn-primary" 
           onClick={onSubmit} 
           disabled={
@@ -295,6 +241,7 @@ const OrcaDashboardComponent = () => {
         >
           Download Output
         </button>
+        
       </div>
     </div>
   );
