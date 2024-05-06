@@ -11,6 +11,7 @@ const OrcaDashboardComponent = () => {
   const [sections, setSections] = useState('');
   const [useTotalLines, setUseTotalLines] = useState('');
   const [totalLines, setTotalLines] = useState('');
+  const [previewContent, setPreviewContent] = useState('');
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -72,6 +73,38 @@ const OrcaDashboardComponent = () => {
 
   const downloadDocument = (blob) => {
     saveAs(blob, 'output.docx');
+  };
+
+  const fetchDocumentPreview = () => {
+    if (!selectedFile) {
+      alert('Please select a file.');
+      return;
+    }
+    
+    const data = {
+      file_path: fileName.toString(),
+      search_terms: searchTerms.split(','),
+      sections: sections.split(','),
+      specify_lines: specifyLines.toString(),
+    };
+
+    if (useTotalLines) {
+      data.use_total_lines = useTotalLines;
+    }
+
+    if (totalLines) {
+      data.total_lines = totalLines;
+    }
+  
+    axios
+      .post('http://localhost:5000/preview', data)
+      .then((response) => {
+        const documentContent = response.data.document_content;
+        setPreviewContent(documentContent);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   return (
@@ -150,9 +183,23 @@ const OrcaDashboardComponent = () => {
             }}
           />
         </div>
-        <button className="btn btn-primary" onClick={onSubmit}>
-          Download Output
+        <button className="btn btn-primary" onClick={fetchDocumentPreview}>
+          Preview Output
         </button>
+        <div className="buttonSpacing">
+          <button className="btn btn-primary" onClick={onSubmit}>
+            Download Output
+          </button>
+        </div>
+
+        {previewContent && (
+          <div className="document-preview">
+            <h3>Document Preview</h3>
+            <div className="preview-box">
+            <pre>{previewContent}</pre>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
