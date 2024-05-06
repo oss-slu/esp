@@ -183,12 +183,16 @@ const GaussianDashboardComponent = () => {
             }}
           />
         </div>
-        <button className="btn btn-primary" onClick={onSubmit}>
-          Download Output
-        </button>
         <button className="btn btn-primary" onClick={fetchDocumentPreview}>
-          Preview File
+          Preview Output
         </button>
+        <div className="buttonSpacing">
+          <button className="btn btn-primary" onClick={onSubmit}>
+            Download Output
+          </button>
+        </div>
+        
+        
 
         {previewContent && (
           <div className="document-preview">

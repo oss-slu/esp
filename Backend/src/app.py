@@ -13,6 +13,84 @@ def create_app():
     uploads_dir = os.path.join(app.instance_path, 'uploads')
     os.makedirs(uploads_dir, exist_ok=True)
 
+    @app.route('/preview', methods=['POST'])
+    def preview_document():
+        data = request.get_json(force=True)
+
+        file_path = data.get('file_path')
+        search_terms = data.get('search_terms')
+        sections = data.get('sections')
+        temp_specify_lines = data.get('specify_lines')
+        use_total_lines = data.get('use_total_lines', False)
+        total_lines = data.get('total_lines', 2000)
+
+        if not all([file_path, search_terms, sections, temp_specify_lines]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        sections = list(map(int, sections))
+        specify_lines = [temp_specify_lines] * len(sections)
+
+        with open(file_path, 'r') as f:
+            Lines = f.readlines()
+
+        document_content = ""
+
+        for term in search_terms:
+            lineNo = 0
+            termLineNo = []
+            termsNum = 0
+            for line in Lines:
+                if term in line:
+                    termLineNo.append(lineNo)
+                    termsNum += 1
+                lineNo += 1
+
+        for i in sections:
+            section_lines = specify_lines[i-1].split()
+            start_line = termLineNo[i-1]
+            line_empty = 0
+
+            if section_lines[0].upper() == 'WHOLE' and not use_total_lines:
+                while line_empty == 0:
+                    if Lines[start_line] != "\n":
+                        document_content += Lines[start_line]
+                        start_line += 1
+                    else:
+                        line_empty = 1
+
+            if section_lines[0].upper() == 'WHOLE' and use_total_lines:
+                for _ in range(total_lines - start_line + termLineNo[i-1]):
+                    document_content += Lines[start_line]
+                    start_line += 1
+                    line_empty = 1
+                else:
+                    start_line += 1
+                    line_empty = 1
+
+            elif section_lines[0].upper() == 'FIRST':
+                line_count = 0
+                while line_count < int(section_lines[1]):
+                    document_content += Lines[start_line]
+                    start_line += 1
+                    line_count += 1
+
+            elif section_lines[0].upper() == 'LAST':
+                line_count = 0
+                document_content += Lines[start_line]
+                document_content += Lines[start_line + 1]
+                while line_count < int(section_lines[1]) - 1:
+                    document_content += Lines[start_line+10]
+                    start_line += 1
+                    line_count += 1
+
+            elif section_lines[0].upper() == 'SPECIFIC':
+                specific_lines = [int(l) for l in section_lines[1].split(",")]
+                document_content += Lines[start_line]
+                for l in specific_lines:
+                    document_content += Lines[start_line + l + 1]
+
+        return jsonify({'document_content': document_content}), 200
+
     @app.route('/upload', methods=['POST'])
     def file_upload():
         if 'file' not in request.files:
@@ -92,14 +170,14 @@ def create_app():
             if section_lines[0].upper() == 'WHOLE' and not use_total_lines:
                 while line_empty == 0:
                     if Lines[start_line] != "\n":
-                        section = document.add_paragraph(Lines[start_line])
+                        section = document.add_paragraph(Lines[start_line].strip())
                         start_line += 1
                     else:
                         line_empty = 1
 
             if section_lines[0].upper() == 'WHOLE' and use_total_lines:
                 for _ in range(total_lines - start_line + termLineNo[i-1]):
-                    section = document.add_paragraph(Lines[start_line])
+                    section = document.add_paragraph(Lines[start_line].strip())
                     start_line += 1
                     line_empty = 1
                 else:
@@ -109,22 +187,22 @@ def create_app():
             elif section_lines[0].upper() == 'FIRST':
                 line_count = -1
                 while line_count < int(section_lines[1]):
-                    section = document.add_paragraph(Lines[start_line])
+                    section = document.add_paragraph(Lines[start_line].strip())
                     start_line += 1
                     line_count += 1
 
             elif section_lines[0].upper() == 'LAST':
-                line_count = -1
+                line_count = 0
                 document.add_paragraph(Lines[start_line])
                 document.add_paragraph(Lines[start_line + 1])
-                while line_count < int(section_lines[1]):
-                    section = document.add_paragraph(Lines[start_line+10])
+                while line_count < int(section_lines[1]) - 1:
+                    section = document.add_paragraph(Lines[start_line+10].strip())
                     start_line += 1
                     line_count += 1
 
             elif section_lines[0].upper() == 'SPECIFIC':
                 specific_lines = [int(l) for l in section_lines[1].split(",")]
-                document.add_paragraph(Lines[start_line])
+                document.add_paragraph(Lines[start_line].strip())
                 for l in specific_lines:
                     section = document.add_paragraph(Lines[start_line + l + 1])
 

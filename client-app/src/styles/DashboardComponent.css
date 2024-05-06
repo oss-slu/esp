@@ -37,6 +37,10 @@ span{
     word-wrap: break-word;
   }
 
+  .buttonSpacing {
+    padding: 10px;
+  }
+
   
 /* :host ::ng-deep .custom-ms 
         .p-multiselect-label {
