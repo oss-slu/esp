@@ -7,6 +7,11 @@ import { useLocation } from 'react-router-dom';
 function NavBarOrca() {
   const location = useLocation();
   const [activeKey, setActiveKey] = useState(location.pathname);
+
+  const handleSelect = (selectedKey) => {
+    setActiveKey(selectedKey);
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg" sticky="top" data-bs-theme="dark" className="bg-body-tertiary">
       <Container>
@@ -24,8 +29,9 @@ function NavBarOrca() {
           <Nav className="me-auto">
             
           </Nav>
-          <Nav activeKey={activeKey} onSelect={(selectedKey) => setActiveKey(selectedKey)}>
+          <Nav activeKey={activeKey} onSelect={handleSelect}>
             <Nav.Link href="/orca">ORCA Log Extraction</Nav.Link>
+            {/* <Nav.Link href="/temp"></Nav.Link>  */}
             <Nav.Link href="/gaussian">Gaussian Log Extraction</Nav.Link>
             <Nav.Link href="/about">About</Nav.Link>
           </Nav>
