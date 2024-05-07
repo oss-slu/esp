@@ -99,14 +99,16 @@ const TempPage = () => {
     });
   };
 
+  const [sameCriteria, setSameCriteria] = useState(false);
+
   const handleSameCriteriaChange = (e) => {
-    setShowCard(e.target.checked); 
+    setSameCriteria(e.target.checked);
   };
 
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
-        <h2 className="mb-4">Extract data from TEMP files to Word documents</h2>
+        <h2 className="mb-4">Extract data from Same Search ORCA page files to Word documents</h2>
         <div className="mb-3 text-start">
           <span>Upload your ORCA data file</span>
           <div className="input-group">
@@ -152,7 +154,7 @@ const TempPage = () => {
                 className="form-check-input"
                 type="checkbox"
                 id="sameCriteriaCheckbox"
-                checked={showCard}
+                checked={sameCriteria}
                 onChange={handleSameCriteriaChange}
               />
               <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
@@ -206,9 +208,11 @@ const TempPage = () => {
           />
         </div>
 
-        <button className="btn btn-primary" onClick={onSubmit}>
+        <div className="button-container">
+          <button className="btn btn-primary" onClick={() => { onSubmit(); setShowCard(true); }}>
             Submit Search Query 
-        </button>
+          </button>
+        </div>
 
         {showCard && (
           <div className="card mt-3">
@@ -225,20 +229,20 @@ const TempPage = () => {
           </div>
         )}
 
-        <button 
-          className="btn btn-primary" 
-          onClick={onSubmit} 
-          disabled={
-            !searchTerms.length ||
-            !specifyLines.length ||
-            !sections.length ||
-            !useTotalLines.length ||
-            !totalLines.length ||
-            !selectedFile
-          }
-        >
-          Download Output
-        </button>
+        <div className="button-container">
+          <button 
+            className="btn btn-primary" 
+            onClick={onSubmit} 
+            disabled={
+              !searchTerms.length ||
+              !specifyLines.length ||
+              !sections.length ||
+              !selectedFile
+            }
+          >
+            Download Output
+          </button>
+        </div>
 
       </div>
     </div>
@@ -246,3 +250,4 @@ const TempPage = () => {
 };
 
 export default TempPage;
+

@@ -12,6 +12,10 @@ span{
     color: #fff;
     border-bottom: 1px solid #fff;
   }
+  
+  .button-container {
+    margin-bottom: 10px; 
+  }
 
   
 /* :host ::ng-deep .custom-ms 
