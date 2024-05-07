@@ -19,6 +19,10 @@ const TempPage = () => {
     setFileName(selectedFile.name.split('/').pop()); 
   };
 
+  const isSearchQueryEnabled = () => {
+    return searchTerms.length && specifyLines.length && sections.length;
+  };
+
   const onUpload = () => {
     if (!selectedFile) {
       console.error('No file selected');
@@ -68,11 +72,29 @@ const TempPage = () => {
       .then((response) => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
-        setShowCard(true); // Set showCard to true after successful submission
+        // setShowCard(true); // Set showCard to true after successful submission
       })
       .catch((error) => {
         console.error('Error:', error);
       });
+  };
+
+  const onSearchQuerySubmit = () => {
+    setShowCard(false)
+    if (!selectedFile) {
+      alert('Please select a file.');
+      return;
+    }
+    else{
+      setShowCard(true)
+    }
+    const search_query_data = {
+      file_path: fileName.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: specifyLines.join(','),
+    };
+
   };
 
   const downloadDocument = (blob) => {
@@ -108,7 +130,7 @@ const TempPage = () => {
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
-        <h2 className="mb-4">Extract data from Same Search ORCA page files to Word documents</h2>
+        <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
           <span>Upload your ORCA data file</span>
           <div className="input-group">
@@ -209,7 +231,11 @@ const TempPage = () => {
         </div>
 
         <div className="button-container">
-          <button className="btn btn-primary" onClick={() => { onSubmit(); setShowCard(true); }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => onSearchQuerySubmit()}
+            disabled={!isSearchQueryEnabled()}
+          >
             Submit Search Query 
           </button>
         </div>

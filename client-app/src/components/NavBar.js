@@ -31,7 +31,7 @@ function NavBarOrca() {
           </Nav>
           <Nav activeKey={activeKey} onSelect={handleSelect}>
             <Nav.Link href="/orca">ORCA Log Extraction</Nav.Link>
-            <Nav.Link href="/temp"></Nav.Link> 
+            {/* <Nav.Link href="/temp"></Nav.Link>  */}
             <Nav.Link href="/gaussian">Gaussian Log Extraction</Nav.Link>
             <Nav.Link href="/about">About</Nav.Link>
           </Nav>
