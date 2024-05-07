@@ -3,7 +3,7 @@ import axios from 'axios';
 import { saveAs } from 'file-saver';
 import '../styles/TempComponent.css';
 
-const TempPage = () => {
+const DraftOrcaDashboard = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [searchTerms, setSearchTerms] = useState([]);
@@ -275,5 +275,5 @@ const TempPage = () => {
   );
 };
 
-export default TempPage;
+export default DraftOrcaDashboard;
 
