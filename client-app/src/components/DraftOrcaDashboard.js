@@ -33,15 +33,16 @@ const DraftOrcaDashboard = () => {
     formData.append('file', selectedFile);
 
     axios
-    .post('http://localhost:5000/upload', formData)
-    .then((response) => {
-      console.log('File uploaded successfully:', response);
-      const uploadedFileName = response.data.filename.split('/').pop();
-      setFileName(uploadedFileName); 
-    })
-    .catch((error) => {
-      console.error('Error uploading file:', error);
-    });
+      .post('http://localhost:5001/upload', formData)
+      .then((response) => {
+        console.log('File uploaded successfully:', response);
+        const uploadedFileName = response.data.filename.split('/').pop();
+        setFileName(uploadedFileName);
+        setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error);
+      });
   };
 
   const onSubmit = () => {
@@ -66,7 +67,7 @@ const DraftOrcaDashboard = () => {
     }
 
     axios
-      .post('http://localhost:5000/find-sections', data, {
+      .post('http://localhost:5001/find-sections', data, {
         responseType: 'blob',
       })
       .then((response) => {
