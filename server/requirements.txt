@@ -1,0 +1,6 @@
+flask
+flask-cors
+pytest
+coverage
+python-docx
+pytest

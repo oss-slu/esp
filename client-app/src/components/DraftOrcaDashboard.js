@@ -38,7 +38,6 @@ const DraftOrcaDashboard = () => {
         console.log('File uploaded successfully:', response);
         const uploadedFileName = response.data.filename.split('/').pop();
         setFileName(uploadedFileName);
-        setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
       })
       .catch((error) => {
         console.error('Error uploading file:', error);
