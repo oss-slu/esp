@@ -20,4 +20,4 @@ jobs:
        
         - name: Test with pytest
           run: |
-            cd Backend && coverage run -m pytest  -v -s
+            cd server && coverage run -m pytest  -v -s
