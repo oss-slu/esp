@@ -15,6 +15,13 @@ const DraftOrcaDashboard = () => {
   const isSearchTermsEmpty = searchTerms.length === 0;
   const isSpecifyLinesEmpty = specifyLines.length === 0;
   const isSectionsEmpty = sections.length === 0;
+  const [sameCriteria, setSameCriteria] = useState(false);
+
+  const [searchQueryData, setSearchQueryData] = useState({
+    searchTerms: [],
+    specifyLines: [],
+    sections: [],
+  });
   
 
   const onFileSelected = (event) => {
@@ -125,14 +132,12 @@ const DraftOrcaDashboard = () => {
     }
     else{
       setShowCard(true)
+      setSearchQueryData({
+        searchTerms: searchTerms,
+        specifyLines: specifyLines,
+        sections: sections,
+      });
     }
-    const search_query_data = {
-      file_path: fileName.toString(),
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: specifyLines.join(','),
-    };
-
   };
 
   const downloadDocument = (blob) => {
@@ -159,10 +164,23 @@ const DraftOrcaDashboard = () => {
     });
   };
 
-  const [sameCriteria, setSameCriteria] = useState(false);
+
 
   const handleSameCriteriaChange = (e) => {
     setSameCriteria(e.target.checked);
+  };
+
+  const handleDelete = () => {
+    setSearchQueryData({
+      searchTerms: [], 
+      specifyLines: [],
+      sections: [],
+    });
+    setSearchTerms([]);
+    setSpecifyLines([]);
+    setSections([]);
+    setShowCard(false);
+    setSameCriteria(false);
   };
 
   return (
@@ -277,7 +295,7 @@ const DraftOrcaDashboard = () => {
               <p className="card-text">Sections: {sections.join(', ')}</p>
               <div className="d-flex justify-content-end">
                 <button className="btn btn-primary me-2">Edit</button>
-                <button className="btn btn-danger">Delete</button>
+                <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
               </div>
             </div>
           </div>
