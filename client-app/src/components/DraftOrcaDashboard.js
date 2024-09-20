@@ -17,13 +17,6 @@ const DraftOrcaDashboard = () => {
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
 
-  const [searchQueryData, setSearchQueryData] = useState({
-    searchTerms: [],
-    specifyLines: [],
-    sections: [],
-  });
-  
-
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
     setSelectedFile(selectedFile);
@@ -132,11 +125,6 @@ const DraftOrcaDashboard = () => {
     }
     else{
       setShowCard(true)
-      setSearchQueryData({
-        searchTerms: searchTerms,
-        specifyLines: specifyLines,
-        sections: sections,
-      });
     }
   };
 
@@ -171,11 +159,6 @@ const DraftOrcaDashboard = () => {
   };
 
   const handleDelete = () => {
-    setSearchQueryData({
-      searchTerms: [], 
-      specifyLines: [],
-      sections: [],
-    });
     setSearchTerms([]);
     setSpecifyLines([]);
     setSections([]);
