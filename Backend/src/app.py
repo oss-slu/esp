@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from docx import Document
+from pathlib import Path
 import logging
 import os
+import json
 
 def create_app():
     app = Flask(__name__)
