@@ -27,7 +27,7 @@ const OrcaDashboardComponent = () => {
     formData.append('file', selectedFile);
 
     axios
-      .post('http://localhost:5000/upload', formData)
+      .post('http://localhost:5001/upload', formData)
       .then((response) => {
         console.log('File uploaded successfully:', response);
         setFileName(response.data.filename);
@@ -59,7 +59,7 @@ const OrcaDashboardComponent = () => {
     }
 
     axios
-      .post('http://localhost:5000/find-sections', data, {
+      .post('http://localhost:5001/find-sections', data, {
         responseType: 'blob',
       })
       .then((response) => {
@@ -97,7 +97,7 @@ const OrcaDashboardComponent = () => {
     }
   
     axios
-      .post('http://localhost:5000/preview', data)
+      .post('http://localhost:5001/preview', data)
       .then((response) => {
         const documentContent = response.data.document_content;
         setPreviewContent(documentContent);

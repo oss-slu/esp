@@ -15,7 +15,7 @@ const DraftOrcaDashboard = () => {
   const isSearchTermsEmpty = searchTerms.length === 0;
   const isSpecifyLinesEmpty = specifyLines.length === 0;
   const isSectionsEmpty = sections.length === 0;
-  
+  const [sameCriteria, setSameCriteria] = useState(false);
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -71,7 +71,7 @@ const DraftOrcaDashboard = () => {
     formData.append('file', selectedFile);
   
     axios
-      .post('http://localhost:5000/upload', formData)
+      .post('http://localhost:5001/upload', formData)
       .then((response) => {
         console.log('File uploaded successfully:', response);
         const uploadedFileName = response.data.filename.split('/').pop();
@@ -104,7 +104,7 @@ const DraftOrcaDashboard = () => {
     };
 
     axios
-      .post('http://localhost:5000/find-sections', data, {
+      .post('http://localhost:5001/find-sections', data, {
         responseType: 'blob',
       })
       .then((response) => {
@@ -126,13 +126,6 @@ const DraftOrcaDashboard = () => {
     else{
       setShowCard(true)
     }
-    const search_query_data = {
-      file_path: fileName.toString(),
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: specifyLines.join(','),
-    };
-
   };
 
   const downloadDocument = (blob) => {
@@ -159,10 +152,18 @@ const DraftOrcaDashboard = () => {
     });
   };
 
-  const [sameCriteria, setSameCriteria] = useState(false);
+
 
   const handleSameCriteriaChange = (e) => {
     setSameCriteria(e.target.checked);
+  };
+
+  const handleDelete = () => {
+    setSearchTerms([]);
+    setSpecifyLines([]);
+    setSections([]);
+    setShowCard(false);
+    setSameCriteria(false);
   };
 
   return (
@@ -277,7 +278,7 @@ const DraftOrcaDashboard = () => {
               <p className="card-text">Sections: {sections.join(', ')}</p>
               <div className="d-flex justify-content-end">
                 <button className="btn btn-primary me-2">Edit</button>
-                <button className="btn btn-danger">Delete</button>
+                <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
               </div>
             </div>
           </div>
@@ -304,4 +305,3 @@ const DraftOrcaDashboard = () => {
 };
 
 export default DraftOrcaDashboard;
-

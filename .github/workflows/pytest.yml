@@ -16,8 +16,8 @@ jobs:
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
-            pip install -r ./Backend/requirements.txt
+            pip install -r ./server/requirements.txt
        
         - name: Test with pytest
           run: |
-            cd Backend && coverage run -m pytest  -v -s
+            cd server && coverage run -m pytest  -v -s
