@@ -8,18 +8,21 @@ Orca Data Converter is a open-source quantum chemistry software package that can
 ## Project Architecture
 <img width="619" alt="image" src="https://user-images.githubusercontent.com/40460915/232928171-03d4110c-db6c-4db2-80ae-caab0955e2b8.png">
 
-## How to Run in Mac
-For Backend (directory: Backend):<code>
-python3 -m venv venv 
-source venv/bin/activate
-pip install -r requirements.txt
-</code>
 
-(Change directory to src):<code>
-python3 app.py
-</code>
+## Getting Started
 
-For Frontend (directory: client-app):<code>
-npm install 
-npm start 
-</code>
+To run the code using one command with Docker Compose, please follow the below instructions:
+
+1. Install Docker on your computer if you do not have one (https://www.docker.com/get-started/)
+
+2. Open the Docker app to start the docker engine (if you are on windows, open services.msc using run command and make sure the docker desktop service is running)
+
+3. Open terminal or shell and run the below command in the the cloned repository
+<br><code>docker-compose up</code>
+
+4. This will start your web application in http://localhost:3000
+
+## Contributing
+
+To get started contributing to the project, see the [contributing guide](CONTRIBUTING.md).
+This document also includes guidelines for reporting bugs and proposing new features.
