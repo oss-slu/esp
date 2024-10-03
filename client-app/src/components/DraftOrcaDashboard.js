@@ -179,6 +179,7 @@ const DraftOrcaDashboard = () => {
               onChange={onFileSelected}
               accept=".txt"
               value=''
+              aria-label="Upload ORCA data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload

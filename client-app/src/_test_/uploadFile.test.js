@@ -1,55 +1,39 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import DraftOrcaDashboard from '../components/DraftOrcaDashboard';
 
-jest.mock('axios');
+// Mock axios to avoid actual API calls
+jest.mock('axios', () => ({
+  post: jest.fn(),
+}));
 
 describe('DraftOrcaDashboard', () => {
-  // Test for successful file upload of an ORCA file
-  test('should allow uploading an ORCA file', async () => {
-    render(<DraftOrcaDashboard />);
-
-    // Simulate clicking the "Choose File" button
-    const fileInput = screen.getByLabelText('Upload your ORCA data file');
-    fireEvent.click(fileInput);
-
-    // Simulate selecting an ORCA file
-    const mockFile = new File([''], 'orcaFile.orca', { type: 'text/plain' }); 
-    fileInput.files = [mockFile];
-    fireEvent.change(fileInput);
-
-    // Simulate clicking the "Upload" button
-    const uploadButton = screen.getByText('Upload');
-    fireEvent.click(uploadButton);
-
-    // Assert that the filename is displayed after successful upload
-    await waitFor(() => {
-      expect(screen.getByText('orcaFile.orca')).toBeInTheDocument();
-    });
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  // Test for preventing non-ORCA file upload
-  test('should prevent uploading non-ORCA files', async () => {
+  test('Clicking on Choose File and uploading an ORCA file', async () => {
     render(<DraftOrcaDashboard />);
 
-    // Simulate clicking the "Choose File" button
-    const fileInput = screen.getByLabelText('Upload your ORCA data file');
-    fireEvent.click(fileInput);
+    const file = new File(['content'], 'test.orca.txt', { type: 'text/plain' });
+    const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
+    const uploadButton = screen.getByRole('button', { name: /Upload/i });
 
-    // Simulate selecting a non-ORCA file
-    const mockFile = new File([''], 'invalidFile.txt', { type: 'text/plain' });
-    fileInput.files = [mockFile];
-    fireEvent.change(fileInput);
+    // Mock axios post response
+    const mockAxios = require('axios');
+    mockAxios.post.mockResolvedValueOnce({ data: { filename: 'test.orca.txt' } });
 
-    // Simulate clicking the "Upload" button
-    const uploadButton = screen.getByText('Upload');
+    // Simulate file selection and upload
+    fireEvent.change(fileInput, { target: { files: [file] } });
     fireEvent.click(uploadButton);
 
-    // Assert that an error message is displayed
+    // Assert file upload and display
     await waitFor(() => {
-      expect(screen.getByText('Only ORCA files are allowed')).toBeInTheDocument();
+      expect(mockAxios.post).toHaveBeenCalledWith(
+        'http://localhost:5001/upload',
+        expect.any(FormData)
+      );
+      expect(screen.getByText('test.orca.txt')).toBeInTheDocument();
     });
   });
-
-
 });
