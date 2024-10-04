@@ -1,18 +1,18 @@
 #!/bin/bash
 
 #check if docker is installed
-if ! command -v docker &> /dev/null; then
+if ! /usr/local/bin/docker --version  &> /dev/null; then
 	echo "Docker is not installed. Please install Docker and try again."
 	exit 1
 fi
 
 #Start docker desktop
-open -a Docker
+open --background -a Docker
 
 #wait for docker to be ready
-while ! docker system info > /dev/null 2>&1; do
+while ! docker  info > /dev/null 2>&1; do
 	echo "Waiting for Docker to start..."
-	sleep 1
+	sleep 5
 done
 
 #run command
