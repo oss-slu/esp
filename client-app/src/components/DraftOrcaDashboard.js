@@ -19,6 +19,10 @@ const DraftOrcaDashboard = () => {
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
+    if (selectedFile.type !== 'text/plain') {
+      alert('Invalid file type. Please upload a .txt file.');
+      return;
+    }
     setSelectedFile(selectedFile);
     setFileName(selectedFile.name.split('/').pop()); 
   };
