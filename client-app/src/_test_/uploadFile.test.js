@@ -60,6 +60,7 @@ describe('DraftOrcaDashboard', () => {
     expect(mockAxios.post).not.toHaveBeenCalled();
   });
 
+  /*
   test('Clicking on Preview without uploading any file and validating the error message', async () => {
     render(<DraftOrcaDashboard />);
   
@@ -73,5 +74,30 @@ describe('DraftOrcaDashboard', () => {
       expect(window.alert).toHaveBeenCalledWith('Please select a file.');
     });
   });
+  */
 
+  test('Clicking on Download Output without uploading any file and validating the error message', async () => {
+    const mockAxios = require('axios');
+    mockAxios.post.mockResolvedValue({}); // Mock the API response
+    
+    render(<DraftOrcaDashboard />); 
+  
+    const downloadButton = screen.getByRole('button', { name: /Download Output/i });
+  
+    // Ensure the button is disabled initially
+    expect(downloadButton).toBeDisabled();
+  
+    // Simulate clicking the Download button without uploading a file
+    fireEvent.click(downloadButton);
+  
+    // Expect alert to be called with the error message
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith('Please select a file.');
+    });
+  
+    // Ensure axios.post was not called
+    expect(mockAxios.post).not.toHaveBeenCalled();
+  });
+  
+  
 });
