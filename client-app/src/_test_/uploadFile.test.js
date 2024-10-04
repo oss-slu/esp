@@ -87,40 +87,14 @@ describe('DraftOrcaDashboard', () => {
     // Ensure the button is disabled initially
     expect(downloadButton).toBeDisabled();
   
-    // Simulate clicking the Download button without uploading a file
+    // Ensure the button is not clickable
     fireEvent.click(downloadButton);
-  
-    // Expect alert to be called with the error message
-    await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith('Please select a file.');
-    });
-  
+    expect(downloadButton).toBeDisabled(); // Button should still be disabled after click
+    
     // Ensure axios.post was not called
     expect(mockAxios.post).not.toHaveBeenCalled();
   });
 
-  /*
-  test('Download Output button is disabled without uploading any file and required fields', async () => {
-    const mockAxios = require('axios');
-    mockAxios.post.mockResolvedValue({});
   
-    render(<DraftOrcaDashboard />);
-  
-    const downloadButton = screen.getByRole('button', { name: /Download Output/i });
-  
-    // Assert that the download button is disabled initially
-    expect(downloadButton).toBeDisabled();
-  
-    // Try clicking the disabled download button
-    fireEvent.click(downloadButton);
-  
-    // Ensure that window.alert was not called
-    expect(window.alert).not.toHaveBeenCalled();
-  
-    // Ensure that axios.post was not called
-    expect(mockAxios.post).not.toHaveBeenCalled();
-  });
-  */
-  
-  
+  //the unit test case to check the positive scenario -  'if the button is enabled after uploading the file and providing the search criteria' will be added as part of another issue
 });
