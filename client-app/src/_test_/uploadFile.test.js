@@ -98,6 +98,29 @@ describe('DraftOrcaDashboard', () => {
     // Ensure axios.post was not called
     expect(mockAxios.post).not.toHaveBeenCalled();
   });
+
+  /*
+  test('Download Output button is disabled without uploading any file and required fields', async () => {
+    const mockAxios = require('axios');
+    mockAxios.post.mockResolvedValue({});
+  
+    render(<DraftOrcaDashboard />);
+  
+    const downloadButton = screen.getByRole('button', { name: /Download Output/i });
+  
+    // Assert that the download button is disabled initially
+    expect(downloadButton).toBeDisabled();
+  
+    // Try clicking the disabled download button
+    fireEvent.click(downloadButton);
+  
+    // Ensure that window.alert was not called
+    expect(window.alert).not.toHaveBeenCalled();
+  
+    // Ensure that axios.post was not called
+    expect(mockAxios.post).not.toHaveBeenCalled();
+  });
+  */
   
   
 });
