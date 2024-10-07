@@ -15,7 +15,7 @@ jobs:
       run: |
         cd client-app
         npm install
-    - name: lint
+    - name: Lint
       run: |
         cd client-app
         npm run lint
