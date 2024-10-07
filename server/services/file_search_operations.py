@@ -1,5 +1,6 @@
 from io import BytesIO
 import re
+import os
 
 def extract_sections(file_path, search_terms, sections, specify_lines, use_total_lines, total_lines):
     '''
@@ -9,18 +10,11 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
         lines = f.readlines()
 
     document_content = ""
-
-    for term in search_terms:
-        line_num = 0
-        term_line_num = []
-        terms_num = 0
-        for line in lines:
-            if term in line:
-                term_line_num.append(line_num)
-                print(f"Term: {term}, Line number: {line_num},term_line_num: {term_line_num}")
-                terms_num += 1
-            line_num += 1
-
+    
+    # Define the regex pattern for the header
+    header_pattern = r'^\s*NO\s+LB\s+ZA\s+FRAG\s+MASS\s+X\s+Y\s+Z\s*$'
+    
+    # Function to determine if a line is content
     def is_content_line(line, term, header_pattern=None):
         if line.strip() == "":
             return False
@@ -35,6 +29,7 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
             return False
         return True
 
+    # Function to identify if the line marks the end of a section
     def is_end_pattern(lines, index):
         if index + 2 >= len(lines):
             return False
@@ -42,13 +37,23 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
                 (lines[index].strip() in lines[index + 2].strip() or lines[index].strip() in lines[index + 3].strip()) and
                 not lines[index + 1].strip().startswith('-'))
 
-    header_pattern = r'^\s*NO\s+LB\s+ZA\s+FRAG\s+MASS\s+X\s+Y\s+Z\s*$'
+    for term in search_terms:
+        line_num = 0
+        term_line_num = []
+        terms_num = 0
+        for line in lines:
+            if term in line:
+                term_line_num.append(line_num)
+                print(f"Term: {term}, Line number: {line_num}, term_line_num: {term_line_num}")
+                terms_num += 1
+            line_num += 1
+
+    search_term = search_terms[0]  #make generic later
 
     for i in sections:
         section_lines = specify_lines[i-1].split()
         start_line = term_line_num[i-1]
         line_empty = 0
-        search_term = search_terms[0]
         document_content += lines[start_line]
         print(f"Start line: {start_line}")
         print("document_content: ", document_content)
@@ -57,8 +62,7 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
             while line_empty == 0:
                 if is_end_pattern(lines, start_line):
                     break
-                if lines[start_line] != "\n" and is_content_line(lines[start_line],
-                                                                      search_term, header_pattern):
+                if lines[start_line] != "\n" and is_content_line(lines[start_line], search_term, header_pattern):
                     document_content += lines[start_line]
                     start_line += 1
                 else:
@@ -66,7 +70,7 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
 
         if section_lines[0].upper() == 'WHOLE' and use_total_lines:
             if is_end_pattern(lines, start_line):
-                    break
+                break
             for _ in range(total_lines - start_line + term_line_num[i-1]):
                 if is_content_line(lines[start_line], search_term, header_pattern):
                     document_content += lines[start_line]
@@ -78,8 +82,7 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
             while line_count < int(section_lines[1]):
                 if is_end_pattern(lines, start_line):
                     break
-                if search_term not in lines[start_line].strip() and is_content_line(lines[start_line],
-                                                                      search_term, header_pattern):
+                if search_term not in lines[start_line].strip() and is_content_line(lines[start_line], search_term, header_pattern):
                     document_content += lines[start_line]
                     line_count += 1
                 start_line += 1
