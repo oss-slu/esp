@@ -35,6 +35,9 @@ describe("DraftOrcaDashboard", () => {
         "http://localhost:5001/upload",
         expect.any(FormData),
       );
+    });
+
+    await waitFor(() => {
       expect(screen.getByText("test.orca.txt")).toBeInTheDocument();
     });
   });
