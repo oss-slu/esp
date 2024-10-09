@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { saveAs } from 'file-saver';
-import '../styles/TempComponent.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { saveAs } from "file-saver";
+import "../styles/TempComponent.css";
 
 const DraftOrcaDashboard = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState("");
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
   const [sections, setSections] = useState([]);
@@ -19,12 +19,12 @@ const DraftOrcaDashboard = () => {
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile.type !== 'text/plain') {
-      alert('Invalid file type. Please upload a .txt file.');
+    if (selectedFile.type !== "text/plain") {
+      alert("Invalid file type. Please upload a .txt file.");
       return;
     }
     setSelectedFile(selectedFile);
-    setFileName(selectedFile.name.split('/').pop()); 
+    setFileName(selectedFile.name.split("/").pop());
   };
 
   const isSearchQueryEnabled = () => {
@@ -32,34 +32,33 @@ const DraftOrcaDashboard = () => {
   };
 
   const handleSpecifyLineChange = (value) => {
-    setSpecifyLines([{ value, showInput: value === 'FIRST' || value === 'LAST' }]);
+    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST" }]);
   };
 
   const renderSpecifyLine = () => {
-    const line = specifyLines[0] || { value: '', showInput: false };
+    const line = specifyLines[0] || { value: "", showInput: false };
     return (
       <div className="mb-2 d-flex align-items-center">
         <select
           className="form-select me-2"
           value={line.value}
-          onChange={(e) => handleSpecifyLineChange(e.target.value)}
-        >
+          onChange={(e) => handleSpecifyLineChange(e.target.value)}>
           <option value="SELECT">SELECT</option>
           <option value="WHOLE">WHOLE</option>
           <option value="FIRST">FIRST</option>
           <option value="LAST">LAST</option>
         </select>
         {line.showInput && (
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter line number"
-          value={line.lineNumber || ''}
-          onChange={(e) => {
-            const updatedLines = [{ ...line, lineNumber: e.target.value }];
-            setSpecifyLines(updatedLines);
-          }}
-        />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter line number"
+            value={line.lineNumber || ""}
+            onChange={(e) => {
+              const updatedLines = [{ ...line, lineNumber: e.target.value }];
+              setSpecifyLines(updatedLines);
+            }}
+          />
         )}
       </div>
     );
@@ -67,35 +66,33 @@ const DraftOrcaDashboard = () => {
 
   const onUpload = () => {
     if (!selectedFile) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append('file', selectedFile);
-  
+    formData.append("file", selectedFile);
+
     axios
-      .post('http://localhost:5001/upload', formData)
+      .post("http://localhost:5001/upload", formData)
       .then((response) => {
-        const uploadedFileName = response.data.filename.split('/').pop();
+        const uploadedFileName = response.data.filename.split("/").pop();
         setFileName(uploadedFileName);
         setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
       })
       .catch((error) => {
-        console.error('Error uploading file:', error);
+        console.error("Error uploading file:", error);
       });
   };
 
   const removeUploadedFile = (fileName) => {
     // You can add logic here to delete the file from the server if needed
-    setUploadedFiles((prevUploadedFiles) =>
-      prevUploadedFiles.filter((file) => file !== fileName)
-    );
+    setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== fileName));
   };
 
   const onSubmit = () => {
     if (!selectedFile) {
-      alert('Please select a file.');
+      alert("Please select a file.");
       return;
     }
 
@@ -103,12 +100,12 @@ const DraftOrcaDashboard = () => {
       file_path: fileName.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(','),
+      specify_lines: specifyLines.join(","),
     };
 
     axios
-      .post('http://localhost:5001/find-sections', data, {
-        responseType: 'blob',
+      .post("http://localhost:5001/find-sections", data, {
+        responseType: "blob",
       })
       .then((response) => {
         const blob = new Blob([response.data]);
@@ -116,33 +113,32 @@ const DraftOrcaDashboard = () => {
         // setShowCard(true); // Set showCard to true after successful submission
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
   const onSearchQuerySubmit = () => {
-    setShowCard(false)
+    setShowCard(false);
     if (!selectedFile) {
-      alert('Please select a file.');
+      alert("Please select a file.");
       return;
-    }
-    else{
-      setShowCard(true)
+    } else {
+      setShowCard(true);
     }
   };
 
   const downloadDocument = (blob) => {
-    saveAs(blob, 'output.docx');
+    saveAs(blob, "output.docx");
   };
 
   const handleKeyPress = (e, setterFunc) => {
-    if (e.key === 'Enter' || e.key === ',') {
+    if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       const value = e.target.value.trim();
       if (value) {
-        const values = value.split(','); 
-        setterFunc(prevValue => [...prevValue, ...values.map(val => val.trim().toUpperCase())]);
-        e.target.value = '';
+        const values = value.split(",");
+        setterFunc((prevValue) => [...prevValue, ...values.map((val) => val.trim().toUpperCase())]);
+        e.target.value = "";
       }
     }
   };
@@ -154,8 +150,6 @@ const DraftOrcaDashboard = () => {
       return updatedTerms;
     });
   };
-
-
 
   const handleSameCriteriaChange = (e) => {
     setSameCriteria(e.target.checked);
@@ -181,7 +175,7 @@ const DraftOrcaDashboard = () => {
               className="form-control"
               onChange={onFileSelected}
               accept=".txt"
-              value=''
+              value=""
               aria-label="Upload ORCA data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
@@ -191,19 +185,18 @@ const DraftOrcaDashboard = () => {
         </div>
 
         <div className="mb-3 text-start">
-        <span>Uploaded Files:</span>
-        {uploadedFiles.map((file, index) => (
-          <span key={index} className="badge bg-secondary me-2 mb-2">
-            {file}
-            <button
-              type="button"
-              className="btn-close ms-1"
-              aria-label="Remove"
-              onClick={() => removeUploadedFile(file)}
-            ></button>
-          </span>
-        ))}
-      </div>
+          <span>Uploaded Files:</span>
+          {uploadedFiles.map((file, index) => (
+            <span key={index} className="badge bg-secondary me-2 mb-2">
+              {file}
+              <button
+                type="button"
+                className="btn-close ms-1"
+                aria-label="Remove"
+                onClick={() => removeUploadedFile(file)}></button>
+            </span>
+          ))}
+        </div>
 
         <div className="mb-3 text-start">
           <span>Enter the terms you wish to search for (txt only):</span>
@@ -218,18 +211,13 @@ const DraftOrcaDashboard = () => {
               <span
                 key={index}
                 className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSearchTerms)}
-              >
+                onClick={() => removeTag(index, setSearchTerms)}>
                 {term}
-                <button
-                  type="button"
-                  className="btn-close ms-1"
-                  aria-label="Remove"
-                ></button>
+                <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
               </span>
             ))}
           </div>
-          {searchTerms.length > 1 && ( 
+          {searchTerms.length > 1 && (
             <div className="form-check mt-2">
               <input
                 className="form-check-input"
@@ -250,56 +238,67 @@ const DraftOrcaDashboard = () => {
           {renderSpecifyLine()}
         </div>
 
-      <div className="mb-3 text-start">
-        <span>Number of sections?</span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="ex: 1-5 or 1,2,5"
-          value={sections.join(', ')}
-          onChange={(e) => setSections(e.target.value.split(',').map((val) => val.trim()))}
-        />
-      </div>
+        <div className="mb-3 text-start">
+          <span>Number of sections?</span>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="ex: 1-5 or 1,2,5"
+            value={sections.join(", ")}
+            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
+          />
+        </div>
 
         <div className="button-container">
           <button
             className="btn btn-primary"
             onClick={() => onSearchQuerySubmit()}
-            disabled={!isSearchQueryEnabled() || isUploadedFilesEmpty || isSearchTermsEmpty || isSpecifyLinesEmpty
-                        || isSectionsEmpty}
-          >
-            Submit Search Query 
+            disabled={
+              !isSearchQueryEnabled() ||
+              isUploadedFilesEmpty ||
+              isSearchTermsEmpty ||
+              isSpecifyLinesEmpty ||
+              isSectionsEmpty
+            }>
+            Submit Search Query
           </button>
         </div>
 
-        {!isUploadedFilesEmpty && !isSearchTermsEmpty && !isSpecifyLinesEmpty && !isSectionsEmpty && showCard && (
-          <div className="card mt-3">
-            <div className="card-body">
-              <h5 className="card-title">Search Query</h5>
-              <p className="card-text">Search Terms: {searchTerms.join(', ')}</p>
-              <p className="card-text">Specify Lines: {specifyLines[0].value !== "SELECT" && specifyLines[0].value}
-                      {specifyLines[0].lineNumber ? `, ${specifyLines[0].lineNumber}` : ''}</p>
-              <p className="card-text">Sections: {sections.join(', ')}</p>
-              <div className="d-flex justify-content-end">
-                <button className="btn btn-primary me-2">Edit</button>
-                <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
+        {!isUploadedFilesEmpty &&
+          !isSearchTermsEmpty &&
+          !isSpecifyLinesEmpty &&
+          !isSectionsEmpty &&
+          showCard && (
+            <div className="card mt-3">
+              <div className="card-body">
+                <h5 className="card-title">Search Query</h5>
+                <p className="card-text">Search Terms: {searchTerms.join(", ")}</p>
+                <p className="card-text">
+                  Specify Lines: {specifyLines[0].value !== "SELECT" && specifyLines[0].value}
+                  {specifyLines[0].lineNumber ? `, ${specifyLines[0].lineNumber}` : ""}
+                </p>
+                <p className="card-text">Sections: {sections.join(", ")}</p>
+                <div className="d-flex justify-content-end">
+                  <button className="btn btn-primary me-2">Edit</button>
+                  <button className="btn btn-danger" onClick={handleDelete}>
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         <div className="button-container">
-          <button 
-            className="btn btn-primary" 
-            onClick={onSubmit} 
+          <button
+            className="btn btn-primary"
+            onClick={onSubmit}
             disabled={
               !searchTerms.length ||
               !specifyLines.length ||
               !sections.length ||
               !selectedFile ||
               isUploadedFilesEmpty
-            }
-          >
+            }>
             Download Output
           </button>
         </div>
