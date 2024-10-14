@@ -1,29 +1,29 @@
-import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import DraftOrcaDashboard from '../components/DraftOrcaDashboard';
+import React from "react";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import DraftOrcaDashboard from "../components/DraftOrcaDashboard";
 
 // Mock axios to avoid actual API calls
-jest.mock('axios', () => ({
+jest.mock("axios", () => ({
   post: jest.fn(),
 }));
 
-describe('DraftOrcaDashboard', () => {
+describe("DraftOrcaDashboard", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(window, "alert").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  test('Clicking on Choose File and uploading an ORCA file', async () => {
+  test("Clicking on Choose File and uploading an ORCA file", async () => {
     render(<DraftOrcaDashboard />);
 
-    const file = new File(['content'], 'test.orca.txt', { type: 'text/plain' });
+    const file = new File(["content"], "test.orca.txt", { type: "text/plain" });
     const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
-    const uploadButton = screen.getByRole('button', { name: /Upload/i });
+    const uploadButton = screen.getByRole("button", { name: /Upload/i });
 
     // Mock axios post response
-    const mockAxios = require('axios');
-    mockAxios.post.mockResolvedValueOnce({ data: { filename: 'test.orca.txt' } });
+    const mockAxios = require("axios");
+    mockAxios.post.mockResolvedValueOnce({ data: { filename: "test.orca.txt" } });
 
     // Simulate file selection and upload
     fireEvent.change(fileInput, { target: { files: [file] } });
@@ -32,19 +32,22 @@ describe('DraftOrcaDashboard', () => {
     // Assert file upload and display
     await waitFor(() => {
       expect(mockAxios.post).toHaveBeenCalledWith(
-        'http://localhost:5001/upload',
-        expect.any(FormData)
+        "http://localhost:5001/upload",
+        expect.any(FormData),
       );
-      expect(screen.getByText('test.orca.txt')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("test.orca.txt")).toBeInTheDocument();
     });
   });
 
-  test('Clicking on Choose File and try to upload any file other than the ORCA file', async () => {
+  test("Clicking on Choose File and try to upload any file other than the ORCA file", async () => {
     render(<DraftOrcaDashboard />);
 
-    const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+    const file = new File(["content"], "test.pdf", { type: "application/pdf" });
     const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
-    const uploadButton = screen.getByRole('button', { name: /Upload/i });
+    const uploadButton = screen.getByRole("button", { name: /Upload/i });
 
     // Simulate file selection and upload
     fireEvent.change(fileInput, { target: { files: [file] } });
@@ -52,11 +55,11 @@ describe('DraftOrcaDashboard', () => {
 
     // Expect alert to be called due to invalid file type
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith('Invalid file type. Please upload a .txt file.');
+      expect(window.alert).toHaveBeenCalledWith("Invalid file type. Please upload a .txt file.");
     });
 
     // Ensure that axios post was never called
-    const mockAxios = require('axios');
+    const mockAxios = require("axios");
     expect(mockAxios.post).not.toHaveBeenCalled();
   });
 
@@ -76,25 +79,24 @@ describe('DraftOrcaDashboard', () => {
   });
   */
 
-  test('Clicking on Download Output without uploading any file and validating the error message', async () => {
-    const mockAxios = require('axios');
+  test("Clicking on Download Output without uploading any file and validating the error message", async () => {
+    const mockAxios = require("axios");
     mockAxios.post.mockResolvedValue({}); // Mock the API response
-    
-    render(<DraftOrcaDashboard />); 
-  
-    const downloadButton = screen.getByRole('button', { name: /Download Output/i });
-  
+
+    render(<DraftOrcaDashboard />);
+
+    const downloadButton = screen.getByRole("button", { name: /Download Output/i });
+
     // Ensure the button is disabled initially
     expect(downloadButton).toBeDisabled();
-  
+
     // Ensure the button is not clickable
     fireEvent.click(downloadButton);
     expect(downloadButton).toBeDisabled(); // Button should still be disabled after click
-    
+
     // Ensure axios.post was not called
     expect(mockAxios.post).not.toHaveBeenCalled();
   });
 
-  
   //the unit test case to check the positive scenario -  'if the button is enabled after uploading the file and providing the search criteria' will be added as part of another issue
 });
