@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { saveAs } from 'file-saver';
-import '../styles/DashboardComponent.css'
+import React, { useState } from "react";
+import axios from "axios";
+import { saveAs } from "file-saver";
+import "../styles/DashboardComponent.css";
 
 const GaussianDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('');
-  const [searchTerms, setSearchTerms] = useState('');
-  const [specifyLines, setSpecifyLines] = useState('');
-  const [sections, setSections] = useState('');
-  const [useTotalLines, setUseTotalLines] = useState('');
-  const [totalLines, setTotalLines] = useState('');
-  const [previewContent, setPreviewContent] = useState('');
+  const [fileName, setFileName] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+  const [specifyLines, setSpecifyLines] = useState("");
+  const [sections, setSections] = useState("");
+  const [useTotalLines, setUseTotalLines] = useState("");
+  const [totalLines, setTotalLines] = useState("");
+  const [previewContent, setPreviewContent] = useState("");
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -19,34 +19,34 @@ const GaussianDashboardComponent = () => {
 
   const onUpload = () => {
     if (!selectedFile) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
 
     axios
-      .post('http://localhost:5001/upload', formData)
+      .post("http://localhost:5001/upload", formData)
       .then((response) => {
-        console.log('File uploaded successfully:', response);
+        console.log("File uploaded successfully:", response);
         setFileName(response.data.filename);
       })
       .catch((error) => {
-        console.error('Error uploading file:', error);
+        console.error("Error uploading file:", error);
       });
   };
 
   const onSubmit = () => {
     if (!selectedFile) {
-      alert('Please select a file.');
+      alert("Please select a file.");
       return;
     }
 
     const data = {
       file_path: fileName.toString(),
-      search_terms: searchTerms.split(','),
-      sections: sections.split(','),
+      search_terms: searchTerms.split(","),
+      sections: sections.split(","),
       specify_lines: specifyLines.toString(),
     };
 
@@ -59,32 +59,32 @@ const GaussianDashboardComponent = () => {
     }
 
     axios
-      .post('http://localhost:5001/find-sections', data, {
-        responseType: 'blob',
+      .post("http://localhost:5001/find-sections", data, {
+        responseType: "blob",
       })
       .then((response) => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
   const downloadDocument = (blob) => {
-    saveAs(blob, 'output.docx');
+    saveAs(blob, "output.docx");
   };
 
   const fetchDocumentPreview = () => {
     if (!selectedFile) {
-      alert('Please select a file.');
+      alert("Please select a file.");
       return;
     }
-    
+
     const data = {
       file_path: fileName.toString(),
-      search_terms: searchTerms.split(','),
-      sections: sections.split(','),
+      search_terms: searchTerms.split(","),
+      sections: sections.split(","),
       specify_lines: specifyLines.toString(),
     };
 
@@ -95,15 +95,15 @@ const GaussianDashboardComponent = () => {
     if (totalLines) {
       data.total_lines = totalLines;
     }
-  
+
     axios
-      .post('http://localhost:5001/preview', data)
+      .post("http://localhost:5001/preview", data)
       .then((response) => {
         const documentContent = response.data.document_content;
         setPreviewContent(documentContent);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
@@ -114,12 +114,7 @@ const GaussianDashboardComponent = () => {
         <div className="mb-3 text-start">
           <span>Upload your Gaussian data file</span>
           <div className="input-group">
-            <input
-              type="file"
-              className="form-control"
-              onChange={onFileSelected}
-              accept=".log"
-            />
+            <input type="file" className="form-control" onChange={onFileSelected} accept=".log" />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>
@@ -179,7 +174,7 @@ const GaussianDashboardComponent = () => {
             value={totalLines}
             onChange={(e) => {
               const inputValue = e.target.value;
-              setTotalLines(inputValue === '' ? '' : parseInt(inputValue));
+              setTotalLines(inputValue === "" ? "" : parseInt(inputValue));
             }}
           />
         </div>
@@ -191,14 +186,12 @@ const GaussianDashboardComponent = () => {
             Download Output
           </button>
         </div>
-        
-        
 
         {previewContent && (
           <div className="document-preview">
             <h3>Document Preview</h3>
             <div className="preview-box">
-            <pre>{previewContent}</pre>
+              <pre>{previewContent}</pre>
             </div>
           </div>
         )}
