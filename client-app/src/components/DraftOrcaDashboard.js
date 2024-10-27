@@ -24,7 +24,7 @@ const DraftOrcaDashboard = () => {
       return;
     }
     setSelectedFile(selectedFile);
-    setFileName(selectedFile.name.split("/").pop());
+    setFileName(selectedFile.path);
   };
 
   const isSearchQueryEnabled = () => {
@@ -76,8 +76,8 @@ const DraftOrcaDashboard = () => {
     axios
       .post("http://localhost:5001/upload", formData)
       .then((response) => {
-        const uploadedFileName = response.data.filename.split("/").pop();
-        setFileName(uploadedFileName);
+        //const uploadedFileName = response.data.filename.split("/").pop();
+        setFileName(response.data.file_path);
         setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
       })
       .catch((error) => {
@@ -97,7 +97,7 @@ const DraftOrcaDashboard = () => {
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: fileName,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: specifyLines.join(","),
