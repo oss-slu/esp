@@ -5,7 +5,7 @@ import "../styles/TempComponent.css";
 
 const DraftOrcaDashboard = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [filePath, setFilePath] = useState("");
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
   const [sections, setSections] = useState([]);
@@ -24,7 +24,6 @@ const DraftOrcaDashboard = () => {
       return;
     }
     setSelectedFile(selectedFile);
-    setFileName(selectedFile.name.split("/").pop());
   };
 
   const isSearchQueryEnabled = () => {
@@ -76,8 +75,8 @@ const DraftOrcaDashboard = () => {
     axios
       .post("http://localhost:5001/upload", formData)
       .then((response) => {
-        const uploadedFileName = response.data.filename.split("/").pop();
-        setFileName(uploadedFileName);
+        const uploadedFileName = response.data.file_name;
+        setFilePath(response.data.file_path);
         setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
       })
       .catch((error) => {
@@ -85,9 +84,9 @@ const DraftOrcaDashboard = () => {
       });
   };
 
-  const removeUploadedFile = (fileName) => {
+  const removeUploadedFile = (filePath) => {
     // You can add logic here to delete the file from the server if needed
-    setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== fileName));
+    setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== filePath));
   };
 
   const onSubmit = () => {
@@ -97,7 +96,7 @@ const DraftOrcaDashboard = () => {
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
       specify_lines: specifyLines.join(","),
