@@ -75,7 +75,7 @@ const DraftOrcaDashboard = () => {
     axios
       .post("http://localhost:5001/upload", formData)
       .then((response) => {
-        const uploadedFileName = response.data.file_name.split(/[/\\]/).pop();
+        const uploadedFileName = response.data.file_name;
         setFilePath(response.data.file_path);
         setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
       })
