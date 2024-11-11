@@ -102,7 +102,8 @@ const DraftOrcaDashboard = () => {
       file_path: fileName.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      //specify_lines: specifyLines.join(","),
+      specify_lines: 'First 5',
     };
 
     axios
@@ -175,7 +176,8 @@ const DraftOrcaDashboard = () => {
       file_path: fileName.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      //specify_lines: specifyLines.join(","),
+      specify_lines: 'First 5',
     };
 
     axios
