@@ -12,8 +12,10 @@ def file_upload_use_case(file):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Invalid file type')
 
     try:
-        filename = save_uploaded_file(file)
-        return ResponseSuccess({'message': 'Success', 'filename': filename})
+        file_path = save_uploaded_file(file)
+        file_name = file.filename
+        return ResponseSuccess({'message': 'Success', 'file_name': file_name,
+                                 'file_path': file_path})
     except PermissionError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'Permission denied: {str(e)}')
     except FileNotFoundError as e:
