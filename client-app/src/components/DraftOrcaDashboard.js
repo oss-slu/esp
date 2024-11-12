@@ -16,6 +16,8 @@ const DraftOrcaDashboard = () => {
   const isSpecifyLinesEmpty = specifyLines.length === 0;
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
+  const [previewContent, setPreviewContent] = useState("");
+  const [showPreviewModal, setShowPreviewModal] = useState(false); 
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -162,6 +164,31 @@ const DraftOrcaDashboard = () => {
     setSameCriteria(false);
   };
 
+  const fetchDocumentPreview = () => {
+    if (!selectedFile) {
+      alert("Please select a file.");
+      return;
+    }
+
+    const data = {
+      file_path: fileName.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      //specify_lines: specifyLines.join(","),
+      specify_lines: 'First 5',
+    };
+
+    axios
+      .post("http://localhost:5001/preview", data)
+      .then((response) => {
+        setPreviewContent(response.data.document_content); 
+        setShowPreviewModal(true); 
+      })
+      .catch((error) => {
+        console.error("Error fetching preview:", error);
+      });
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -290,6 +317,21 @@ const DraftOrcaDashboard = () => {
         <div className="button-container">
           <button
             className="btn btn-primary"
+            onClick={fetchDocumentPreview}
+              disabled={
+                !searchTerms.length ||
+                !specifyLines.length ||
+                !sections.length ||
+                !selectedFile ||
+                isUploadedFilesEmpty
+              }>
+            Preview
+          </button>
+        </div>    
+
+        <div className="button-container">
+          <button
+            className="btn btn-primary"
             onClick={onSubmit}
             disabled={
               !searchTerms.length ||
@@ -301,6 +343,18 @@ const DraftOrcaDashboard = () => {
             Download Output
           </button>
         </div>
+
+        {showPreviewModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={() => setShowPreviewModal(false)}>&times;</span>
+              <h3>Document Preview</h3>
+              <div className="preview-box">
+                <pre>{previewContent}</pre>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
