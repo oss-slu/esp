@@ -171,11 +171,11 @@ const DraftOrcaDashboard = () => {
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      //specify_lines: specifyLines.join(","),
       specify_lines: 'First 5',
+      //specify_lines: specifyLines.join(","),
     };
 
     axios
