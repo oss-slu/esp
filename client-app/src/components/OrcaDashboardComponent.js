@@ -5,7 +5,7 @@ import "../styles/DashboardComponent.css";
 
 const OrcaDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [filePath, setFilePath] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
   const [specifyLines, setSpecifyLines] = useState("");
   const [sections, setSections] = useState("");
@@ -30,7 +30,7 @@ const OrcaDashboardComponent = () => {
       .post("http://localhost:5001/upload", formData)
       .then((response) => {
         console.log("File uploaded successfully:", response);
-        setFileName(response.data.filename);
+        setFilePath(response.data.file_path);
       })
       .catch((error) => {
         console.error("Error uploading file:", error);
@@ -44,7 +44,7 @@ const OrcaDashboardComponent = () => {
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: filePath.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
@@ -82,7 +82,7 @@ const OrcaDashboardComponent = () => {
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: filePath.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
