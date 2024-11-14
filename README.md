@@ -27,7 +27,7 @@ To start the components individually, please follow the below instructions:
 1. To start the client-app: [client-app README.md](client-app/README.md/)
 2. To start the server: [server README.md](server/README.md)
 
-## Steps to use the application:
+## Steps to use the application for ORCA log files:
 
 1. For input, you can select any ORCA log file. The test log files are in the esp/test-data/orca-files.
 2. Once the input is provided, click on upload.
