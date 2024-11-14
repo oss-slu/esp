@@ -22,6 +22,11 @@ To run the code using one command with Docker Compose, please follow the below i
 
 4. This will start your web application in http://localhost:3000
 
+To start the components individually, please follow the below instructions:
+
+1. To start the client-app: [client-app README.md](client-app/README.md/)
+2. To start the server: [server README.md](server/README.md)
+
 ## Contributing
 
 To get started contributing to the project, see the [contributing guide](CONTRIBUTING.md).
