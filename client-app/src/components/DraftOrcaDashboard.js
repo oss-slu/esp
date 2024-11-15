@@ -328,6 +328,24 @@ const DraftOrcaDashboard = () => {
             Preview
           </button>
         </div>    
+        {showPreviewModal && (
+          <div className="card mt-3">
+            <div className="card-body">
+              <h5 className="card-title">Document Preview</h5>
+              <div className="preview-box">
+                <pre>{previewContent}</pre>
+              </div>
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => setShowPreviewModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="button-container">
           <button
@@ -344,17 +362,6 @@ const DraftOrcaDashboard = () => {
           </button>
         </div>
 
-        {showPreviewModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={() => setShowPreviewModal(false)}>&times;</span>
-              <h3>Document Preview</h3>
-              <div className="preview-box">
-                <pre>{previewContent}</pre>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

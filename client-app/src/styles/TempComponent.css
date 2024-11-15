@@ -17,6 +17,27 @@ span {
   margin-bottom: 10px;
 }
 
+.card {
+    max-height: 400px; /* Limit the card height */
+    overflow-y: auto;  /* Allow scrolling if content overflows */
+    margin-bottom: 20px; /* Adjust bottom margin for spacing */
+  }
+  
+  .card-body {
+    padding: 15px; /* Reduce padding to make it less bulky */
+  }
+  
+  .card-title {
+    font-size: 1.25rem; /* Adjust font size */
+    margin-bottom: 10px; /* Adjust spacing */
+  }
+  
+  .card-text {
+    font-size: 1rem; /* Adjust font size */
+    margin-bottom: 8px; /* Adjust spacing */
+  }
+  
+
 /* :host ::ng-deep .custom-ms 
         .p-multiselect-label {
         width: 300px !important;
@@ -169,4 +190,7 @@ span {
         background-color: #0b5ed7;
         border-color: #0a58ca;
       }
+
+    
+
        */
