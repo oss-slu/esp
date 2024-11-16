@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 '''
 Configuration settings for the application are handled in this module
 '''

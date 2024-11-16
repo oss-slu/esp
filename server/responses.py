@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 '''
 This module defines the response classes and types for the server.
 
@@ -33,22 +35,40 @@ class ResponseFailure:
 
     @property
     def value(self):
+        '''
+        Returns the response as a dictionary containing the type and message.
+        '''
         return {"type": self.response_type, "message": self.message}
 
     def __bool__(self):
+        '''
+        Determines the truthiness of the response (always False).
+        '''
         return False
 
 
 class ResponseSuccess:
+    '''
+    Represents a successful response.
+    '''
     def __init__(self, value=None):
+        '''
+        Initializes a ResponseSuccess instance.
+        '''
         self.value = value
         self.response_type = ResponseTypes.SUCCESS
 
     def __bool__(self):
+        '''
+        Determines the truthiness of the response (always True).
+        '''
         return True
 
 
 def build_response_from_invalid_request(invalid_request):
+    '''
+    Builds a ResponseFailure from an invalid request, compiling its errors.
+    '''
     message = "\n".join(
         [f"{err['parameter']}: {err['message']}"
          for err in invalid_request.errors]

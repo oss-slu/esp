@@ -1,7 +1,12 @@
+'''
+This module provides functions for extracting sections from an ORCA log file 
+based on specified search terms and saving the extracted data to a byte stream.
+'''
 from io import BytesIO
 import re
 
-def extract_sections(file_path, search_terms, sections, specify_lines, use_total_lines, total_lines):
+def extract_sections(file_path, search_terms, sections, specify_lines,
+                    use_total_lines, total_lines):
     '''
     Extracts the data from orca log file based on search terms and sections.
     '''
@@ -15,11 +20,7 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
 
     # Function to determine if a line is content
     def is_content_line(line, term, header_pattern=None):
-        if line.strip() == "":
-            return False
-        if line.startswith("-----"):
-            return False
-        if line.startswith(term):
+        if line.strip() == "" or line.startswith("-----") or line.startswith(term):
             return False
         if header_pattern and re.match(header_pattern, line):
             return False

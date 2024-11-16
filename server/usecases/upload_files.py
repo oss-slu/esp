@@ -1,3 +1,9 @@
+"""
+This module provides use cases for uploading and handling files, 
+including file upload validation and saving to a temporary folder.
+It also includes a sample data function to test server connection.
+"""
+
 from responses import ResponseSuccess, ResponseFailure, ResponseTypes
 from services.file_upload_operations import save_uploaded_file
 
