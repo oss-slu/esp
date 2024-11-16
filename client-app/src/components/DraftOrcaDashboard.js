@@ -329,19 +329,21 @@ const DraftOrcaDashboard = () => {
           </button>
         </div>    
         {showPreviewModal && (
-          <div className="card mt-3">
-            <div className="card-body">
-              <h5 className="card-title">Document Preview</h5>
-              <div className="preview-box">
-                <pre>{previewContent}</pre>
-              </div>
-              <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-danger"
-                  onClick={() => setShowPreviewModal(false)}
-                >
-                  Close
-                </button>
+          <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Document Preview</h5>
+                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <pre>{previewContent}</pre>
+                </div>
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
