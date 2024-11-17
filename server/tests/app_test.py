@@ -1,7 +1,7 @@
 """Unit tests for the API endpoints and use cases."""
 
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 from io import BytesIO
 from flask import Flask
 from application.rest.search_orca_data import blueprint as search_blueprint
@@ -81,10 +81,13 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Option 1', response.data)
 
-    @patch('usecases.search_orca_data.extract_sections')
-    def test_preview_document_use_case(self, mock_extract):
+    @patch('usecases.search_orca_data.ORCALogExtractor')
+    def test_preview_document_use_case(self, mock_extractor_class):
         """Test the preview document use case."""
-        mock_extract.return_value = 'Extracted content'
+        # Mock the ORCALogExtractor instance and its method
+        mock_extractor = MagicMock()
+        mock_extractor.extract_sections.return_value = 'Extracted content'
+        mock_extractor_class.return_value = mock_extractor
 
         data = {
             'file_path': 'test.txt',
@@ -99,13 +102,19 @@ class TestAPI(unittest.TestCase):
         with patch('builtins.open', mock_file):
             response = preview_document_use_case(data)
 
+        # Assertions
         self.assertIsInstance(response, ResponseSuccess)
         self.assertEqual(response.value, {'document_content': 'Extracted content'})
 
-        mock_extract.assert_called_once()
-        call_args = mock_extract.call_args[0]
-        self.assertEqual(call_args[1:], (['test'], [1], ['10'], False, 2000))
+        # Assert ORCALogExtractor was instantiated correctly
+        mock_extractor_class.assert_called_once_with('test.txt')
 
+        # Assert extract_sections was called with the correct arguments
+        mock_extractor.extract_sections.assert_called_once_with(
+            search_terms=['test'],
+            sections=[1],
+            specify_lines=['10']
+        )
 
 if __name__ == '__main__':
     unittest.main()
