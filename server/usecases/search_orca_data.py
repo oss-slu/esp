@@ -6,20 +6,18 @@ content and finding specific sections based on search terms.
 
 from responses import ResponseSuccess, ResponseFailure, ResponseTypes
 from docx import Document
-from services.file_search_operations import extract_sections, save_document_to_bytes
+from services.file_search_operations import ORCALogExtractor, save_document_to_bytes
 
 
 def preview_document_use_case(data):
-    '''
+    """
     Prepares and returns a preview of the document content 
     based on the provided data.
-    '''
+    """
     file_path = data.get('file_path')
     search_terms = data.get('search_terms')
     sections = data.get('sections')
     temp_specify_lines = data.get('specify_lines')
-    use_total_lines = data.get('use_total_lines', False)
-    total_lines = data.get('total_lines', 2000)
 
     if not all([file_path, search_terms, sections, temp_specify_lines]):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Missing required fields')
@@ -27,8 +25,14 @@ def preview_document_use_case(data):
     try:
         sections = list(map(int, sections))
         specify_lines = [temp_specify_lines] * len(sections)
-        document_content = extract_sections(file_path, search_terms, sections,
-                                        specify_lines, use_total_lines, total_lines)
+
+        # Use ORCALogExtractor for extraction
+        extractor = ORCALogExtractor(file_path)
+        document_content = extractor.extract_sections(
+            search_terms=search_terms,
+            sections=sections,
+            specify_lines=specify_lines,
+        )
         return ResponseSuccess({'document_content': document_content})
     except FileNotFoundError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'File not found: {str(e)}')
@@ -39,25 +43,30 @@ def preview_document_use_case(data):
 
 
 def find_sections_use_case(data):
-    '''
+    """
     Finds and returns a document with the specified data based on the 
     provided search query.
-    '''
+    """
     file_path = data.get('file_path')
     search_terms = data.get('search_terms')
     sections = data.get('sections')
     temp_specify_lines = data.get('specify_lines')
-    use_total_lines = data.get('use_total_lines', False)
-    total_lines = data.get('total_lines', 2000)
-
     if not all([file_path, search_terms, sections, temp_specify_lines]):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Missing required fields')
 
     try:
         sections = list(map(int, sections))
         specify_lines = [temp_specify_lines] * len(sections)
-        document_content = extract_sections(file_path, search_terms, sections,
-                                            specify_lines, use_total_lines, total_lines)
+
+        # Use ORCALogExtractor for extraction
+        extractor = ORCALogExtractor(file_path)
+        document_content = extractor.extract_sections(
+            search_terms=search_terms,
+            sections=sections,
+            specify_lines=specify_lines,
+        )
+
+        # Create a Word document from the extracted content
         document = Document()
         for paragraph in document_content.split('\n'):
             document.add_paragraph(paragraph.strip())
