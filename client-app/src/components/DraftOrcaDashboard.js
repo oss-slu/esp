@@ -337,7 +337,9 @@ const DraftOrcaDashboard = () => {
                   <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
                 </div>
                 <div className="modal-body">
-                  <pre>{previewContent}</pre>
+                  <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                    {previewContent}
+                  </pre>
                 </div>
                 <div className="modal-footer">
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
