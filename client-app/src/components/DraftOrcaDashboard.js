@@ -174,8 +174,7 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: 'First 5',
-      //specify_lines: specifyLines.join(","),
+      specify_lines: specifyLines.join(","),
     };
 
     axios
@@ -330,14 +329,14 @@ const DraftOrcaDashboard = () => {
         </div>    
         {showPreviewModal && (
           <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog"  style={{ maxWidth: "80vw"}} >
+            <div className="modal-dialog"  style={{ maxWidth: "80vw"}}>
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Document Preview</h5>
                   <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
                 </div>
                 <div className="modal-body">
-                  <pre >
+                <pre>
                     {previewContent}
                   </pre>
                 </div>
