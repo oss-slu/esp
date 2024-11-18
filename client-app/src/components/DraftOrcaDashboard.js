@@ -33,8 +33,9 @@ const DraftOrcaDashboard = () => {
   };
 
   const handleSpecifyLineChange = (value) => {
-    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST" }]);
+    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST", lineNumber: "" }]);
   };
+  
 
   const renderSpecifyLine = () => {
     const line = specifyLines[0] || { value: "", showInput: false };
@@ -51,15 +52,15 @@ const DraftOrcaDashboard = () => {
         </select>
         {line.showInput && (
           <input
-            type="text"
-            className="form-control"
-            placeholder="Enter line number"
-            value={line.lineNumber || ""}
-            onChange={(e) => {
-              const updatedLines = [{ ...line, lineNumber: e.target.value }];
-              setSpecifyLines(updatedLines);
-            }}
-          />
+          type="text"
+          className="form-control"
+          placeholder="Enter line number"
+          value={line.lineNumber || ""}
+          onChange={(e) => {
+            const updatedLines = [{ ...line, lineNumber: e.target.value }];
+            setSpecifyLines(updatedLines);
+          }}
+        />
         )}
       </div>
     );
@@ -101,8 +102,19 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      specify_lines: specifyLines
+        .map((line) => {
+          if (line.value === "WHOLE") {
+            return "WHOLE";
+          }
+          if (line.value === "FIRST" || line.value === "LAST") {
+            return `${line.value} ${line.lineNumber || ""}`.trim();
+          }
+          return "";
+        })
+        .join(", "),
     };
+    
 
     axios
       .post("http://localhost:5001/find-sections", data, {
