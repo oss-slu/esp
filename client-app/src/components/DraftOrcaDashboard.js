@@ -16,6 +16,8 @@ const DraftOrcaDashboard = () => {
   const isSpecifyLinesEmpty = specifyLines.length === 0;
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
+  const [previewContent, setPreviewContent] = useState("");
+  const [showPreviewModal, setShowPreviewModal] = useState(false); 
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -162,6 +164,30 @@ const DraftOrcaDashboard = () => {
     setSameCriteria(false);
   };
 
+  const fetchDocumentPreview = () => {
+    if (!selectedFile) {
+      alert("Please select a file.");
+      return;
+    }
+
+    const data = {
+      file_path: filePath.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: specifyLines.join(","),
+    };
+
+    axios
+      .post("http://localhost:5001/preview", data)
+      .then((response) => {
+        setPreviewContent(response.data.document_content); 
+        setShowPreviewModal(true); 
+      })
+      .catch((error) => {
+        console.error("Error fetching preview:", error);
+      });
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -290,6 +316,43 @@ const DraftOrcaDashboard = () => {
         <div className="button-container">
           <button
             className="btn btn-primary"
+            onClick={fetchDocumentPreview}
+              disabled={
+                !searchTerms.length ||
+                !specifyLines.length ||
+                !sections.length ||
+                !selectedFile ||
+                isUploadedFilesEmpty
+              }>
+            Preview
+          </button>
+        </div>    
+        {showPreviewModal && (
+          <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog"  style={{ maxWidth: "80vw"}}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Document Preview</h5>
+                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                <pre>
+                    {previewContent}
+                  </pre>
+                </div>
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="button-container">
+          <button
+            className="btn btn-primary"
             onClick={onSubmit}
             disabled={
               !searchTerms.length ||
@@ -301,6 +364,7 @@ const DraftOrcaDashboard = () => {
             Download Output
           </button>
         </div>
+
       </div>
     </div>
   );
