@@ -52,14 +52,14 @@ const DraftOrcaDashboard = () => {
         </select>
         {line.showInput && (
           <input
-          type="text"
-          className="form-control"
-          placeholder="Enter line number"
-          value={line.lineNumber || ""}
-          onChange={(e) => {
-            const updatedLines = [{ ...line, lineNumber: e.target.value }];
-            setSpecifyLines(updatedLines);
-          }}
+            type="text"
+            className="form-control"
+            placeholder="Enter line number"
+            value={line.lineNumber || ""}
+            onChange={(e) => {
+              const updatedLines = [{ ...line, lineNumber: e.target.value }];
+              setSpecifyLines(updatedLines);
+            }}
         />
         )}
       </div>
@@ -88,7 +88,6 @@ const DraftOrcaDashboard = () => {
   };
 
   const removeUploadedFile = (filePath) => {
-    // You can add logic here to delete the file from the server if needed
     setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== filePath));
   };
 
@@ -98,23 +97,26 @@ const DraftOrcaDashboard = () => {
       return;
     }
 
-    const data = {
-      file_path: filePath.toString(),
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: specifyLines
-        .map((line) => {
-          if (line.value === "WHOLE") {
-            return "WHOLE";
-          }
-          if (line.value === "FIRST" || line.value === "LAST") {
-            return `${line.value} ${line.lineNumber || ""}`.trim();
-          }
-          return "";
-        })
-        .join(", "),
-    };
-    
+function formatSpecifyLines(specifyLines) {
+  return specifyLines
+    .map((line) => {
+      if (line.value === "WHOLE") {
+        return "WHOLE";
+      }
+      if (line.value === "FIRST" || line.value === "LAST") {
+        return `${line.value} ${line.lineNumber || ""}`.trim();
+      }
+      return "";
+    })
+    .join(", ");
+}
+
+const data = {
+  file_path: filePath.toString(),
+  search_terms: searchTerms,
+  sections: sections,
+  specify_lines: formatSpecifyLines(specifyLines),
+};
 
     axios
       .post("http://localhost:5001/find-sections", data, {
@@ -123,7 +125,6 @@ const DraftOrcaDashboard = () => {
       .then((response) => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
-        // setShowCard(true); // Set showCard to true after successful submission
       })
       .catch((error) => {
         console.error("Error:", error);
