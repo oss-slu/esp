@@ -8,7 +8,7 @@ from application.rest.search_orca_data import blueprint as search_blueprint
 from application.rest.upload_files import blueprint as upload_blueprint
 from responses import ResponseSuccess, ResponseTypes
 from usecases.search_orca_data import preview_document_use_case
-
+from services.file_search_operations import ExtractionConfig
 
 class TestAPI(unittest.TestCase):
     """Test suite for API endpoints and use cases."""
@@ -113,7 +113,8 @@ class TestAPI(unittest.TestCase):
         mock_extractor.extract_sections.assert_called_once_with(
             search_terms=['test'],
             sections=[1],
-            specify_lines=['10']
+            specify_lines=['10'],
+            config=ExtractionConfig(use_total_lines=False, total_lines=None)
         )
 
 if __name__ == '__main__':
