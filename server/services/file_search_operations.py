@@ -5,6 +5,20 @@ and saving the extracted data to a byte stream.
 
 from io import BytesIO
 import re
+from dataclasses import dataclass
+
+@dataclass
+class ExtractionConfig:
+    """
+    Configuration options for extracting sections from a file.
+
+    Attributes:
+        use_total_lines (bool): Indicates whether to use the total lines in extraction.
+        total_lines (int, optional): The total number of lines to consider if enabled.
+    """
+    use_total_lines: bool = False
+    total_lines: int = None
+
 
 class ORCALogExtractor:
     """
@@ -26,7 +40,7 @@ class ORCALogExtractor:
     def is_content_line(self, line, term):
         """
         Check if a line is content based on the given term and header pattern.
-
+        
         :param line: The line to check
         :param term: The search term to exclude
         :return: True if the line is content, False otherwise
@@ -77,38 +91,44 @@ class ORCALogExtractor:
             )
         return term_line_num
 
-    def extract_section(self, start_line, section_lines, search_term):
+    def extract_section(self, start_line, section_lines, search_term, config: ExtractionConfig  ):
         """
         Extract a specific section from the log file.
 
         :param start_line: The starting line index
         :param section_lines: Details of the section to extract
         :param search_term: Search term to exclude from content
+        :param config: Extraction configuration containing use_total_lines and total_lines
         :return: Extracted section content
         """
         document_content = ""
 
         if section_lines[0].upper() == 'WHOLE':
-            document_content += self._extract_whole(start_line, search_term)
-
+            content = self._extract_whole(start_line, search_term)
         elif section_lines[0].upper() == 'FIRST':
-            document_content += self._extract_first(start_line, search_term, int(section_lines[1]))
-
+            content = self._extract_first(start_line, search_term, int(section_lines[1]))
         elif section_lines[0].upper() == 'LAST':
-            document_content += self._extract_last(start_line, search_term, int(section_lines[1]))
-
+            content = self._extract_last(start_line, search_term, int(section_lines[1]))
         elif section_lines[0].upper() == 'SPECIFIC':
-            document_content += self._extract_specific(start_line, section_lines[1], search_term)
+            content = self._extract_specific(start_line, section_lines[1], search_term)
+        else:
+            content = ""
 
+        # Apply total_lines restriction if config.use_total_lines is True
+        if config.use_total_lines and config.total_lines is not None:
+            content = "\n".join(content.splitlines()[:config.total_lines])
+
+        document_content += content
         return document_content
 
-    def extract_sections(self, search_terms, sections, specify_lines):
+    def extract_sections(self, search_terms, sections, specify_lines, config: ExtractionConfig):
         """
         Extract multiple sections based on search terms and configuration.
 
         :param search_terms: List of search terms
         :param sections: List of sections to extract
         :param specify_lines: Specifications for each section
+        :param config: Extraction configuration containing use_total_lines and total_lines
         :return: Extracted document content
         """
         term_line_num = self.find_term_lines(search_terms)
@@ -118,7 +138,7 @@ class ORCALogExtractor:
             start_line = term_line_num[i]
             section_lines = specify_lines[section - 1].split()
             search_term = search_terms[0]
-            document_content += self.extract_section(start_line, section_lines, search_term)
+            document_content += self.extract_section(start_line, section_lines, search_term, config)
 
         return document_content
 

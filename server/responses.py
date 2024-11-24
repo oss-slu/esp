@@ -1,5 +1,3 @@
-# pylint: disable=too-few-public-methods
-
 '''
 This module defines the response classes and types for the server.
 

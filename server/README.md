@@ -22,15 +22,15 @@ This server has API endpoints supporting the application. Here's how you run thi
 
    ### On Windows
 
-   The first time you want to run this code, you will need to: 3. Install Git Bash (if not already installed) and in VS code open the terminal of type Git Bash 4. Create a virtual environment: <code>py -m venv venv</code> 5. Activate virtual environment:
+   The first time you want to run this code, you will need to:
 
-   - On Windows: <code>source venv/Scripts/activate</code>
+   1. Install Git Bash (if not already installed) and in VS code open the terminal of type Git Bash
+   2. Create a virtual environment: <code>py -m venv venv</code>
+   3. Install dependencies into the virtual environment: <code>pip install -r requirements.txt</code>
 
-   6. Install dependencies into the virtual environment: <code>pip install -r requirements.txt</code>
+   On all subsequent runs, you will need to:
 
-   On all subsequent runs, you will need to: 7. Activate virtual environment:
-
-   - On Windows: <code>source venv/Scripts/activate</code>
-
-   8. Run the development server:
+   1. Activate virtual environment:
+      - On Windows: <code>source venv/Scripts/activate</code>
+   2. Run the development server:
       - On Windows: <code>bash run_dev_server.sh</code>

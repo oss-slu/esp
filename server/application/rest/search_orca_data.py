@@ -8,7 +8,31 @@ from responses import ResponseSuccess
 from usecases.search_orca_data import find_sections_use_case, preview_document_use_case
 from utils.http_status_mapping import HTTP_STATUS_CODES_MAPPING
 
+# Define constants
+CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+MIME_TYPE = 'application/json'
+OUTPUT_FILENAME = 'output.document'
+
 blueprint = Blueprint("search_orca_data", __name__)
+
+def handle_response(response, mime_type=MIME_TYPE):
+    """
+    Utility function to handle JSON responses.
+    """
+    return Response(
+        json.dumps(response.value),
+        mimetype=mime_type,
+        status=HTTP_STATUS_CODES_MAPPING[response.response_type],
+    )
+
+def handle_document_response(document_content):
+    """
+    Utility function to handle document responses.
+    """
+    document_response = make_response(document_content)
+    document_response.headers.set('Content-Type', CONTENT_TYPE)
+    document_response.headers.set('Content-Disposition', 'attachment', filename=OUTPUT_FILENAME)
+    return document_response
 
 @blueprint.route('/preview', methods=['POST'])
 def preview_document():
@@ -17,11 +41,9 @@ def preview_document():
     """
     data = request.get_json(force=True)
     response = preview_document_use_case(data)
-    return Response(
-        json.dumps(response.value),
-        mimetype="application/json",
-        status=HTTP_STATUS_CODES_MAPPING[response.response_type],
-    )
+
+    # Use the helper function to handle the response
+    return handle_response(response)
 
 @blueprint.route('/find-sections', methods=['POST'])
 def find_sections():
@@ -32,22 +54,9 @@ def find_sections():
     response = find_sections_use_case(data)
 
     if isinstance(response, ResponseSuccess):
-        docx_content = response.value
-        docx_response = make_response(docx_content)
-        docx_response.headers.set(
-            'Content-Type',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        )
-        docx_response.headers.set(
-            'Content-Disposition',
-            'attachment',
-            filename='output.docx'
-        )
-        return docx_response
+        document_content = response.value
+        # Use the helper function to handle document response
+        return handle_document_response(document_content)
 
-    # Handle ResponseFailure
-    return Response(
-        json.dumps(response.value),
-        mimetype="application/json",
-        status=HTTP_STATUS_CODES_MAPPING[response.response_type],
-    )
+    # Handle failure response
+    return handle_response(response)
