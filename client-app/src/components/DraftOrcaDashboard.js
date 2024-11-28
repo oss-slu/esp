@@ -8,7 +8,7 @@ const DraftOrcaDashboard = () => {
   const [filePath, setFilePath] = useState("");
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
-  const [sections, setSections] = useState([]);
+  const [sections, setSections] = useState();
   const [showCard, setShowCard] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const isUploadedFilesEmpty = uploadedFiles.length === 0;
@@ -105,9 +105,11 @@ const DraftOrcaDashboard = () => {
 
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: formatSpecifyLines()
+      search_terms: searchTerms.split(","),
+      sections: sections.type === "Custom"
+        ? sections.value.split(",") // Convert custom value into an array
+        : sections.value.split(","), // Handle First/Last consistently
+      specify_lines: specifyLines.toString(),
     };
 
     axios
@@ -177,9 +179,11 @@ const DraftOrcaDashboard = () => {
 
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: formatSpecifyLines()
+      search_terms: searchTerms.split(","),
+      sections: sections.type === "Custom"
+        ? sections.value.split(",") // Convert custom value into an array
+        : sections.value.split(","), // Handle First/Last consistently
+      specify_lines: specifyLines.toString(),
     };
 
     axios
@@ -269,15 +273,42 @@ const DraftOrcaDashboard = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="ex: 1-5 or 1,2,5"
-            value={sections.join(", ")}
-            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
-          />
-        </div>
+  <span>Number of sections?</span>
+  <select
+  className="form-select mb-2"
+  value={sections.type || "Custom"} // Bind the value to sections.type
+  onChange={(e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue === "First") {
+      setSections({ type: "First", value: "1" }); // Consistent object format
+    } else if (selectedValue === "Last") {
+      setSections({ type: "Last", value: "0" }); // Consistent object format
+    } else {
+      setSections({ type: "Custom", value: "" }); // Clear for custom input
+    }
+  }}
+>
+  <option value="First">First</option>
+  <option value="Last">Last</option>
+  <option value="Custom">Custom</option>
+</select>
+
+{/* Custom input field */}
+{sections.type === "Custom" && (
+  <input
+    type="text"
+    className="form-control"
+    placeholder="Enter custom sections (e.g., 1-5 or 1,3,5)"
+    value={sections.value} // Bind to sections.value
+    onChange={(e) =>
+      setSections({ type: "Custom", value: e.target.value.trim() })
+    }
+  />
+)}
+
+</div>
+
+
 
         <div className="button-container">
           <button
