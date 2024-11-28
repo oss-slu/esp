@@ -47,8 +47,8 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.type === "Custom"
-        ? sections.value.split(",") // Convert custom value into an array
-        : sections.value.split(","), // Handle First/Last consistently
+        ? sections.value.split(",") 
+        : sections.value.split(","),
       specify_lines: specifyLines.toString(),
     };
 
@@ -87,8 +87,8 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.type === "Custom"
-        ? sections.value.split(",") // Convert custom value into an array
-        : sections.value.split(","), // Handle First/Last consistently
+        ? sections.value.split(",")
+        : sections.value.split(","), 
       specify_lines: specifyLines.toString(),
     };
 
@@ -148,36 +148,39 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-  <span>Number of sections?</span>
-  <select
-  className="form-select mb-2"
-  value={sections.type || "Custom"} 
-  onChange={(e) => {
-    const selectedValue = e.target.value;
-    if (selectedValue === "First") {
-      setSections({ type: "First", value: "1" }); 
-    } else if (selectedValue === "Last") {
-      setSections({ type: "Last", value: "0" }); 
-    } else {
-      setSections({ type: "Custom", value: "" }); 
-    }
-  }}>
-  <option value="First">First</option>
-  <option value="Last">Last</option>
-  <option value="Custom">Custom</option>
-</select>
-{sections.type === "Custom" && (
-  <input
-    type="text"
-    className="form-control"
-    placeholder="Enter custom sections (e.g., 1-5 or 1,3,5)"
-    value={sections.value} 
-    onChange={(e) =>
-      setSections({ type: "Custom", value: e.target.value.trim() })
-    }
-  />
-)}
-</div>
+          <span>Number of sections?</span>
+          <select
+            className="form-select mb-2"
+            value={sections.type || "Custom"} 
+            onChange={(e) => {
+              const selectedValue = e.target.value;
+              if (selectedValue === "First") {
+                  setSections({ type: "First", value: "1" }); 
+              } else if (selectedValue === "Last") {
+                  setSections({ type: "Last", value: "0" }); 
+              } else {
+                  setSections({ type: "Custom", value: "" }); 
+              }
+            }}
+          >
+            <option value="First">First</option>
+            <option value="Last">Last</option>
+            <option value="Custom">Custom</option>
+          </select>
+
+          {sections.type === "Custom" && (
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter custom sections (e.g., 1-5 or 1,3,5)"
+            value={sections.value} 
+            onChange={(e) =>
+              setSections({ type: "Custom", value: e.target.value.trim() })
+            }
+          />
+          )}
+
+        </div>
 
 
         <div className="mb-3 text-start">
