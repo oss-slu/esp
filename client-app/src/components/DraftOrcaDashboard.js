@@ -20,12 +20,11 @@ const DraftOrcaDashboard = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false); 
 
   const onFileSelected = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile.type !== "text/plain") {
+    if (event.target.files[0].type !== "text/plain") {
       alert("Invalid file type. Please upload a .txt file.");
       return;
     }
-    setSelectedFile(selectedFile);
+    setSelectedFile(event.target.files[0]);
   };
 
   const isSearchQueryEnabled = () => {
@@ -84,6 +83,7 @@ const DraftOrcaDashboard = () => {
       .catch((error) => {
         console.error("Error uploading file:", error);
       });
+
   };
 
   const removeUploadedFile = (filePath) => {
@@ -200,7 +200,6 @@ const DraftOrcaDashboard = () => {
               className="form-control"
               onChange={onFileSelected}
               accept=".txt"
-              value=""
               aria-label="Upload ORCA data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
