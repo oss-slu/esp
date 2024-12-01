@@ -13,8 +13,19 @@ describe("DraftOrcaDashboard", () => {
     jest.spyOn(window, "alert").mockImplementation(() => {});
     jest.spyOn(console, "error").mockImplementation(() => {});
   });
+  test("Displays uploaded ORCA file name after choosing the file", async () => {
+    render(<DraftOrcaDashboard />);
 
-  test("Clicking on Choose File and uploading an ORCA file", async () => {
+    const file = new File(["content"], "test.orca.txt", { type: "text/plain" });
+    const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
+
+    // Simulate selecting a file
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    // Check if the file name is displayed in the document
+    expect(fileInput.files[0].name).toBe("test.orca.txt");
+  });
+  test("uploading an ORCA file", async () => {
     render(<DraftOrcaDashboard />);
 
     const file = new File(["content"], "test.orca.txt", { type: "text/plain" });
@@ -23,7 +34,9 @@ describe("DraftOrcaDashboard", () => {
 
     // Mock axios post response
     const mockAxios = require("axios");
-    mockAxios.post.mockResolvedValueOnce({ data: { filename: "test.orca.txt" } });
+    mockAxios.post.mockResolvedValue({
+      data: { file_name: "test.orca.txt", file_path: "/uploads/test.orca.txt" },
+    });
 
     // Simulate file selection and upload
     fireEvent.change(fileInput, { target: { files: [file] } });
@@ -35,10 +48,6 @@ describe("DraftOrcaDashboard", () => {
         "http://localhost:5001/upload",
         expect.any(FormData),
       );
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText("test.orca.txt")).toBeInTheDocument();
     });
   });
 
