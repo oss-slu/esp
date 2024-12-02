@@ -8,7 +8,7 @@ const DraftOrcaDashboard = () => {
   const [filePath, setFilePath] = useState("");
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
-  const [sections, setSections] = useState();
+  const [sections, setSections] = useState([]);
   const [showCard, setShowCard] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const isUploadedFilesEmpty = uploadedFiles.length === 0;
@@ -18,6 +18,8 @@ const DraftOrcaDashboard = () => {
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [sectionType, setSectionType] = useState("SELECT");
+  const [customSections, setCustomSections] = useState("");
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -29,7 +31,17 @@ const DraftOrcaDashboard = () => {
   };
 
   const isSearchQueryEnabled = () => {
-    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length;
+    const hasValidSections = 
+      (sectionType === "FIRST") || 
+      (sectionType === "LAST") ||
+      (sectionType === "CUSTOM" && customSections.trim() !== "");
+
+    return (
+      uploadedFiles.length > 0 &&
+      searchTerms.length > 0 &&
+      specifyLines.length > 0 &&
+      hasValidSections
+    );
   };
 
   const handleSpecifyLineChange = (value) => {
@@ -65,13 +77,6 @@ const DraftOrcaDashboard = () => {
     );
   };
 
-  const formatSpecifyLines = () => {
-    const line = specifyLines[0];
-    return line.value === "WHOLE" || line.value === "SELECT" 
-      ? line.value 
-      : `${line.value} ${line.lineNumber}`;
-   };
-
   const onUpload = () => {
     if (!selectedFile) {
       console.error("No file selected");
@@ -94,22 +99,81 @@ const DraftOrcaDashboard = () => {
   };
 
   const removeUploadedFile = (filePath) => {
+    // You can add logic here to delete the file from the server if needed
     setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== filePath));
   };
+
+  const handleSectionTypeChange = (value) => {
+    setSectionType(value);
+    setCustomSections(""); // Clear custom sections when changing type
+    
+    switch (value) {
+      case "FIRST":
+        setSections(["1"]);
+        break;
+      case "LAST":
+        setSections(["last"]);
+        break;
+      case "CUSTOM":
+        setSections([]);
+        break;
+      default:
+        setSections([]);
+    }
+  };
+
+  const handleCustomSectionChange = (value) => {
+    setCustomSections(value);
+    if (value.trim()) {
+      const sectionArray = value.split(",")
+        .map(s => s.trim())
+        .filter(s => s !== "");
+      setSections(sectionArray);
+    } else {
+      setSections([]);
+    }
+  };
+
+  // Render section selection UI
+  const renderSectionSelection = () => (
+    <div className="mb-3 text-start">
+      <span>Select cycles for data extraction:</span>
+      <div className="d-flex align-items-center gap-2">
+        <select
+          className="form-select"
+          value={sectionType}
+          onChange={(e) => handleSectionTypeChange(e.target.value)}
+        >
+          <option value="SELECT">Select cycle type</option>
+          <option value="FIRST">First cycle</option>
+          <option value="LAST">Last cycle</option>
+          <option value="CUSTOM">Custom cycles</option>
+        </select>
+        
+        {sectionType === "CUSTOM" && (
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter cycles (e.g., 1, 2, 3)"
+            value={customSections}
+            onChange={(e) => handleCustomSectionChange(e.target.value)}
+          />
+        )}
+      </div>
+    </div>
+  );
 
   const onSubmit = () => {
     if (!selectedFile) {
       alert("Please select a file.");
       return;
     }
-
+  
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms.split(","),
-      sections: sections.type === "Custom"
-        ? sections.value.split(",")
-        : sections.value.split(","),
-      specify_lines: specifyLines.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: "FIRST 5",
     };
 
     axios
@@ -119,6 +183,7 @@ const DraftOrcaDashboard = () => {
       .then((response) => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
+        // setShowCard(true); // Set showCard to true after successful submission
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -176,15 +241,13 @@ const DraftOrcaDashboard = () => {
       alert("Please select a file.");
       return;
     }
-
+  
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms.split(","),
-      sections: sections.type === "Custom"
-        ? sections.value.split(",")
-        : sections.value.split(","),
+      search_terms: searchTerms,
+      sections: sections,
       specify_lines: specifyLines.toString(),
-    };
+    };  
 
     axios
       .post("http://localhost:5001/preview", data)
@@ -272,39 +335,7 @@ const DraftOrcaDashboard = () => {
           {renderSpecifyLine()}
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Number of sections?</span>
-          <select
-            className="form-select mb-2"
-            value={sections.type || "Custom"} 
-            onChange={(e) => {
-              const selectedValue = e.target.value;
-              if (selectedValue === "First") {
-                setSections({ type: "First", value: "1" }); 
-              } else if (selectedValue === "Last") {
-                setSections({ type: "Last", value: "0" }); 
-              } else {
-                setSections({ type: "Custom", value: "" }); 
-              }
-            }}
-          >
-            <option value="First">First</option>
-            <option value="Last">Last</option>
-            <option value="Custom">Custom</option>
-          </select>
-
-          {sections.type === "Custom" && (
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter custom sections (e.g., 1-5 or 1,3,5)"
-            value={sections.value}
-            onChange={(e) =>
-              setSections({ type: "Custom", value: e.target.value.trim() })
-            }
-          />
-          )}
-        </div>
+        {renderSectionSelection()}
 
 
 
