@@ -33,9 +33,8 @@ const DraftOrcaDashboard = () => {
   };
 
   const handleSpecifyLineChange = (value) => {
-    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST", lineNumber: "" }]);
+    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST" }]);
   };
-  
 
   const renderSpecifyLine = () => {
     const line = specifyLines[0] || { value: "", showInput: false };
@@ -60,11 +59,18 @@ const DraftOrcaDashboard = () => {
               const updatedLines = [{ ...line, lineNumber: e.target.value }];
               setSpecifyLines(updatedLines);
             }}
-        />
+          />
         )}
       </div>
     );
   };
+
+  const formatSpecifyLines = () => {
+    const line = specifyLines[0];
+    return line.value === "WHOLE" || line.value === "SELECT" 
+      ? line.value 
+      : `${line.value} ${line.lineNumber}`;
+   };
 
   const onUpload = () => {
     if (!selectedFile) {
@@ -97,26 +103,12 @@ const DraftOrcaDashboard = () => {
       return;
     }
 
-  function formatSpecifyLines(specifyLines) {
-    return specifyLines
-      .map((line) => {
-        if (line.value === "WHOLE") {
-          return "WHOLE";
-        }
-        if (line.value === "FIRST" || line.value === "LAST") {
-          return `${line.value} ${line.lineNumber || ""}`.trim();
-        }
-        return "";
-      })
-      .join(", ");
-  }
-
-  const data = {
-    file_path: filePath.toString(),
-    search_terms: searchTerms,
-    sections: sections,
-    specify_lines: formatSpecifyLines(specifyLines),
-  };
+    const data = {
+      file_path: filePath.toString(),
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: formatSpecifyLines()
+    };
 
   axios
       .post("http://localhost:5001/find-sections", data, {
@@ -196,7 +188,7 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      specify_lines: formatSpecifyLines()
     };
 
     axios
