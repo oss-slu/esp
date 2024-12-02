@@ -27,6 +27,7 @@ def preview_document():
     '''
     data = request.get_json(force=True)
     response = preview_document_use_case(data)
+    console.log(data)
     return Response(
         json.dumps(response.value),
         mimetype="application/json",

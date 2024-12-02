@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import "../styles/DashboardComponent.css";
@@ -12,6 +12,22 @@ const OrcaDashboardComponent = () => {
   const [useTotalLines, setUseTotalLines] = useState("");
   const [totalLines, setTotalLines] = useState("");
   const [previewContent, setPreviewContent] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, []);
+
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -76,10 +92,10 @@ const OrcaDashboardComponent = () => {
   };
 
   const fetchDocumentPreview = () => {
-    if (!selectedFile) {
-      alert("Please select a file.");
-      return;
-    }
+     if (!selectedFile) {
+       alert("Please select a file.");
+       return;
+     }
 
     const data = {
       file_path: filePath.toString(),
@@ -95,17 +111,43 @@ const OrcaDashboardComponent = () => {
     if (totalLines) {
       data.total_lines = totalLines;
     }
-
-    axios
-      .post("http://localhost:5001/preview", data)
-      .then((response) => {
-        const documentContent = response.data.document_content;
-        setPreviewContent(documentContent);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    console.log(data)
+    // Simulated response
+  const mockResponse = {
+    data: {
+      document_content: `Preview of document content for file: ${data.file_path}
+      Search Terms: ${data.search_terms.join(", ")}
+      Sections: ${data.sections.join(", ")}
+      Specify Lines: ${data.specify_lines}
+      Total Lines: ${data.use_total_lines ? data.total_lines : "Not Specified"}`,
+    },
   };
+
+  // Simulate the response handling
+  try {
+    const documentContent = mockResponse.data.document_content;
+    console.log("Mock Response:", mockResponse);
+    setPreviewContent(documentContent);
+    setIsModalOpen(true);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
+  //   axios
+  //     .post("http://localhost:5001/preview", data)
+  //     .then((response) => {
+  //       const documentContent = response.data.document_content;
+
+  //       console.log(response)
+  //       setPreviewContent(documentContent);
+  //       setIsModalOpen(true);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // };
 
   return (
     <div className="container py-5 d-flex justify-content-center">
@@ -187,14 +229,29 @@ const OrcaDashboardComponent = () => {
           </button>
         </div>
 
-        {previewContent && (
+        Modal
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button className="close-button" onClick={() => setIsModalOpen(false)}>
+                &times;
+              </button>
+              <h3>Document Preview</h3>
+              <div className="preview-box">
+                <pre>{previewContent}</pre>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* {previewContent && (
           <div className="document-preview">
             <h3>Document Preview</h3>
             <div className="preview-box">
               <pre>{previewContent}</pre>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
