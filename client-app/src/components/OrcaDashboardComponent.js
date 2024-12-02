@@ -12,6 +12,7 @@ const OrcaDashboardComponent = () => {
   const [useTotalLines, setUseTotalLines] = useState("");
   const [totalLines, setTotalLines] = useState("");
   const [previewContent, setPreviewContent] = useState("");
+  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -100,11 +101,17 @@ const OrcaDashboardComponent = () => {
       .post("http://localhost:5001/preview", data)
       .then((response) => {
         const documentContent = response.data.document_content;
+        console.log("Preview content:", documentContent); // Log the response to check if content is returned
         setPreviewContent(documentContent);
+        setModalVisible(true); // Open the modal when preview content is available
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+
+  const closeModal = () => {
+    setModalVisible(false); // Close the modal
   };
 
   return (
@@ -183,19 +190,27 @@ const OrcaDashboardComponent = () => {
         </button>
         <div className="buttonSpacing">
           <button className="btn btn-primary" onClick={onSubmit}>
-            Download Output
+            Generate Word Document
           </button>
         </div>
+      </div>
 
-        {previewContent && (
-          <div className="document-preview">
-            <h3>Document Preview</h3>
+      {/* Modal for document preview */}
+      {modalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="preview-header">
+              <span>Preview Output</span>
+              <button className="close-btn" onClick={closeModal}>
+                &times;
+              </button>
+            </div>
             <div className="preview-box">
-              <pre>{previewContent}</pre>
+              {previewContent}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

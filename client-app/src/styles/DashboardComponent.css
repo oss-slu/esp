@@ -1,196 +1,97 @@
-input::placeholder {
-  color: gray;
-  font-style: italic;
-  font-size: 12px;
-}
-span {
-  text-align: start;
-}
-
-.nav-link.active {
-  font-weight: bold;
-  color: #fff;
-  border-bottom: 1px solid #fff;
-}
-
-.document-preview {
-  margin-top: 20px;
-}
-
-.preview-box {
-  background-color: #212529;
-  color: #ffffff;
-  padding: 20px;
-  border-radius: 4px;
-  width: 600px;
-  height: 800px;
-  overflow-y: auto;
+/* Container and button styles */
+.container {
+  max-width: 900px;
   margin: 0 auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.preview-box pre {
-  font-family: "Arial", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group input {
+  flex: 1;
+}
+
+.input-group button {
+  margin-left: 0.5rem;
 }
 
 .buttonSpacing {
-  padding: 10px;
+  margin-top: 1rem;
 }
 
-/* :host ::ng-deep .custom-ms 
-        .p-multiselect-label {
-        width: 300px !important;
-    }
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
 
-    input[type="file"]{
-        padding: 0.5rem;
-        cursor: pointer;
-        font-size: 1rem;
-    }
+.modal-content {
+  background: white;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+  overflow-y: auto;
+  max-height: 80vh;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
 
-    input[type="file"]::file-selector-button {
-        padding: 0.5rem 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f0f0f0;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        }
-        
-        input[type="file"]::file-selector-button:hover {
-        background-color: #e0e0e0;
-        }
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
 
-    #whole {
-        font-family: 'Didot';
-        font-size: 20px;
-        text-align: center;
-        padding: 80px 0;
-        position: relative;
-    }
-    
-    .form-label {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        display: inline-block;
-        padding: 8px 15px;
-        cursor: pointer;
-        font-size: 18px;
-        transition-duration: 0.7s;
-    }
+.preview-box {
+  max-height: 400px;
+  overflow-y: scroll;
+  font-family: 'Courier New', monospace;
+  background-color: #f9f9f9; /* Light background for better visibility */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  white-space: pre-wrap; /* Ensures text wrapping */
+  word-wrap: break-word; /* Prevents content from overflowing */
+  text-align: left; /* Aligns the content to the left */
+  line-height: 1.5; /* Increases line height for better readability */
+  margin-top: 10px; /* Adds spacing between header and content */
+}
 
-    .form-label:hover {
-        background-color: black;
-        color:white;
-    }
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
 
-    #keyTerms-toSearch {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
+.preview-header span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: maroon;
+}
 
-    #linesSpecified-toSearch {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
-
-    #sections-toSearch {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
-
-    #useTotalLines-toSearch {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
-
-    #totalLines-toSearch {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
-
-    input::placeholder {
-        color: gray;
-        font-family:'Courier New', Courier, monospace;
-        font-style: italic;
-        font-size: 12px;
-    }
-
-
-    #fileNameInput {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px 12px;
-        width: 210x;
-        box-sizing: border-box;
-        font-size: 18px;
-    }
-
-    #fileNameInput:focus {
-        border: 2px solid #555;
-    }
-
-    #downloadButton {
-        font-family: 'Calibri';
-        font-size: 18px;
-        color: black;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 25px;
-        padding: 12px;
-    }
-
-    #downloadButton:hover,.Submit:hover {
-        background-color: black;
-        color:white;
-        transform: scale(1.1);
-        transition: all 0.5s ease-in;
-        cursor: pointer;
-    }
-
-    .Submit {
-        border: none;
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
-    }
-
-    .form-control:focus {
-        box-shadow: none;
-        border-color: #86b7fe;
-      }
-      
-      .btn-primary {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-      }
-      
-      .btn-primary:hover {
-        background-color: #0b5ed7;
-        border-color: #0a58ca;
-      }
-       */
+.close-btn:hover {
+  color: red; /* Color change on hover */
+}
