@@ -23,7 +23,7 @@ const AboutComponent = () => {
               <li><strong>Uploaded File:</strong> ORCA log file (`.txt`)</li>
               <li><strong>Search Terms:</strong> `CARTESIAN COORDINATES`</li>
               <li><strong>Line Specification:</strong> `FIRST`</li>
-              <li><strong>Sections:</strong> `1-5`</li>
+              <li><strong>Sections:</strong> `1`</li>
             </ul>
             <strong>Output:</strong> Extracted data in `output.docx` containing the first occurrence of `CARTESIAN COORDINATES` in sections 1-5.
           </li>
@@ -33,7 +33,7 @@ const AboutComponent = () => {
               <li><strong>Uploaded File:</strong> ORCA log file with molecular energy data</li>
               <li><strong>Search Terms:</strong> `TOTAL ENERGY, FINAL GRADIENT`</li>
               <li><strong>Line Specification:</strong> `WHOLE`</li>
-              <li><strong>Sections:</strong> `2,4`</li>
+              <li><strong>Sections:</strong> `2`</li>
             </ul>
             <strong>Output:</strong> Extracted data in `output.docx` containing all lines with `TOTAL ENERGY` and `FINAL GRADIENT` from sections 2 and 4.
           </li>
@@ -44,7 +44,7 @@ const AboutComponent = () => {
           <li>Upload a `.txt` file containing ORCA log data using the file upload option.</li>
           <li>Enter keywords in the search field (e.g., `CARTESIAN COORDINATES`). Press **Enter** or use commas to add multiple terms.</li>
           <li>Select how to specify lines (e.g., `FIRST`, `LAST`, `WHOLE`) and provide additional details like line numbers if required.</li>
-          <li>Define sections to search within (e.g., `1-5` or `1,3,5`).</li>
+          <li>Define sections to search within (e.g., `1-2` or `1,2`).</li>
           <li>Submit the search query to review and validate your criteria.</li>
           <li>Preview the extracted data using the **Preview** button.</li>
           <li>Download the results as a Word document by clicking the **Download Output** button.</li>
