@@ -60,6 +60,14 @@ const AboutComponent = () => {
           <li><strong>User-Friendly Interface:</strong> Interactive design with badges, dropdowns, and modals for seamless navigation.</li>
         </ul>
 
+        <h3>Tutorial Video</h3>
+        <div className="tutorial-video">
+          <p>Watch this video to learn how to use the application:</p>
+          <video width="560" height="315" controls>
+            <source src="/tutorial Video.mov" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
     </Container>
   );
