@@ -363,20 +363,36 @@ const data = {
           </div>
         )}
 
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={onSubmit}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !selectedFile ||
-              isUploadedFilesEmpty
-            }>
-            Download Output
-          </button>
-        </div>
+<div className="button-container">
+  <button
+  title="Download"
+    className="btn"
+    onClick={onSubmit}
+    disabled={
+      !searchTerms.length ||
+      !specifyLines.length ||
+      !sections.length ||
+      !selectedFile ||
+      isUploadedFilesEmpty
+    }
+    style={{
+      backgroundColor: "transparent",
+      border: "2px solid #4169E1", 
+      padding: "0", 
+      width: "96px", 
+      height: "96px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <img
+      src="download-icon.png"
+      alt="Download"
+      style={{ width: "96px", height: "96px" }}
+    />
+  </button>
+</div>
 
       </div>
     </div>
@@ -384,3 +400,6 @@ const data = {
 };
 
 export default DraftOrcaDashboard;
+
+
+
