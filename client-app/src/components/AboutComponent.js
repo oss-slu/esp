@@ -6,13 +6,23 @@ const AboutComponent = () => {
   return (
     <Container className="d-flex justify-content-center mb-4">
       <div className="text-left mb-3 min-vh-100">
-        <h2 className="mb-4">About</h2>
+        <h2 className="mb-4">About Electronic Structure Parser</h2>
         <p className="about-content">
           Our web application specializes in extracting specific details from chemistry log files.
           Users can effortlessly search for information by entering a search term, enabling
           efficient data retrieval. Additionally, our application offers the convenience of
           downloading the extracted data as a Word document, ensuring seamless accessibility and
           usability.
+        </p>
+        <p className="about-content">
+          Access the application here:{" "}
+          <a
+            href="https://raven-intent-mentally.ngrok-free.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Electronic Structure Parser
+          </a>
         </p>
 
         <h3>Example Inputs and Outputs</h3>
@@ -25,7 +35,7 @@ const AboutComponent = () => {
               <li><strong>Line Specification:</strong> `FIRST`</li>
               <li><strong>Sections:</strong> `1`</li>
             </ul>
-            <strong>Output:</strong> Extracted data in `output.docx` containing the first occurrence of `CARTESIAN COORDINATES` in sections 1-5.
+            <strong>Output:</strong> Extracted data in `output.docx` containing the first occurrence of `CARTESIAN COORDINATES` in section 1.
           </li>
           <li>
             <strong>Input 2:</strong> 
@@ -33,9 +43,9 @@ const AboutComponent = () => {
               <li><strong>Uploaded File:</strong> ORCA log file with molecular energy data</li>
               <li><strong>Search Terms:</strong> `TOTAL ENERGY, FINAL GRADIENT`</li>
               <li><strong>Line Specification:</strong> `WHOLE`</li>
-              <li><strong>Sections:</strong> `2`</li>
+              <li><strong>Sections:</strong> `1,2`</li>
             </ul>
-            <strong>Output:</strong> Extracted data in `output.docx` containing all lines with `TOTAL ENERGY` and `FINAL GRADIENT` from sections 2 and 4.
+            <strong>Output:</strong> Extracted data in `output.docx` containing all lines with `TOTAL ENERGY` and `FINAL GRADIENT` from sections 1 and 2.
           </li>
         </ul>
         
@@ -53,7 +63,7 @@ const AboutComponent = () => {
         <h3>Key Features</h3>
         <ul>
           <li><strong>File Upload:</strong> Accepts `.txt` files for ORCA data processing.</li>
-          <li><strong>Dynamic Search:</strong> Allows multiple search terms and criteria for precise data extraction.</li>
+          <li><strong>Search Functionality:</strong> Allows users to search for a single term in the uploaded file for precise data extraction. (Support for multiple search terms is planned for a future update.)</li>
           <li><strong>Section-Based Selection:</strong> Filters data by user-defined sections for better accuracy.</li>
           <li><strong>Preview Option:</strong> Provides a preview of extracted data before downloading.</li>
           <li><strong>Output Generation:</strong> Creates a Word document (`output.docx`) with the extracted results.</li>
