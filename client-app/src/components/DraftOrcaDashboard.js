@@ -110,31 +110,40 @@ const DraftOrcaDashboard = () => {
       specify_lines: formatSpecifyLines()
     };
 
-    axios
+  axios
       .post("http://localhost:5001/find-sections", data, {
         responseType: "blob",
       })
       .then((response) => {
         const blob = new Blob([response.data]);
-        downloadDocument(blob);
+        const today = new Date();
+        const date = today.toISOString().slice(0, 10).replace(/-/g, "");
+        const inputFileName = truncateString(selectedFile.name, 40);
+        const searchTerm = truncateString(searchTerms[0] || "SEARCH", 40);
+        const filename = `${date}_${inputFileName}_${searchTerm}.docx`.slice(0, 100);
+        downloadDocument(blob, filename);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const onSearchQuerySubmit = () => {
-    setShowCard(false);
-    if (!selectedFile) {
-      alert("Please select a file.");
-      return;
-    } else {
-      setShowCard(true);
-    }
+    const onSearchQuerySubmit = () => {
+      setShowCard(false);
+      if (!selectedFile) {
+        alert("Please select a file.");
+        return;
+      } else {
+        setShowCard(true);
+      }
+    };
+
+  const truncateString = (str, maxLength) => {
+    return str.length > maxLength ? str.slice(0, maxLength - 3) + "..." : str;
   };
 
-  const downloadDocument = (blob) => {
-    saveAs(blob, "output.docx");
+  const downloadDocument = (blob, filename) => {
+    saveAs(blob, filename);
   };
 
   const handleKeyPress = (e, setterFunc) => {
@@ -355,9 +364,10 @@ const DraftOrcaDashboard = () => {
           </div>
         )}
 
-        <div className="button-container">
+        <div className="button-container d-flex justify-content-center">
           <button
-            className="btn btn-primary"
+          title="Download"
+            className="btn"
             onClick={onSubmit}
             disabled={
               !searchTerms.length ||
@@ -365,11 +375,25 @@ const DraftOrcaDashboard = () => {
               !sections.length ||
               !selectedFile ||
               isUploadedFilesEmpty
-            }>
-            Download Output
+            }
+            style={{
+              backgroundColor: "transparent",
+              border: "2px solid #4169E1", 
+              padding: "0", 
+              width: "96px", 
+              height: "96px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="download-icon.png"
+              alt="Download"
+              style={{ width: "96px", height: "96px" }}
+            />
           </button>
         </div>
-
       </div>
     </div>
   );
