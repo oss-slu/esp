@@ -7,14 +7,14 @@ const AboutComponent = () => {
     <Container className="d-flex justify-content-center mb-4">
       <div className="text-left mb-3 min-vh-100">
         <h2 className="mb-4">About Electronic Structure Parser</h2>
-        <p className="about-content">
+        <p>
           Our web application specializes in extracting specific details from chemistry log files.
           Users can effortlessly search for information by entering a search term, enabling
           efficient data retrieval. Additionally, our application offers the convenience of
           downloading the extracted data as a Word document, ensuring seamless accessibility and
           usability.
         </p>
-        <p className="about-content">
+        <p>
           Access the application here:{" "}
           <a
             href="https://raven-intent-mentally.ngrok-free.app/"
