@@ -6,3 +6,26 @@
   font-size: 1.25rem;
   line-height: 1.5;
 }
+
+.examples-list {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.how-to-guide {
+  margin-top: 1rem;
+  list-style: decimal inside;
+}
+
+.logo-title {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+a.logo-title:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
