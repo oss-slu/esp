@@ -7,17 +7,9 @@ from flask import Blueprint, Response, request, jsonify
 from flask_cors import cross_origin
 from responses import ResponseTypes
 from usecases.upload_files import file_upload_use_case, get_data_use_case
+from utils.http_status_mapping import HTTP_STATUS_CODES_MAPPING
 
 blueprint = Blueprint("upload_files", __name__)
-
-HTTP_STATUS_CODES_MAPPING = {
-    ResponseTypes.NOT_FOUND: 404,
-    ResponseTypes.SYSTEM_ERROR: 500,
-    ResponseTypes.AUTHORIZATION_ERROR: 403,
-    ResponseTypes.PARAMETER_ERROR: 400,
-    ResponseTypes.SUCCESS: 200,
-    ResponseTypes.CONFLICT: 409
-}
 
 @blueprint.route('/upload', methods=['POST'])
 @cross_origin()
