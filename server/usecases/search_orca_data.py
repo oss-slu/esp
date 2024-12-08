@@ -9,7 +9,7 @@ def preview_document_use_case(data):
     based on the provided data.
     '''
     file_path = data.get('file_path')
-    search_terms = data.get('search_terms')
+    search_terms = data.get('search_terms', [])  
     sections = data.get('sections')
     temp_specify_lines = data.get('specify_lines')
     use_total_lines = data.get('use_total_lines', False)
@@ -38,7 +38,7 @@ def find_sections_use_case(data):
     provided search query.
     '''
     file_path = data.get('file_path')
-    search_terms = data.get('search_terms')
+    search_terms = data.get('search_terms', [])
     sections = data.get('sections')
     temp_specify_lines = data.get('specify_lines')
     use_total_lines = data.get('use_total_lines', False)
