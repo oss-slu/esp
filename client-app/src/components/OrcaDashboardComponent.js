@@ -43,10 +43,12 @@ const OrcaDashboardComponent = () => {
       return;
     }
 
+    const searchTermsArray = searchTerms.split(",").map((term) => term.trim().toUpperCase());
+
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms.split(","),
-      sections: sections.split(","),
+      search_terms: searchTermsArray,
+      sections: sections.split(",").map((section) => section.trim()),
       specify_lines: specifyLines.toString(),
     };
 
@@ -81,10 +83,12 @@ const OrcaDashboardComponent = () => {
       return;
     }
 
+    const searchTermsArray = searchTerms.split(",").map((term) => term.trim().toUpperCase()); // Clean and split terms
+
     const data = {
       file_path: filePath.toString(),
-      search_terms: searchTerms.split(","),
-      sections: sections.split(","),
+      search_terms: searchTermsArray, // Send the array of search terms
+      sections: sections.split(",").map((section) => section.trim()), // Clean section inputs
       specify_lines: specifyLines.toString(),
     };
 
