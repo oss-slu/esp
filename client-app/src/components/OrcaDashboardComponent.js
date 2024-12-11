@@ -12,6 +12,7 @@ const OrcaDashboardComponent = () => {
   const [useTotalLines, setUseTotalLines] = useState("");
   const [totalLines, setTotalLines] = useState("");
   const [previewContent, setPreviewContent] = useState("");
+  const [downloadFormat, setDownloadFormat] = useState('docx');
 
   const onFileSelected = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -37,43 +38,38 @@ const OrcaDashboardComponent = () => {
       });
   };
 
+  const downloadDocument = (blob, format) => {
+    saveAs(blob, `output.${format}`);
+  };
+
+
   const onSubmit = () => {
     if (!selectedFile) {
       alert("Please select a file.");
       return;
     }
-
+    
     const data = {
       file_path: filePath.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
+      format: downloadFormat
     };
-
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
-
+  
     axios
       .post("http://localhost:5001/find-sections", data, {
         responseType: "blob",
       })
       .then((response) => {
         const blob = new Blob([response.data]);
-        downloadDocument(blob);
+        downloadDocument(blob, downloadFormat);  // Use the function here instead of saveAs directly
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const downloadDocument = (blob) => {
-    saveAs(blob, "output.docx");
-  };
 
   const fetchDocumentPreview = () => {
     if (!selectedFile) {
@@ -182,11 +178,25 @@ const OrcaDashboardComponent = () => {
           Preview Output
         </button>
         <div className="buttonSpacing">
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Download Output
-          </button>
-        </div>
-
+  <div className="btn-group" role="group">
+    <button 
+      className={`btn ${downloadFormat === 'docx' ? 'btn-primary' : 'btn-outline-primary'}`}
+      onClick={() => setDownloadFormat('docx')}>
+      DOCX
+    </button>
+    <button 
+      className={`btn ${downloadFormat === 'pdf' ? 'btn-primary' : 'btn-outline-primary'}`}
+      onClick={() => setDownloadFormat('pdf')}>
+      PDF
+    </button>
+  </div>
+  <button 
+  className="btn btn-primary ms-2" 
+  onClick={onSubmit}
+  disabled={!selectedFile}>
+  Download Output
+</button>
+</div>
         {previewContent && (
           <div className="document-preview">
             <h3>Document Preview</h3>
