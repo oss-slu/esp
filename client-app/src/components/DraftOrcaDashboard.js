@@ -17,7 +17,9 @@ const DraftOrcaDashboard = () => {
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [sectionType, setSectionType] = useState("SELECT");
+  const [customSections, setCustomSections] = useState("");
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -29,7 +31,17 @@ const DraftOrcaDashboard = () => {
   };
 
   const isSearchQueryEnabled = () => {
-    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length;
+    const hasValidSections = 
+      (sectionType === "FIRST") || 
+      (sectionType === "LAST") ||
+      (sectionType === "CUSTOM" && customSections.trim() !== "");
+
+    return (
+      uploadedFiles.length > 0 &&
+      searchTerms.length > 0 &&
+      specifyLines.length > 0 &&
+      hasValidSections
+    );
   };
 
   const handleSpecifyLineChange = (value) => {
@@ -96,6 +108,66 @@ const DraftOrcaDashboard = () => {
   const removeUploadedFile = (filePath) => {
     setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== filePath));
   };
+
+  const handleSectionTypeChange = (value) => {
+    setSectionType(value);
+    setCustomSections(""); // Clear custom sections when changing type
+    
+    switch (value) {
+      case "FIRST":
+        setSections(["1"]);
+        break;
+      case "LAST":
+        setSections(["last"]);
+        break;
+      case "CUSTOM":
+        setSections([]);
+        break;
+      default:
+        setSections([]);
+    }
+  };
+
+  const handleCustomSectionChange = (value) => {
+    setCustomSections(value);
+    if (value.trim()) {
+      const sectionArray = value.split(",")
+        .map(s => s.trim())
+        .filter(s => s !== "");
+      setSections(sectionArray);
+    } else {
+      setSections([]);
+    }
+  };
+
+  // Render section selection UI
+  const renderSectionSelection = () => (
+    <div className="mb-3 text-start">
+      <span>Select cycles for data extraction:</span>
+      <div className="d-flex align-items-center gap-2">
+        <select
+          className="form-select"
+          value={sectionType}
+          onChange={(e) => handleSectionTypeChange(e.target.value)}
+        >
+          <option value="SELECT">Select cycle type</option>
+          <option value="FIRST">First cycle</option>
+          <option value="LAST">Last cycle</option>
+          <option value="CUSTOM">Custom cycles</option>
+        </select>
+        
+        {sectionType === "CUSTOM" && (
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter cycles (e.g., 1, 2, 3)"
+            value={customSections}
+            onChange={(e) => handleCustomSectionChange(e.target.value)}
+          />
+        )}
+      </div>
+    </div>
+  );
 
   const onSubmit = () => {
     if (!selectedFile) {
@@ -268,16 +340,7 @@ const DraftOrcaDashboard = () => {
           {renderSpecifyLine()}
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Number of sections?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="ex: 1-5 or 1,2,5"
-            value={sections.join(", ")}
-            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
-          />
-        </div>
+        {renderSectionSelection()}
 
         <div className="button-container">
           <button
