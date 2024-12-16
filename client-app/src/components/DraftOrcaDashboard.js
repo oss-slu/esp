@@ -64,6 +64,13 @@ const DraftOrcaDashboard = () => {
     );
   };
 
+  const formatSpecifyLines = () => {
+    const line = specifyLines[0];
+    return line.value === "WHOLE" || line.value === "SELECT" 
+      ? line.value 
+      : `${line.value} ${line.lineNumber}`;
+   };
+
   const onUpload = () => {
     if (!selectedFile) {
       console.error("No file selected");
@@ -87,7 +94,6 @@ const DraftOrcaDashboard = () => {
   };
 
   const removeUploadedFile = (filePath) => {
-    // You can add logic here to delete the file from the server if needed
     setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== filePath));
   };
 
@@ -101,7 +107,7 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      specify_lines: formatSpecifyLines()
     };
 
     axios
@@ -111,7 +117,6 @@ const DraftOrcaDashboard = () => {
       .then((response) => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
-        // setShowCard(true); // Set showCard to true after successful submission
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -174,7 +179,7 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: specifyLines.join(","),
+      specify_lines: formatSpecifyLines()
     };
 
     axios
