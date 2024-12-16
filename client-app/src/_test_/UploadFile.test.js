@@ -23,7 +23,7 @@ describe("DraftOrcaDashboard", () => {
 
     // Mock axios post response
     const mockAxios = require("axios");
-    mockAxios.post.mockResolvedValueOnce({ data: { filename: "test.orca.txt" } });
+    mockAxios.post.mockResolvedValueOnce({ data: { file_name: "test.orca.txt" } });
 
     // Simulate file selection and upload
     fireEvent.change(fileInput, { target: { files: [file] } });
