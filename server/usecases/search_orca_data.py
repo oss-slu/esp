@@ -1,7 +1,6 @@
 from responses import ResponseSuccess, ResponseFailure, ResponseTypes
 from docx import Document
-from services.file_search_operations import extract_sections, save_document_to_bytes
-
+from services.file_search_operations import ORCALogProcessor, save_document_to_bytes
 
 def preview_document_use_case(data):
     '''
@@ -19,10 +18,13 @@ def preview_document_use_case(data):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Missing required fields')
 
     try:
+        processor = ORCALogProcessor()
         sections = list(map(int, sections))
         specify_lines = [temp_specify_lines] * len(sections)
-        document_content = extract_sections(file_path, search_terms, sections, 
-                                            specify_lines, use_total_lines, total_lines)
+        document_content = processor.extract_sections(
+            file_path, search_terms, sections, specify_lines, 
+            use_total_lines, total_lines
+        )
         return ResponseSuccess({'document_content': document_content})
     except FileNotFoundError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'File not found: {str(e)}')
@@ -30,7 +32,6 @@ def preview_document_use_case(data):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'Permission denied: {str(e)}')
     except ValueError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'Value error: {str(e)}')
-
 
 def find_sections_use_case(data):
     '''
@@ -47,12 +48,14 @@ def find_sections_use_case(data):
     if not all([file_path, search_terms, sections, temp_specify_lines]):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Missing required fields')
 
-    sections = list(map(int, sections))
-    specify_lines = [temp_specify_lines] * len(sections)
-
     try:
-        document_content = extract_sections(file_path, search_terms, sections, 
-                                            specify_lines, use_total_lines, total_lines)
+        processor = ORCALogProcessor()
+        sections = list(map(int, sections))
+        specify_lines = [temp_specify_lines] * len(sections)
+        document_content = processor.extract_sections(
+            file_path, search_terms, sections, specify_lines, 
+            use_total_lines, total_lines
+        )
         document = Document()
         for paragraph in document_content.split('\n'):
             document.add_paragraph(paragraph.strip())
