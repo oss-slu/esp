@@ -1,13 +1,13 @@
 import React from "react";
 import { render, fireEvent, screen, waitFor } from "@testing-library/react";
-import DraftOrcaDashboard from "../components/DraftOrcaDashboard";
+import OrcaDashboardComponent from "../components/OrcaDashboardComponent";
 
 // Mock axios to avoid actual API calls
 jest.mock("axios", () => ({
   post: jest.fn(),
 }));
 
-describe("DraftOrcaDashboard", () => {
+describe("OrcaDashboardComponent", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(window, "alert").mockImplementation(() => {});
@@ -15,7 +15,7 @@ describe("DraftOrcaDashboard", () => {
   });
 
   test("Clicking on Choose File and uploading an ORCA file", async () => {
-    render(<DraftOrcaDashboard />);
+    render(<OrcaDashboardComponent />);
 
     const file = new File(["content"], "test.orca.txt", { type: "text/plain" });
     const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
@@ -32,7 +32,7 @@ describe("DraftOrcaDashboard", () => {
     // Assert file upload and display
     await waitFor(() => {
       expect(mockAxios.post).toHaveBeenCalledWith(
-        "http://localhost:5001/upload",
+        "http://127.0.0.1:5001/upload",
         expect.any(FormData),
       );
     });
@@ -43,7 +43,7 @@ describe("DraftOrcaDashboard", () => {
   });
 
   test("Clicking on Choose File and try to upload any file other than the ORCA file", async () => {
-    render(<DraftOrcaDashboard />);
+    render(<OrcaDashboardComponent />);
 
     const file = new File(["content"], "test.pdf", { type: "application/pdf" });
     const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
@@ -65,7 +65,7 @@ describe("DraftOrcaDashboard", () => {
 
   /*
   test('Clicking on Preview without uploading any file and validating the error message', async () => {
-    render(<DraftOrcaDashboard />);
+    render(<OrcaDashboardComponent />);
   
     const previewButton = screen.getByRole('button', { name: /Submit Search Query/i });
   
@@ -83,7 +83,7 @@ describe("DraftOrcaDashboard", () => {
     const mockAxios = require("axios");
     mockAxios.post.mockResolvedValue({}); // Mock the API response
 
-    render(<DraftOrcaDashboard />);
+    render(<OrcaDashboardComponent />);
 
     const downloadButton = screen.getByRole("button", { name: /Download Output/i });
 
