@@ -81,9 +81,11 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Option 1', response.data)
 
-    @patch('usecases.search_orca_data.extract_sections')
-    def test_preview_document_use_case(self, mock_extract):
+    @patch('services.file_search_operations.spacy.load')
+    @patch('services.file_search_operations.ORCALogProcessor.extract_sections')
+    def test_preview_document_use_case(self, mock_extract, mock_spacy):
         """Test the preview document use case."""
+        mock_spacy.return_value = None  # Mock spaCy model load
         mock_extract.return_value = 'Extracted content'
 
         data = {
@@ -102,10 +104,9 @@ class TestAPI(unittest.TestCase):
         self.assertIsInstance(response, ResponseSuccess)
         self.assertEqual(response.value, {'document_content': 'Extracted content'})
 
-        mock_extract.assert_called_once()
-        call_args = mock_extract.call_args[0]
-        self.assertEqual(call_args[1:], (['test'], [1], ['10'], False, 2000))
-
+        mock_extract.assert_called_once_with(
+            'test.txt', ['test'], [1], ['10'], False, 2000
+        )
 
 if __name__ == '__main__':
     unittest.main()
