@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import "../styles/DashboardComponent.css";
+import "../styles/OrcaDashboardComponentLegacy.css";
+import config from "../utils/config";
 
 const GaussianDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -27,7 +28,7 @@ const GaussianDashboardComponent = () => {
     formData.append("file", selectedFile);
 
     axios
-      .post("http://localhost:5001/upload", formData)
+      .post(`${config.apiBaseUrl}/upload`, formData)
       .then((response) => {
         console.log("File uploaded successfully:", response);
         setFileName(response.data.filename);
@@ -59,7 +60,7 @@ const GaussianDashboardComponent = () => {
     }
 
     axios
-      .post("http://localhost:5001/find-sections", data, {
+      .post(`${config.apiBaseUrl}/find-sections`, data, {
         responseType: "blob",
       })
       .then((response) => {
@@ -97,7 +98,7 @@ const GaussianDashboardComponent = () => {
     }
 
     axios
-      .post("http://localhost:5001/preview", data)
+      .post(`${config.apiBaseUrl}/preview`, data)
       .then((response) => {
         const documentContent = response.data.document_content;
         setPreviewContent(documentContent);
