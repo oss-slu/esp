@@ -1,3 +1,7 @@
+'''
+This module contains functions for handling file upload operations.
+'''
+
 import os
 from flask import current_app
 
@@ -11,7 +15,7 @@ def get_uploads_dir():
 
 def save_uploaded_file(file):
     '''
-    saves the uploaded file
+    saves the uploaded file to the uploads directory
     '''
     uploads_dir = get_uploads_dir()
     filename = os.path.join(uploads_dir, file.filename)
