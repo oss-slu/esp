@@ -17,7 +17,7 @@ const DraftOrcaDashboard = () => {
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -67,10 +67,10 @@ const DraftOrcaDashboard = () => {
 
   const formatSpecifyLines = () => {
     const line = specifyLines[0];
-    return line.value === "WHOLE" || line.value === "SELECT" 
-      ? line.value 
+    return line.value === "WHOLE" || line.value === "SELECT"
+      ? line.value
       : `${line.value} ${line.lineNumber}`;
-   };
+  };
 
   const onUpload = () => {
     if (!selectedFile) {
@@ -107,7 +107,7 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
@@ -119,7 +119,11 @@ const DraftOrcaDashboard = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error:", error);
+        }
       });
   };
 
@@ -179,17 +183,21 @@ const DraftOrcaDashboard = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
       .post("http://localhost:5001/preview", data)
       .then((response) => {
-        setPreviewContent(response.data.document_content); 
-        setShowPreviewModal(true); 
+        setPreviewContent(response.data.document_content);
+        setShowPreviewModal(true);
       })
       .catch((error) => {
-        console.error("Error fetching preview:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error fetching preview:", error);
+        }
       });
   };
 
@@ -322,28 +330,32 @@ const DraftOrcaDashboard = () => {
           <button
             className="btn btn-primary"
             onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !selectedFile ||
-                isUploadedFilesEmpty
-              }>
+            disabled={
+              !searchTerms.length ||
+              !specifyLines.length ||
+              !sections.length ||
+              !selectedFile ||
+              isUploadedFilesEmpty
+            }>
             Preview
           </button>
-        </div>    
+        </div>
         {showPreviewModal && (
-          <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog"  style={{ maxWidth: "80vw"}}>
+          <div
+            className="modal"
+            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Document Preview</h5>
-                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowPreviewModal(false)}></button>
                 </div>
                 <div className="modal-body">
-                <pre>
-                    {previewContent}
-                  </pre>
+                  <pre>{previewContent}</pre>
                 </div>
                 <div className="modal-footer">
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
@@ -369,7 +381,6 @@ const DraftOrcaDashboard = () => {
             Download Output
           </button>
         </div>
-
       </div>
     </div>
   );

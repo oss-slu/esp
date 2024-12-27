@@ -23,6 +23,8 @@ def preview_document_use_case(data):
         specify_lines = [temp_specify_lines] * len(sections)
         document_content = extract_sections(file_path, search_terms, sections, 
                                             specify_lines, use_total_lines, total_lines)
+        if not document_content:
+            return ResponseFailure(ResponseTypes.NOT_FOUND, 'There is no data for the provided search term')
         return ResponseSuccess({'document_content': document_content})
     except FileNotFoundError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'File not found: {str(e)}')
@@ -30,7 +32,8 @@ def preview_document_use_case(data):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'Permission denied: {str(e)}')
     except ValueError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'Value error: {str(e)}')
-
+    except Exception as e:
+        return ResponseFailure(ResponseTypes.SYSTEM_ERROR, str(e))
 
 def find_sections_use_case(data):
     '''
@@ -53,6 +56,8 @@ def find_sections_use_case(data):
     try:
         document_content = extract_sections(file_path, search_terms, sections, 
                                             specify_lines, use_total_lines, total_lines)
+        if not document_content:
+            return ResponseFailure(ResponseTypes.NOT_FOUND, 'There is no data for the provided search term')
         document = Document()
         for paragraph in document_content.split('\n'):
             document.add_paragraph(paragraph.strip())
@@ -68,3 +73,5 @@ def find_sections_use_case(data):
         return ResponseFailure(ResponseTypes.SYSTEM_ERROR, f'Document processing error: {str(e)}')
     except TypeError as e:
         return ResponseFailure(ResponseTypes.SYSTEM_ERROR, f'Document type error: {str(e)}')
+    except Exception as e:
+        return ResponseFailure(ResponseTypes.SYSTEM_ERROR, str(e))

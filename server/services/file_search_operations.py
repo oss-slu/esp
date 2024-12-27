@@ -62,6 +62,10 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
                 terms_num += 1
             line_num += 1
 
+    # If no search terms found, return empty string
+    if not term_line_num:
+        return ""
+
     for i in sections:
         section_lines = specify_lines[i-1].split()
         start_line = term_line_num[i-1]
