@@ -27,6 +27,12 @@ To start the components individually, please follow the below instructions:
 1. To start the client-app: [client-app README.md](client-app/README.md/)
 2. To start the server: [server README.md](server/README.md)
 
+To run the application as single service:
+
+1. <code>bash deploy_as_one_service.sh</code>
+2. Navigate to the URL that gets provided (http://localhost:5001/)
+
+
 ## Steps to use the application for ORCA log files:
 
 1. For input, you can select any ORCA log file. The test log files are in the esp/test-data/orca-files.
