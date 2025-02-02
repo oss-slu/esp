@@ -18,12 +18,17 @@ const OrcaDashboardComponent = () => {
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile.type !== "text/plain") {
       alert("Invalid file type. Please upload a .txt file.");
+      return;
+    }
+
+    if (uploadedFiles.includes(selectedFile.name)) {
+      alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
     setSelectedFile(selectedFile);
@@ -68,14 +73,19 @@ const OrcaDashboardComponent = () => {
 
   const formatSpecifyLines = () => {
     const line = specifyLines[0];
-    return line.value === "WHOLE" || line.value === "SELECT" 
-      ? line.value 
+    return line.value === "WHOLE" || line.value === "SELECT"
+      ? line.value
       : `${line.value} ${line.lineNumber}`;
-   };
+  };
 
   const onUpload = () => {
     if (!selectedFile) {
       console.error("No file selected");
+      return;
+    }
+
+    if (uploadedFiles.includes(selectedFile.name)) {
+      alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
 
@@ -108,7 +118,7 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
@@ -189,14 +199,14 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
       .post(`${config.apiBaseUrl}/preview`, data)
       .then((response) => {
-        setPreviewContent(response.data.document_content); 
-        setShowPreviewModal(true); 
+        setPreviewContent(response.data.document_content);
+        setShowPreviewModal(true);
       })
       .catch((error) => {
         console.error("Error fetching preview:", error);
@@ -333,28 +343,32 @@ const OrcaDashboardComponent = () => {
           <button
             className="btn btn-primary"
             onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !selectedFile ||
-                isUploadedFilesEmpty
-              }>
+            disabled={
+              !searchTerms.length ||
+              !specifyLines.length ||
+              !sections.length ||
+              !selectedFile ||
+              isUploadedFilesEmpty
+            }>
             Preview
           </button>
-        </div>    
+        </div>
         {showPreviewModal && (
-          <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog"  style={{ maxWidth: "80vw"}}>
+          <div
+            className="modal"
+            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Document Preview</h5>
-                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowPreviewModal(false)}></button>
                 </div>
                 <div className="modal-body">
-                <pre>
-                    {previewContent}
-                  </pre>
+                  <pre>{previewContent}</pre>
                 </div>
                 <div className="modal-footer">
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
@@ -380,7 +394,6 @@ const OrcaDashboardComponent = () => {
             Download Output
           </button>
         </div>
-
       </div>
     </div>
   );
