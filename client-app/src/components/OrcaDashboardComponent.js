@@ -43,6 +43,7 @@ const OrcaDashboardComponent = () => {
       <div className="mb-2 d-flex align-items-center">
         <select
           className="form-select me-2"
+          id="specifyLinesSelect"
           value={line.value}
           onChange={(e) => handleSpecifyLineChange(e.target.value)}>
           <option value="SELECT">SELECT</option>
@@ -217,11 +218,12 @@ const OrcaDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
-          <label className="mb-2">Upload your ORCA data file:</label>
+          <label htmlFor="fileUpload" className="mb-2">Upload your ORCA data file:</label>
           <div className="input-group">
             <input
               type="file"
               className="form-control"
+              id="fileUpload"
               onChange={onFileSelected}
               accept=".txt"
               value=""
@@ -248,11 +250,12 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <label className="mb-2">Enter the terms you wish to search for (txt only):</label>
+          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <div>
             <input
               type="text"
               className="form-control"
+              id="searchTermInput"
               placeholder="E.g., CARTESIAN COORDINATES"
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
@@ -284,18 +287,18 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <label className="mb-2">Enter how you want the lines specified:</label>
+          <label htmlFor="specifyLinesSelect" className="mb-2">Enter how you want the lines specified:</label>
           {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <label className="mb-2">Number of sections?</label>
+          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
           <input
             type="text"
             className="form-control"
+            id="numSectionsInput"
             placeholder="ex: 1-5 or 1,2,5"
             defaultValue={sections.join(", ")}
-            //onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
             onBlur={handleNumSectionsBlur}
           />
         </div>
