@@ -23,6 +23,10 @@ def preview_document_use_case(data):
         specify_lines = [temp_specify_lines] * len(sections)
         document_content = extract_sections(file_path, search_terms, sections, 
                                             specify_lines, use_total_lines, total_lines)
+        
+        if not document_content:
+            return ResponseFailure(ResponseTypes.NOT_FOUND, 'No data found for the provided search term.')
+
         return ResponseSuccess({'document_content': document_content})
     except FileNotFoundError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'File not found: {str(e)}')
@@ -53,6 +57,10 @@ def find_sections_use_case(data):
     try:
         document_content = extract_sections(file_path, search_terms, sections, 
                                             specify_lines, use_total_lines, total_lines)
+        
+        if not document_content:
+            return ResponseFailure(ResponseTypes.NOT_FOUND, 'No data found for the provided search term.')
+
         document = Document()
         for paragraph in document_content.split('\n'):
             document.add_paragraph(paragraph.strip())

@@ -121,7 +121,11 @@ const OrcaDashboardComponent = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error:", error);
+        }
       });
   };
 
@@ -209,7 +213,11 @@ const OrcaDashboardComponent = () => {
         setShowPreviewModal(true); 
       })
       .catch((error) => {
-        console.error("Error fetching preview:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error fetching preview:", error);
+        }
       });
   };
 
