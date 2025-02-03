@@ -19,6 +19,8 @@ const OrcaDashboardComponent = () => {
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [selectedFileName, setSelectedFileName] = useState("No file chosen");
+
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -27,6 +29,7 @@ const OrcaDashboardComponent = () => {
       return;
     }
     setSelectedFile(selectedFile);
+    setSelectedFileName(selectedFile.name);
   };
 
   const isSearchQueryEnabled = () => {
@@ -210,13 +213,13 @@ const OrcaDashboardComponent = () => {
         <div className="mb-3 text-start">
           <span>Upload your ORCA data file</span>
           <div className="input-group">
+          
             <input
-              type="file"
               className="form-control"
+              type="file"
+              id="fileInput"
               onChange={onFileSelected}
               accept=".txt"
-              value=""
-              aria-label="Upload ORCA data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
