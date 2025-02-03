@@ -43,6 +43,7 @@ const OrcaDashboardComponent = () => {
       <div className="mb-2 d-flex align-items-center">
         <select
           className="form-select me-2"
+          id="specifyLinesSelect"
           value={line.value}
           onChange={(e) => handleSpecifyLineChange(e.target.value)}>
           <option value="SELECT">SELECT</option>
@@ -150,7 +151,7 @@ const OrcaDashboardComponent = () => {
     }
   };
 
-  const handleBlur = (e, setterFunc) => {
+  const handleSearchTermBlur = (e, setterFunc) => {
     const value = e.target.value.trim();
     if (value) {
       const values = value.split(",");
@@ -159,6 +160,15 @@ const OrcaDashboardComponent = () => {
     }
   };
 
+  const handleNumSectionsBlur = (e) => {
+    const parsedSections = e.target.value
+    .split(",")
+    .map((val) => val.trim())
+    .filter((val) => val !== "");
+
+  setSections(parsedSections);
+  };
+  
   const removeTag = (index, setterFunc) => {
     setterFunc((prevTerms) => {
       const updatedTerms = [...prevTerms];
@@ -208,11 +218,12 @@ const OrcaDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
-          <span>Upload your ORCA data file</span>
+          <label htmlFor="fileUpload" className="mb-2">Upload your ORCA data file:</label>
           <div className="input-group">
             <input
               type="file"
               className="form-control"
+              id="fileUpload"
               onChange={onFileSelected}
               accept=".txt"
               value=""
@@ -225,7 +236,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Uploaded Files:</span>
+          <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
             <span key={index} className="badge bg-secondary me-2 mb-2">
               {file}
@@ -239,14 +250,15 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
+          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <div>
             <input
               type="text"
               className="form-control"
+              id="searchTermInput"
               placeholder="E.g., CARTESIAN COORDINATES"
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
-              onBlur={(e) => handleBlur(e, setSearchTerms)}
+              onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             {searchTerms.map((term, index) => (
               <span
@@ -275,18 +287,19 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
+          <label htmlFor="specifyLinesSelect" className="mb-2">Enter how you want the lines specified:</label>
           {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
           <input
             type="text"
             className="form-control"
+            id="numSectionsInput"
             placeholder="ex: 1-5 or 1,2,5"
-            value={sections.join(", ")}
-            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
+            defaultValue={sections.join(", ")}
+            onBlur={handleNumSectionsBlur}
           />
         </div>
 
