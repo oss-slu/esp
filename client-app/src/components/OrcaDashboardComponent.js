@@ -150,7 +150,7 @@ const OrcaDashboardComponent = () => {
     }
   };
 
-  const handleBlur = (e, setterFunc) => {
+  const handleSearchTermBlur = (e, setterFunc) => {
     const value = e.target.value.trim();
     if (value) {
       const values = value.split(",");
@@ -159,6 +159,15 @@ const OrcaDashboardComponent = () => {
     }
   };
 
+  const handleNumSectionsBlur = (e) => {
+    const parsedSections = e.target.value
+    .split(",")
+    .map((val) => val.trim())
+    .filter((val) => val !== "");
+
+  setSections(parsedSections);
+  };
+  
   const removeTag = (index, setterFunc) => {
     setterFunc((prevTerms) => {
       const updatedTerms = [...prevTerms];
@@ -246,7 +255,7 @@ const OrcaDashboardComponent = () => {
               className="form-control"
               placeholder="E.g., CARTESIAN COORDINATES"
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
-              onBlur={(e) => handleBlur(e, setSearchTerms)}
+              onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             {searchTerms.map((term, index) => (
               <span
@@ -285,8 +294,9 @@ const OrcaDashboardComponent = () => {
             type="text"
             className="form-control"
             placeholder="ex: 1-5 or 1,2,5"
-            value={sections.join(", ")}
-            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
+            defaultValue={sections.join(", ")}
+            //onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
+            onBlur={handleNumSectionsBlur}
           />
         </div>
 
