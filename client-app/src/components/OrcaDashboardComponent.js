@@ -208,7 +208,7 @@ const OrcaDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
-          <span>Upload your ORCA data file</span>
+          <label className="mb-2">Upload your ORCA data file:</label>
           <div className="input-group">
             <input
               type="file"
@@ -225,7 +225,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Uploaded Files:</span>
+          <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
             <span key={index} className="badge bg-secondary me-2 mb-2">
               {file}
@@ -239,7 +239,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
+          <label className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <div>
             <input
               type="text"
@@ -275,12 +275,12 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
+          <label className="mb-2">Enter how you want the lines specified:</label>
           {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+          <label className="mb-2">Number of sections?</label>
           <input
             type="text"
             className="form-control"
