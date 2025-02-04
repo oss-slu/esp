@@ -21,11 +21,15 @@ const OrcaDashboardComponent = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false); 
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
-
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile.type !== "text/plain") {
       alert("Invalid file type. Please upload a .txt file.");
+      return;
+    }
+
+    if (uploadedFiles.includes(selectedFile.name)) {
+      alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
     setSelectedFile(selectedFile);
@@ -46,6 +50,7 @@ const OrcaDashboardComponent = () => {
       <div className="mb-2 d-flex align-items-center">
         <select
           className="form-select me-2"
+          id="specifyLinesSelect"
           value={line.value}
           onChange={(e) => handleSpecifyLineChange(e.target.value)}>
           <option value="SELECT">SELECT</option>
@@ -71,14 +76,19 @@ const OrcaDashboardComponent = () => {
 
   const formatSpecifyLines = () => {
     const line = specifyLines[0];
-    return line.value === "WHOLE" || line.value === "SELECT" 
-      ? line.value 
+    return line.value === "WHOLE" || line.value === "SELECT"
+      ? line.value
       : `${line.value} ${line.lineNumber}`;
-   };
+  };
 
   const onUpload = () => {
     if (!selectedFile) {
       console.error("No file selected");
+      return;
+    }
+
+    if (uploadedFiles.includes(selectedFile.name)) {
+      alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
 
@@ -120,7 +130,7 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
@@ -132,7 +142,11 @@ const OrcaDashboardComponent = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error:", error);
+        }
       });
   };
 
@@ -162,7 +176,7 @@ const OrcaDashboardComponent = () => {
     }
   };
 
-  const handleBlur = (e, setterFunc) => {
+  const handleSearchTermBlur = (e, setterFunc) => {
     const value = e.target.value.trim();
     if (value) {
       const values = value.split(",");
@@ -171,6 +185,15 @@ const OrcaDashboardComponent = () => {
     }
   };
 
+  const handleNumSectionsBlur = (e) => {
+    const parsedSections = e.target.value
+    .split(",")
+    .map((val) => val.trim())
+    .filter((val) => val !== "");
+
+  setSections(parsedSections);
+  };
+  
   const removeTag = (index, setterFunc) => {
     setterFunc((prevTerms) => {
       const updatedTerms = [...prevTerms];
@@ -201,17 +224,21 @@ const OrcaDashboardComponent = () => {
       file_path: filePath.toString(),
       search_terms: searchTerms,
       sections: sections,
-      specify_lines: formatSpecifyLines()
+      specify_lines: formatSpecifyLines(),
     };
 
     axios
       .post(`${config.apiBaseUrl}/preview`, data)
       .then((response) => {
-        setPreviewContent(response.data.document_content); 
-        setShowPreviewModal(true); 
+        setPreviewContent(response.data.document_content);
+        setShowPreviewModal(true);
       })
       .catch((error) => {
-        console.error("Error fetching preview:", error);
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error fetching preview:", error);
+        }
       });
   };
 
@@ -220,13 +247,13 @@ const OrcaDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
-          <span>Upload your ORCA data file</span>
+          <label htmlFor="fileUpload" className="mb-2">Upload your ORCA data file:</label>
           <div className="input-group">
           
             <input
               className="form-control"
               type="file"
-              id="fileInput"
+              id="fileUpload"
               onChange={onFileSelected}
               accept=".txt"
               aria-label="Upload ORCA data file"
@@ -238,7 +265,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Uploaded Files:</span>
+          <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
             <span key={index} className="badge bg-secondary me-2 mb-2">
               {file}
@@ -252,14 +279,15 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
+          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <div>
             <input
               type="text"
               className="form-control"
+              id="searchTermInput"
               placeholder="E.g., CARTESIAN COORDINATES"
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
-              onBlur={(e) => handleBlur(e, setSearchTerms)}
+              onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             {searchTerms.map((term, index) => (
               <span
@@ -288,18 +316,19 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
+          <label htmlFor="specifyLinesSelect" className="mb-2">Enter how you want the lines specified:</label>
           {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
           <input
             type="text"
             className="form-control"
+            id="numSectionsInput"
             placeholder="ex: 1-5 or 1,2,5"
-            value={sections.join(", ")}
-            onChange={(e) => setSections(e.target.value.split(",").map((val) => val.trim()))}
+            defaultValue={sections.join(", ")}
+            onBlur={handleNumSectionsBlur}
           />
         </div>
 
@@ -346,28 +375,32 @@ const OrcaDashboardComponent = () => {
           <button
             className="btn btn-primary"
             onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !selectedFile ||
-                isUploadedFilesEmpty
-              }>
+            disabled={
+              !searchTerms.length ||
+              !specifyLines.length ||
+              !sections.length ||
+              !selectedFile ||
+              isUploadedFilesEmpty
+            }>
             Preview
           </button>
-        </div>    
+        </div>
         {showPreviewModal && (
-          <div className="modal" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog"  style={{ maxWidth: "80vw"}}>
+          <div
+            className="modal"
+            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Document Preview</h5>
-                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowPreviewModal(false)}></button>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowPreviewModal(false)}></button>
                 </div>
                 <div className="modal-body">
-                <pre>
-                    {previewContent}
-                  </pre>
+                  <pre>{previewContent}</pre>
                 </div>
                 <div className="modal-footer">
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
@@ -393,7 +426,6 @@ const OrcaDashboardComponent = () => {
             Download Output
           </button>
         </div>
-
       </div>
     </div>
   );
