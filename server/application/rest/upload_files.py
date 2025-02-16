@@ -31,14 +31,18 @@ def file_upload():
             mimetype="application/json",
             status=HTTP_STATUS_CODES_MAPPING[ResponseTypes.PARAMETER_ERROR],
         )
-
-    file = request.files['file']
-    response = file_upload_use_case(file)
-
+    files = request.files.getlist('file')
+    all_responses = []
+    status_code = HTTP_STATUS_CODES_MAPPING[ResponseTypes.SUCCESS]
+    for f in files:
+        response = file_upload_use_case(f)
+        if response.response_type != ResponseTypes.SUCCESS:
+            status_code = HTTP_STATUS_CODES_MAPPING[response.response_type]
+        all_responses.append(response.value)
     return Response(
-        json.dumps(response.value),
+        json.dumps({"files": all_responses}),
         mimetype="application/json",
-        status=HTTP_STATUS_CODES_MAPPING[response.response_type],
+        status=status_code,
     )
 
 @blueprint.route('/api/data', methods=['GET'])
