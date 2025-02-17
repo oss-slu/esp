@@ -171,12 +171,12 @@ const OrcaDashboardComponent = () => {
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
-    const searchTerm = searchTerms.join("_").slice(0, 50);
-
-    let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
-    fileName = truncateName(fileName, 100);
-
-    saveAs(blob, fileName);
+    const searchTerm = searchTerms.join("_");
+  
+    let filename = `${date}_${baseFileName}_${searchTerm}.docx`;
+    filename = filename.slice(0, 100);
+  
+    saveAs(blob, filename);
   };
 
   const handleKeyPress = (e, setterFunc) => {
@@ -453,8 +453,8 @@ const OrcaDashboardComponent = () => {
               !selectedFile ||
               isUploadedFilesEmpty
             }>
-           <FaDownload
-            size="1.2em"
+            <FaDownload
+            size="1.5em"
             title="Download Output"
             />
           </button>
