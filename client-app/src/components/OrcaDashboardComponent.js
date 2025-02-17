@@ -143,10 +143,18 @@ const OrcaDashboardComponent = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
+<<<<<<< HEAD
          if (error.response){
           if (error.response.status === 404) {
             alert("There is no data for the provided search term");
           } else {alert(`Error ${error.response.status}: ${error.response.statusText}`);
+=======
+        if (error.response){
+          if (error.response.status === 404) {
+            alert("There is no data for the provided search term");
+          } else {
+            alert(`Error ${error.response.status}: ${error.response.statusText}`);
+>>>>>>> e70696a (added error message)
           }
         }
       });
