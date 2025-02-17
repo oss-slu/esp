@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
 
@@ -161,7 +162,14 @@ const OrcaDashboardComponent = () => {
   };
 
   const downloadDocument = (blob) => {
-    saveAs(blob, "output.docx");
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
+    const searchTerm = searchTerms.join("_");
+  
+    let filename = `${date}_${baseFileName}_${searchTerm}.docx`;
+    filename = filename.slice(0, 100);
+  
+    saveAs(blob, filename);
   };
 
   const handleKeyPress = (e, setterFunc) => {
@@ -423,7 +431,10 @@ const OrcaDashboardComponent = () => {
               !selectedFile ||
               isUploadedFilesEmpty
             }>
-            Download Output
+            <FaDownload
+            size="1.5em"
+            title="Download Output"
+            />
           </button>
         </div>
       </div>
