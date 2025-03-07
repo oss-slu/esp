@@ -22,23 +22,34 @@ HTTP_STATUS_CODES_MAPPING = {
 @blueprint.route('/upload', methods=['POST'])
 @cross_origin()
 def file_upload():
-    '''
-    This defines the API endpoint to upload input file
-    '''
     if 'file' not in request.files:
         return Response(
             json.dumps({'message': 'No file part'}),
             mimetype="application/json",
             status=HTTP_STATUS_CODES_MAPPING[ResponseTypes.PARAMETER_ERROR],
         )
+    files = request.files.getlist('file')
+    all_responses = []
+    final_status_code = HTTP_STATUS_CODES_MAPPING[ResponseTypes.SUCCESS]
 
-    file = request.files['file']
-    response = file_upload_use_case(file)
+    for file in files:
+        response = file_upload_use_case(file)      
+        current_code = HTTP_STATUS_CODES_MAPPING[response.response_type]
+        if current_code != HTTP_STATUS_CODES_MAPPING[ResponseTypes.SUCCESS]:
+            final_status_code = current_code
+            
+        all_responses.append(response.value)
 
+    if len(all_responses) == 1:
+        return Response(
+            json.dumps(all_responses[0]),
+            mimetype="application/json",
+            status=final_status_code,
+        )
     return Response(
-        json.dumps(response.value),
+        json.dumps({"files": all_responses}),
         mimetype="application/json",
-        status=HTTP_STATUS_CODES_MAPPING[response.response_type],
+        status=final_status_code,
     )
 
 @blueprint.route('/api/data', methods=['GET'])
