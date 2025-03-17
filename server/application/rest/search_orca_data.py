@@ -26,7 +26,24 @@ def preview_document():
     the document
     '''
     data = request.get_json(force=True)
+
+    # Debugging logs
+    print("DEBUG: Received request in Flask preview endpoint.")
+    print("DEBUG: Full received JSON data:", json.dumps(data, indent=4))
+
+    file_paths = data.get("file_paths", [])
+    print("DEBUG: Extracted file_paths before validation:", file_paths)
+    
+    if not isinstance(file_paths, list) or not file_paths:
+        print("ERROR: Invalid or missing file_paths. Received:", file_paths)
+        return Response(
+            json.dumps({"error": "Invalid or missing file_paths"}),
+            mimetype="application/json",
+            status=400
+        )
+
     response = preview_document_use_case(data)
+
     return Response(
         json.dumps(response.value),
         mimetype="application/json",
@@ -41,7 +58,23 @@ def find_sections():
     word document
     '''
     data = request.get_json(force=True)
+
+    # Debugging logs
+    print("DEBUG: Received request in Flask find-sections endpoint.")
+    print("DEBUG: Full received JSON data:", json.dumps(data, indent=4))
+
+    file_paths = data.get("file_paths", [])
+    print("DEBUG: Extracted file_paths before validation:", file_paths)
+
+    if not isinstance(file_paths, list) or not file_paths:
+        return Response(
+            json.dumps({"error": "Invalid or missing file_paths"}),
+            mimetype="application/json",
+            status=400
+        )
+
     response = find_sections_use_case(data)
+
     if isinstance(response, ResponseSuccess):
         docx_content = response.value
         response = make_response(docx_content)
