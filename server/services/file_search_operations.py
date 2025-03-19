@@ -65,15 +65,20 @@ def extract_sections(file_path, search_terms, sections, specify_lines, use_total
         return ""
 
     for term in search_terms:
-        term_line_num = term_line_nums[term]
-        for i in range(len(sections)):
-            section_lines = specify_lines[i].split()
-            start_line = term_line_num[i] if i < len(term_line_num) else None
+        term_line_num = term_line_nums.get(term, [])  
+
+        for section_number in sections:  
+            if section_number > len(specify_lines):
+                continue  
+
+            section_lines = specify_lines[section_number - 1].split()  
+            start_line = term_line_num[section_number - 1] if section_number - 1 < len(term_line_num) else None
+
             if start_line is None:
-                continue  # Skip this section if the term is not found
+                continue  
 
             line_empty = 0
-            document_content += lines[start_line]
+            document_content += lines[start_line] + "\n"
 
             if section_lines[0].upper() == 'WHOLE' and not use_total_lines:
                 while line_empty == 0:
