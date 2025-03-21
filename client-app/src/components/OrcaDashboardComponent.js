@@ -143,18 +143,11 @@ const OrcaDashboardComponent = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
-<<<<<<< HEAD
-         if (error.response){
-          if (error.response.status === 404) {
-            alert("There is no data for the provided search term");
-          } else {alert(`Error ${error.response.status}: ${error.response.statusText}`);
-=======
         if (error.response){
           if (error.response.status === 404) {
             alert("There is no data for the provided search term");
           } else {
             alert(`Error ${error.response.status}: ${error.response.statusText}`);
->>>>>>> e70696a (added error message)
           }
         }
       });
@@ -175,17 +168,18 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-
+  
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
-    const searchTerm = searchTerms.join("_");
+    const searchTerm = searchTerms.join("_").slice(0, 50);
   
-    let filename = `${date}_${baseFileName}_${searchTerm}.docx`;
-    filename = filename.slice(0, 100);
+    let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
+    fileName = truncateName(fileName, 100);
   
-    saveAs(blob, filename);
+    saveAs(blob, fileName);
   };
+  
 
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
@@ -236,6 +230,13 @@ const OrcaDashboardComponent = () => {
     setShowCard(false);
     setSameCriteria(false);
   };
+
+  const isDisabled =
+    !searchTerms.length ||
+    !specifyLines.length ||
+    !sections.length ||
+    !selectedFile ||
+    isUploadedFilesEmpty;
 
   const fetchDocumentPreview = () => {
     if (!selectedFile) {
@@ -290,7 +291,7 @@ const OrcaDashboardComponent = () => {
         <div className="mb-3 text-start">
           <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
-            <span key={index} className="badge bg-secondary me-2 mb-2">
+            <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
               {truncateName(file, 40)}
               <button
                 type="button"
@@ -312,15 +313,18 @@ const OrcaDashboardComponent = () => {
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
-            {searchTerms.map((term, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSearchTerms)}>
-                {truncateName(term, 40)}
-                <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
-              </span>
+            <div className="mt-3">
+            <span>Search Terms:</span>
+              {searchTerms.map((term, index) => (
+                <span
+                  key={index}
+                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  onClick={() => removeTag(index, setSearchTerms)}>
+                  {truncateName(term, 40)}
+                  <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
+                </span>
             ))}
+            </div>
           </div>
           {searchTerms.length > 1 && (
             <div className="form-check mt-2">
@@ -398,13 +402,7 @@ const OrcaDashboardComponent = () => {
           <button
             className="btn btn-primary"
             onClick={fetchDocumentPreview}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !selectedFile ||
-              isUploadedFilesEmpty
-            }>
+            disabled={isDisabled}>
             Preview
           </button>
         </div>
@@ -429,13 +427,8 @@ const OrcaDashboardComponent = () => {
                   <button
                     className="btn btn-primary"
                     onClick={onSubmit}
-                    disabled={
-                      !searchTerms.length ||
-                      !specifyLines.length ||
-                      !sections.length ||
-                      !selectedFile ||
-                      isUploadedFilesEmpty
-                    }>
+                    disabled={isDisabled}
+                    >
                     <FaDownload
                     size="1.2em"
                     title="Download Output"
@@ -449,21 +442,15 @@ const OrcaDashboardComponent = () => {
             </div>
           </div>
         )}
-
         <div className="button-container">
           <button
             className="btn btn-primary"
             onClick={onSubmit}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !selectedFile ||
-              isUploadedFilesEmpty
-            }>
+            disabled={isDisabled}
+            >
             <FaDownload
             size="1.5em"
-            title="Download Output"
+            title={isDisabled ? "Please fill all required fields" : "Download Output"}
             />
           </button>
         </div>
