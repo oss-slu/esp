@@ -148,8 +148,6 @@ const OrcaDashboardComponent = () => {
             alert("There is no data for the provided search term");
           } else {
             alert(`Error ${error.response.status}: ${error.response.statusText}`);
-          } else {
-            alert(`Error ${error.response.status}: ${error.response.statusText}`);
           }
         }
       });
