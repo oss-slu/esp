@@ -359,7 +359,7 @@ const OrcaDashboardComponent = () => {
           />
         </div>
 
-        <div className="button-container">
+        <div className="button-container" title="Please fill all required fields">
           <button
             className="btn btn-primary"
             onClick={() => onSearchQuerySubmit()}
@@ -398,7 +398,7 @@ const OrcaDashboardComponent = () => {
             </div>
           )}
 
-        <div className="button-container">
+        <div className="button-container" title="Please fill all required fields">
           <button
             className="btn btn-primary"
             onClick={fetchDocumentPreview}
@@ -423,7 +423,7 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-body">
                   <pre>{previewContent}</pre>
                 </div>
-                <div className="modal-footer">
+                <div className="modal-footer" title="Please fill all required fields">
                   <button
                     className="btn btn-primary"
                     onClick={onSubmit}
@@ -443,7 +443,8 @@ const OrcaDashboardComponent = () => {
           </div>
         )}
         <div className="button-container">
-          <button
+          <div title="Please fill all required fields">
+            <button
             className="btn btn-primary"
             onClick={onSubmit}
             disabled={isDisabled}
@@ -452,7 +453,8 @@ const OrcaDashboardComponent = () => {
             size="1.5em"
             title={isDisabled ? "Please fill all required fields" : "Download Output"}
             />
-          </button>
+            </button>
+          </div>
         </div>
       </div>
     </div>
