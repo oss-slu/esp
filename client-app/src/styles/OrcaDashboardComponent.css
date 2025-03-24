@@ -16,3 +16,8 @@ span {
 .button-container {
   margin-bottom: 10px;
 }
+
+.btn-primary:disabled {
+  background-color: #aaaaaa !important;
+  border-color: #aaaaaa !important;
+}
