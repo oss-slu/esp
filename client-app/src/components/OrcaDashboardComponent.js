@@ -488,7 +488,7 @@ const OrcaDashboardComponent = () => {
             >
             <FaDownload
             size="1.5em"
-            title={isDisabled ? "Please fill all required fields" : "Download Output"}
+            title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
             />
             </button>
           </div>
