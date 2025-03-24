@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
@@ -19,7 +20,7 @@ const OrcaDashboardComponent = () => {
   const isSectionsEmpty = sections.length === 0;
   const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [showPreviewModal, setShowPreviewModal] = useState(false); 
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
   const onFileSelected = (event) => {
@@ -143,7 +144,7 @@ const OrcaDashboardComponent = () => {
         downloadDocument(blob);
       })
       .catch((error) => {
-        if (error.response){
+        if (error.response) {
           if (error.response.status === 404) {
             alert("There is no data for the provided search term");
           } else {
@@ -206,14 +207,29 @@ const OrcaDashboardComponent = () => {
   };
 
   const handleNumSectionsBlur = (e) => {
-    const parsedSections = e.target.value
-    .split(",")
-    .map((val) => val.trim())
-    .filter((val) => val !== "");
+    const input = e.target.value;
+    let parsedSections = new Set();
 
-  setSections(parsedSections);
+    input.split(",").forEach((part) => {
+      part = part.trim();
+      if (part.includes("-")) {
+        const [start, end] = part.split("-").map((num) => parseInt(num.trim(), 10));
+        if (!isNaN(start) && !isNaN(end) && start <= end) {
+          for (let i = start; i <= end; i++) {
+            parsedSections.add(i);
+          }
+        }
+      } else {
+        const num = parseInt(part, 10);
+        if (!isNaN(num)) {
+          parsedSections.add(num);
+        }
+      }
+    });
+
+    setSections(Array.from(parsedSections).sort((a, b) => a - b));
   };
-  
+
   const removeTag = (index, setterFunc) => {
     setterFunc((prevTerms) => {
       const updatedTerms = [...prevTerms];
@@ -269,14 +285,26 @@ const OrcaDashboardComponent = () => {
       });
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setShowPreviewModal(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
         <div className="mb-3 text-start">
-          <label htmlFor="fileUpload" className="mb-2">Upload your ORCA data file:</label>
+          <label htmlFor="fileUpload" className="mb-2">
+            Upload your ORCA data file:
+          </label>
           <div className="input-group">
-          
             <input
               className="form-control"
               type="file"
@@ -306,7 +334,9 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
+          <label htmlFor="searchTermInput" className="mb-2">
+            Enter the terms you wish to search for (txt only):
+          </label>
           <div>
             <input
               type="text"
@@ -346,12 +376,16 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <label htmlFor="specifyLinesSelect" className="mb-2">Enter how you want the lines specified:</label>
+          <label htmlFor="specifyLinesSelect" className="mb-2">
+            Enter how you want the lines specified:
+          </label>
           {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
+          <label htmlFor="numSectionsInput" className="mb-2">
+            Number of sections?
+          </label>
           <input
             type="text"
             className="form-control"
