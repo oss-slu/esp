@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { saveAs } from "file-saver";
@@ -22,6 +22,8 @@ const OrcaDashboardComponent = () => {
   const [previewContent, setPreviewContent] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const inputSelectedFile = useRef();
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -34,8 +36,9 @@ const OrcaDashboardComponent = () => {
       alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
-    setSelectedFile(selectedFile);
+    setSelectedFiles([...selectedFiles, selectedFile]);
     setSelectedFileName(selectedFile.name);
+    console.log(selectedFiles);
   };
 
   const isSearchQueryEnabled = () => {
@@ -285,6 +288,13 @@ const OrcaDashboardComponent = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleSelectFile = () => document.getElementById("fileUpload").click();
+  const removeFile = (index) => {
+    setSelectedFiles((prevFiles) => {
+      prevFiles.filter((_, i) => i !== index);
+    });
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -301,7 +311,29 @@ const OrcaDashboardComponent = () => {
               onChange={onFileSelected}
               accept=".txt"
               aria-label="Upload ORCA data file"
+              ref={inputSelectedFile.current}
+              hidden
             />
+            <button className="select-btn" onClick={handleSelectFile}>
+              Choose file
+            </button>
+            <div className="input-file">
+              {!selectedFiles.length ? (
+                "No file chosen"
+              ) : (
+                <ul>
+                  {selectedFiles.map((file, index) => (
+                    <li key={index}>
+                      {file.name}
+                      <button className="remove-btn" onClick={() => removeFile(index)}>
+                        ✖
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>

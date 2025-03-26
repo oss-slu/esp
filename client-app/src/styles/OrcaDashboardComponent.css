@@ -16,3 +16,14 @@ span {
 .button-container {
   margin-bottom: 10px;
 }
+.select-btn {
+  height: 30px;
+}
+
+.remove-btn{
+  border: 0;
+  background-color: #fff;
+}
+.input-file{
+  width: fit-content;
+}
