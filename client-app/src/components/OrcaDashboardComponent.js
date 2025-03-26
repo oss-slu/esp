@@ -24,6 +24,8 @@ const OrcaDashboardComponent = () => {
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const inputSelectedFile = useRef();
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
@@ -294,6 +296,23 @@ const OrcaDashboardComponent = () => {
       prevFiles.filter((_, i) => i !== index);
     });
   };
+  const handleNumSection = (e) => {
+    const value = e.target.value;
+
+    if (value === "") {
+      setInputValue("");
+      setError("");
+      return;
+    }
+
+    const number = Number(value);
+    if (!isNaN(number) && Number.isInteger(number) && number > 0) {
+      setInputValue(value);
+      setError("");
+    } else {
+      setError("Please enter a positive whole number");
+    }
+  };
 
   return (
     <div className="container py-5 d-flex justify-content-center">
@@ -408,10 +427,13 @@ const OrcaDashboardComponent = () => {
             type="text"
             className="form-control"
             id="numSectionsInput"
-            placeholder="ex: 1-5 or 1,2,5"
+            placeholder="Enter a whole number (e.g., 1, 2, 3)"
             defaultValue={sections.join(", ")}
+            value={inputValue}
             onBlur={handleNumSectionsBlur}
+            onChange={handleNumSection}
           />
+          {error && <p style={{color: "red"}}>{ error}</p>}
         </div>
 
         <div className="button-container">
