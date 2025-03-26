@@ -16,3 +16,10 @@ span {
 .button-container {
   margin-bottom: 10px;
 }
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
