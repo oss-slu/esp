@@ -17,9 +17,15 @@ span {
   margin-bottom: 10px;
 }
 
-.button-group {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 10px;
+.select-btn {
+  height: 30px;
+}
+
+.remove-btn {
+  border: 0;
+  background-color: #fff;
+}
+.file-input {
+  padding-left: 30px;
+  padding-right: 30px;
 }

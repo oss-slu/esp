@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { saveAs } from "file-saver";
@@ -22,20 +22,35 @@ const OrcaDashboardComponent = () => {
   const [previewContent, setPreviewContent] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const inputSelectedFile = useRef();
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
   const onFileSelected = (event) => {
     const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
     if (selectedFile.type !== "text/plain") {
       alert("Invalid file type. Please upload a .txt file.");
       return;
     }
+    event.target.value = "";
 
     if (uploadedFiles.includes(selectedFile.name)) {
       alert(`The file "${selectedFile.name}" has already been uploaded.`);
       return;
     }
-    setSelectedFile(selectedFile);
+    setSelectedFiles((prevFiles) => {
+      const isFileAlreadySelected = prevFiles.some((file) => file.name === selectedFile.name);
+
+      if (isFileAlreadySelected) {
+        return prevFiles;
+      }
+
+      return [...prevFiles, selectedFile];
+    });
     setSelectedFileName(selectedFile.name);
+    setSelectedFile(selectedFile);
   };
 
   const isSearchQueryEnabled = () => {
@@ -285,6 +300,44 @@ const OrcaDashboardComponent = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleSelectFile = () => document.getElementById("fileUpload").click();
+  const removeFile = (index) => {
+    setSelectedFiles((prevFiles) => {
+      const updatedFiles = prevFiles.filter((_, i) => i !== index);
+
+      if (updatedFiles.length === 0) {
+        setSelectedFile(null);
+        setSelectedFileName("No file chosen");
+
+        if (inputSelectedFile.current) {
+          inputSelectedFile.current.value = "";
+        }
+      } else {
+        setSelectedFile(updatedFiles[0]);
+        setSelectedFileName(updatedFiles[0].name);
+      }
+
+      return updatedFiles;
+    });
+  };
+  const handleNumSection = (e) => {
+    const value = e.target.value;
+
+    if (value === "") {
+      setInputValue("");
+      setError("");
+      return;
+    }
+
+    const number = Number(value);
+    if (!isNaN(number) && Number.isInteger(number) && number > 0) {
+      setInputValue(value);
+      setError("");
+    } else {
+      setError("Please enter a positive whole number");
+    }
+  };
+
   return (
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
@@ -301,7 +354,29 @@ const OrcaDashboardComponent = () => {
               onChange={onFileSelected}
               accept=".txt"
               aria-label="Upload ORCA data file"
+              ref={inputSelectedFile.current}
+              hidden
             />
+            <button className="select-btn" onClick={handleSelectFile}>
+              Choose file
+            </button>
+            <div className="input-file">
+              {!selectedFiles.length ? (
+                <p className="file-input">No file chosen</p>
+              ) : (
+                <ul>
+                  {selectedFiles.map((file, index) => (
+                    <li key={index}>
+                      {file.name}
+                      <button className="remove-btn" onClick={() => removeFile(index)}>
+                        ✖
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>
@@ -376,10 +451,12 @@ const OrcaDashboardComponent = () => {
             type="text"
             className="form-control"
             id="numSectionsInput"
-            placeholder="ex: 1-5 or 1,2,5"
-            defaultValue={sections.join(", ")}
+            placeholder="Enter a whole number (e.g., 1, 2, 3)"
+            value={inputValue}
             onBlur={handleNumSectionsBlur}
+            onChange={handleNumSection}
           />
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
 
         <div className="button-group">
