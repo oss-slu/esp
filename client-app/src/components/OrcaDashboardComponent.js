@@ -459,19 +459,52 @@ const OrcaDashboardComponent = () => {
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
 
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={() => onSearchQuerySubmit()}
-            disabled={
-              !isSearchQueryEnabled() ||
-              isUploadedFilesEmpty ||
-              isSearchTermsEmpty ||
-              isSpecifyLinesEmpty ||
-              isSectionsEmpty
-            }>
-            Submit Search Query
-          </button>
+        <div className="button-group">
+          <div className="button-container">
+            <button
+              className="btn btn-primary"
+              onClick={() => onSearchQuerySubmit()}
+              disabled={
+                !isSearchQueryEnabled() ||
+                isUploadedFilesEmpty ||
+                isSearchTermsEmpty ||
+                isSpecifyLinesEmpty ||
+                isSectionsEmpty
+              }>
+              Submit Search Query
+            </button>
+          </div>
+
+          <div className="button-container">
+            <button
+              className="btn btn-primary"
+              onClick={fetchDocumentPreview}
+              disabled={
+                !searchTerms.length ||
+                !specifyLines.length ||
+                !sections.length ||
+                !selectedFile ||
+                isUploadedFilesEmpty
+              }>
+              Preview
+            </button>
+          </div>
+
+          <div className="button-container">
+            <button
+              className="btn btn-primary"
+              onClick={onSubmit}
+              disabled={
+                !searchTerms.length ||
+                !specifyLines.length ||
+                !sections.length ||
+                !selectedFile ||
+                isUploadedFilesEmpty
+              }>
+              Download{" "}
+               <FaDownload size="1.2em" title="Download Output"/> 
+            </button>
+          </div>
         </div>
 
         {!isUploadedFilesEmpty &&
@@ -498,20 +531,7 @@ const OrcaDashboardComponent = () => {
             </div>
           )}
 
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={fetchDocumentPreview}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !selectedFile ||
-              isUploadedFilesEmpty
-            }>
-            Preview
-          </button>
-        </div>
+        
         {showPreviewModal && (
           <div
             className="modal"
@@ -540,7 +560,7 @@ const OrcaDashboardComponent = () => {
                       !selectedFile ||
                       isUploadedFilesEmpty
                     }>
-                    <FaDownload size="1.2em" title="Download Output" />
+                    <FaDownload size="1.2em" title="Download Output"/>
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close
@@ -550,21 +570,6 @@ const OrcaDashboardComponent = () => {
             </div>
           </div>
         )}
-
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={onSubmit}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !selectedFile ||
-              isUploadedFilesEmpty
-            }>
-            <FaDownload size="1.2em" title="Download Output" />
-          </button>
-        </div>
       </div>
     </div>
   );
