@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useEffect } from "react";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
 
 const OrcaDashboardComponent = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [filePath, setFilePath] = useState("");
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [filePaths, setFilePaths] = useState([]);
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
   const [sections, setSections] = useState([]);
@@ -24,18 +23,19 @@ const OrcaDashboardComponent = () => {
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
   const onFileSelected = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile.type !== "text/plain") {
-      alert("Invalid file type. Please upload a .txt file.");
-      return;
-    }
-
-    if (uploadedFiles.includes(selectedFile.name)) {
-      alert(`The file "${selectedFile.name}" has already been uploaded.`);
-      return;
-    }
-    setSelectedFile(selectedFile);
-    setSelectedFileName(selectedFile.name);
+    const files = Array.from(event.target.files);
+    const validFiles = files.filter((file) => {
+      if (file.type !== "text/plain") {
+        alert(`Invalid file type: ${file.name}`);
+        return false;
+      }
+      if (uploadedFiles.includes(file.name)) {
+        alert(`The file "${file.name}" has already been uploaded.`);
+        return false;
+      }
+      return true;
+    });
+    setSelectedFile(validFiles);
   };
 
   const isSearchQueryEnabled = () => {
@@ -84,52 +84,59 @@ const OrcaDashboardComponent = () => {
   };
 
   const onUpload = () => {
-    if (!selectedFile) {
-      console.error("No file selected");
+    if (!selectedFile.length) {
+      alert("Please choose a file to upload.");
       return;
     }
 
-    if (uploadedFiles.includes(selectedFile.name)) {
-      alert(`The file "${selectedFile.name}" has already been uploaded.`);
-      return;
-    }
+    selectedFile.forEach((file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      axios
+        .post(`${config.apiBaseUrl}/upload`, formData)
+        .then((response) => {
+          setUploadedFiles((prev) => [...prev, response.data.file_name]);
+          setFilePaths((prev) => [...prev, response.data.file_path]);
+          setSelectedFileName(file.name);
+        })
+        .catch((error) => console.error("Upload error:", error));
+    });
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    axios
-      .post(`${config.apiBaseUrl}/upload`, formData)
-      .then((response) => {
-        const uploadedFileName = response.data.file_name;
-        setFilePath(response.data.file_path);
-        setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    setSelectedFile([]);
+    document.getElementById("fileUpload").value = "";
   };
 
-  const removeUploadedFile = (file) => {
+  const removeUploadedFile = (fileName) => {
     setUploadedFiles((prevUploadedFiles) => {
-      const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
-      setSelectedFile(null);
-      setSelectedFileName("No file chosen");
-      const inputElement = document.getElementById("fileInput");
-      if (inputElement) {
-        inputElement.value = "";
-      }
+      const index = prevUploadedFiles.indexOf(fileName);
+      if (index === -1) return prevUploadedFiles;
+
+      const updatedFiles = [...prevUploadedFiles];
+      updatedFiles.splice(index, 1);
+
+      setFilePaths((prevPaths) => {
+        const updatedPaths = [...prevPaths];
+        updatedPaths.splice(index, 1);
+        return updatedPaths;
+      });
+
       return updatedFiles;
     });
+
+    setSelectedFile([]);
+    setSelectedFileName("No file chosen");
+    const inputElement = document.getElementById("fileUpload");
+    if (inputElement) inputElement.value = "";
   };
 
   const onSubmit = () => {
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: filePath.toString(),
+      file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
@@ -156,7 +163,7 @@ const OrcaDashboardComponent = () => {
 
   const onSearchQuerySubmit = () => {
     setShowCard(false);
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     } else {
@@ -247,13 +254,13 @@ const OrcaDashboardComponent = () => {
   };
 
   const fetchDocumentPreview = () => {
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: filePath.toString(),
+      file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
@@ -300,6 +307,7 @@ const OrcaDashboardComponent = () => {
               id="fileUpload"
               onChange={onFileSelected}
               accept=".txt"
+              multiple
               aria-label="Upload ORCA data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
@@ -406,7 +414,7 @@ const OrcaDashboardComponent = () => {
                 !searchTerms.length ||
                 !specifyLines.length ||
                 !sections.length ||
-                !selectedFile ||
+                !filePaths.length ||
                 isUploadedFilesEmpty
               }>
               Preview
@@ -421,11 +429,10 @@ const OrcaDashboardComponent = () => {
                 !searchTerms.length ||
                 !specifyLines.length ||
                 !sections.length ||
-                !selectedFile ||
+                !filePaths.length ||
                 isUploadedFilesEmpty
               }>
-              Download{" "}
-               <FaDownload size="1.2em" title="Download Output"/> 
+              Download <FaDownload size="1.2em" title="Download Output" />
             </button>
           </div>
         </div>
@@ -454,7 +461,6 @@ const OrcaDashboardComponent = () => {
             </div>
           )}
 
-        
         {showPreviewModal && (
           <div
             className="modal"
@@ -480,10 +486,10 @@ const OrcaDashboardComponent = () => {
                       !searchTerms.length ||
                       !specifyLines.length ||
                       !sections.length ||
-                      !selectedFile ||
+                      !filePaths.length ||
                       isUploadedFilesEmpty
                     }>
-                    <FaDownload size="1.2em" title="Download Output"/>
+                    <FaDownload size="1.2em" title="Download Output" />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close

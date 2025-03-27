@@ -55,7 +55,7 @@ describe("OrcaDashboardComponent", () => {
 
     // Expect alert to be called due to invalid file type
     await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith("Invalid file type. Please upload a .txt file.");
+      expect(window.alert).toHaveBeenCalledWith("Invalid file type: test.pdf");
     });
 
     // Ensure that axios post was never called
@@ -66,12 +66,12 @@ describe("OrcaDashboardComponent", () => {
   /*
   test('Clicking on Preview without uploading any file and validating the error message', async () => {
     render(<OrcaDashboardComponent />);
-  
+
     const previewButton = screen.getByRole('button', { name: /Submit Search Query/i });
-  
+
     // Simulate clicking on Preview button
     fireEvent.click(previewButton);
-  
+
     // Expect alert to be called due to no file selected
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith('Please select a file.');

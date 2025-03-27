@@ -87,7 +87,7 @@ class TestAPI(unittest.TestCase):
         mock_extract.return_value = 'Extracted content'
 
         data = {
-            'file_path': 'test.txt',
+            'file_paths': ['test.txt'],  
             'search_terms': ['test'],
             'sections': [1],
             'specify_lines': '10'
@@ -100,11 +100,11 @@ class TestAPI(unittest.TestCase):
             response = preview_document_use_case(data)
 
         self.assertIsInstance(response, ResponseSuccess)
-        self.assertEqual(response.value, {'document_content': 'Extracted content'})
+        self.assertEqual(response.value, {'document_content': "\n===== File name: test.txt =====\nExtracted content\n"})
 
         mock_extract.assert_called_once()
         call_args = mock_extract.call_args[0]
-        self.assertEqual(call_args[1:], (['test'], [1], ['10'], False, 2000))
+        self.assertEqual(call_args, ('test.txt', ['test'], [1], ['10'], False, 2000))
 
 
 if __name__ == '__main__':
