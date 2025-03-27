@@ -20,10 +20,11 @@ span {
   height: 30px;
 }
 
-.remove-btn{
+.remove-btn {
   border: 0;
   background-color: #fff;
 }
-.input-file{
-  width: fit-content;
+.file-input {
+  padding-left: 30px;
+  padding-right: 30px;
 }
