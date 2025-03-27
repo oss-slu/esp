@@ -414,7 +414,7 @@ const OrcaDashboardComponent = () => {
                 !searchTerms.length ||
                 !specifyLines.length ||
                 !sections.length ||
-                !selectedFile ||
+                !filePaths.length ||
                 isUploadedFilesEmpty
               }>
               Preview
@@ -429,11 +429,10 @@ const OrcaDashboardComponent = () => {
                 !searchTerms.length ||
                 !specifyLines.length ||
                 !sections.length ||
-                !selectedFile ||
+                !filePaths.length ||
                 isUploadedFilesEmpty
               }>
-              Download{" "}
-               <FaDownload size="1.2em" title="Download Output"/> 
+              Download <FaDownload size="1.2em" title="Download Output" />
             </button>
           </div>
         </div>
@@ -461,21 +460,6 @@ const OrcaDashboardComponent = () => {
               </div>
             </div>
           )}
-
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={fetchDocumentPreview}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !filePaths.length ||
-              isUploadedFilesEmpty
-            }>
-            Preview
-          </button>
-        </div>
 
         {showPreviewModal && (
           <div
@@ -505,7 +489,7 @@ const OrcaDashboardComponent = () => {
                       !filePaths.length ||
                       isUploadedFilesEmpty
                     }>
-                    <FaDownload size="1.2em" title="Download Output"/>
+                    <FaDownload size="1.2em" title="Download Output" />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close
@@ -515,21 +499,6 @@ const OrcaDashboardComponent = () => {
             </div>
           </div>
         )}
-
-        <div className="button-container">
-          <button
-            className="btn btn-primary"
-            onClick={onSubmit}
-            disabled={
-              !searchTerms.length ||
-              !specifyLines.length ||
-              !sections.length ||
-              !filePaths.length ||
-              isUploadedFilesEmpty
-            }>
-            <FaDownload size="1.2em" title="Download Output" />
-          </button>
-        </div>
       </div>
     </div>
   );
