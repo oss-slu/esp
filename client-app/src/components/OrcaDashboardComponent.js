@@ -177,7 +177,6 @@ const OrcaDashboardComponent = () => {
     return `${truncated}...`;
   };
   
-  
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
@@ -187,11 +186,9 @@ const OrcaDashboardComponent = () => {
     let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
     fileName = truncateName(fileName, 100);
   
-  
     saveAs(blob, fileName);
   };
   
-
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -415,7 +412,9 @@ const OrcaDashboardComponent = () => {
                 isSearchTermsEmpty ||
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
-              }>
+              }
+              title="Submit Search Query"
+              >
               Submit Search Query
             </button>
           </div>
@@ -424,13 +423,8 @@ const OrcaDashboardComponent = () => {
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !filePaths.length ||
-                isUploadedFilesEmpty
-              }>
+              disabled={isDisabled}
+              title={"Preview Output"}>
               Preview
             </button>
           </div>
@@ -438,9 +432,10 @@ const OrcaDashboardComponent = () => {
           <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
-              title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
+              title={"Download Output"}
               onClick={onSubmit}
-              disabled={isDisabled}>
+              disabled={isDisabled}
+              >
               Download <FaDownload size="1.2em"/>
             </button>
           </div>
