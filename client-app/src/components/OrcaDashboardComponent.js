@@ -438,15 +438,10 @@ const OrcaDashboardComponent = () => {
           <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
+              title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
               onClick={onSubmit}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !filePaths.length ||
-                isUploadedFilesEmpty
-              }>
-              Download <FaDownload size="1.2em" title="Download Output" />
+              disabled={isDisabled}>
+              Download <FaDownload size="1.2em"/>
             </button>
           </div>
         </div>
@@ -492,7 +487,7 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-body">
                   <pre>{previewContent}</pre>
                 </div>
-                <div className="modal-footer" title="Please fill all required fields">
+                <div className="modal-footer">
                   <button
                     className="btn btn-primary"
                     title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
