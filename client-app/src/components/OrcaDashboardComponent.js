@@ -463,12 +463,12 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-footer" title="Please fill all required fields">
                   <button
                     className="btn btn-primary"
+                    title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
                     onClick={onSubmit}
                     disabled={isDisabled}
                     >
                     <FaDownload
                     size="1.2em"
-                    title="Download Output"
                     />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
@@ -483,12 +483,12 @@ const OrcaDashboardComponent = () => {
           <div title="Please fill all required fields">
             <button
             className="btn btn-primary"
+            title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
             onClick={onSubmit}
             disabled={isDisabled}
             >
             <FaDownload
             size="1.5em"
-            title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
             />
             </button>
           </div>

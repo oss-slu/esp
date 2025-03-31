@@ -84,9 +84,9 @@ describe("OrcaDashboardComponent", () => {
     mockAxios.post.mockResolvedValue({}); // Mock the API response
 
     render(<OrcaDashboardComponent />);
-
-    const downloadButton = screen.getByRole("button", { name: /Download Output/i });
-
+    
+    const downloadButton = screen.getByRole("button", { name: /Please fill all required fields before submitting/i });
+    
     // Ensure the button is disabled initially
     expect(downloadButton).toBeDisabled();
 
