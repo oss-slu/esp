@@ -106,28 +106,21 @@ const OrcaDashboardComponent = () => {
     document.getElementById("fileUpload").value = "";
   };
 
-  const removeUploadedFile = (fileName) => {
+  const removeUploadedFile = (file) => {
     setUploadedFiles((prevUploadedFiles) => {
-      const index = prevUploadedFiles.indexOf(fileName);
-      if (index === -1) return prevUploadedFiles;
-
-      const updatedFiles = [...prevUploadedFiles];
-      updatedFiles.splice(index, 1);
-
-      setFilePaths((prevPaths) => {
-        const updatedPaths = [...prevPaths];
-        updatedPaths.splice(index, 1);
-        return updatedPaths;
-      });
-
+      const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
+      if (selectedFile && selectedFile.name === file) {
+        setSelectedFile(null);
+        setSelectedFileName("File Upload"); 
+        const inputElement = document.getElementById("fileUpload");
+        if (inputElement) {
+          inputElement.value = ""; 
+        }
+      }
       return updatedFiles;
     });
-
-    setSelectedFile([]);
-    setSelectedFileName("No file chosen");
-    const inputElement = document.getElementById("fileUpload");
-    if (inputElement) inputElement.value = "";
   };
+  
 
   const onSubmit = () => {
     if (!filePaths.length) {
