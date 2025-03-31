@@ -121,7 +121,6 @@ const OrcaDashboardComponent = () => {
     });
   };
   
-
   const onSubmit = () => {
     if (!filePaths.length) {
       alert("Please select a file.");
