@@ -17,6 +17,11 @@ span {
   margin-bottom: 10px;
 }
 
+.btn-primary:disabled {
+  background-color: #aaaaaa !important;
+  border-color: #aaaaaa !important;
+}
+
 .button-group {
   display: flex;
   gap: 10px;

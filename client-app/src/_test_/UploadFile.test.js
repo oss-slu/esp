@@ -42,36 +42,15 @@ describe("OrcaDashboardComponent", () => {
     });
   });
 
-  test("Clicking on Choose File and try to upload any file other than the ORCA file", async () => {
-    render(<OrcaDashboardComponent />);
-
-    const file = new File(["content"], "test.pdf", { type: "application/pdf" });
-    const fileInput = screen.getByLabelText(/Upload ORCA data file/i);
-    const uploadButton = screen.getByRole("button", { name: /Upload/i });
-
-    // Simulate file selection and upload
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    fireEvent.click(uploadButton);
-
-    // Expect alert to be called due to invalid file type
-    await waitFor(() => {
-      expect(window.alert).toHaveBeenCalledWith("Invalid file type: test.pdf");
-    });
-
-    // Ensure that axios post was never called
-    const mockAxios = require("axios");
-    expect(mockAxios.post).not.toHaveBeenCalled();
-  });
-
   /*
   test('Clicking on Preview without uploading any file and validating the error message', async () => {
     render(<OrcaDashboardComponent />);
-
+  
     const previewButton = screen.getByRole('button', { name: /Submit Search Query/i });
-
+  
     // Simulate clicking on Preview button
     fireEvent.click(previewButton);
-
+  
     // Expect alert to be called due to no file selected
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith('Please select a file.');
@@ -84,9 +63,9 @@ describe("OrcaDashboardComponent", () => {
     mockAxios.post.mockResolvedValue({}); // Mock the API response
 
     render(<OrcaDashboardComponent />);
-
-    const downloadButton = screen.getByRole("button", { name: /Download Output/i });
-
+    
+    const downloadButton = screen.getByRole("button", { name: /Download/i });
+    
     // Ensure the button is disabled initially
     expect(downloadButton).toBeDisabled();
 

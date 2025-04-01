@@ -169,18 +169,19 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-
+  
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
     const searchTerm = searchTerms.join("_").slice(0, 50);
-
+  
+  
     let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
     fileName = truncateName(fileName, 100);
-
+  
     saveAs(blob, fileName);
   };
-
+  
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -245,6 +246,13 @@ const OrcaDashboardComponent = () => {
     setShowCard(false);
     setSameCriteria(false);
   };
+
+  const isDisabled =
+    !searchTerms.length ||
+    !specifyLines.length ||
+    !sections.length ||
+    !selectedFile ||
+    isUploadedFilesEmpty;
 
   const fetchDocumentPreview = () => {
     if (!filePaths.length) {
@@ -312,7 +320,7 @@ const OrcaDashboardComponent = () => {
         <div className="mb-3 text-start">
           <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
-            <span key={index} className="badge bg-secondary me-2 mb-2">
+            <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
               {truncateName(file, 40)}
               <button
                 type="button"
@@ -336,15 +344,18 @@ const OrcaDashboardComponent = () => {
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
-            {searchTerms.map((term, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSearchTerms)}>
-                {truncateName(term, 40)}
-                <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
-              </span>
+            <div className="mt-3">
+            <span>Search Terms:</span>
+              {searchTerms.map((term, index) => (
+                <span
+                  key={index}
+                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  onClick={() => removeTag(index, setSearchTerms)}>
+                  {truncateName(term, 40)}
+                  <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
+                </span>
             ))}
+            </div>
           </div>
           {searchTerms.length > 1 && (
             <div className="form-check mt-2">
@@ -384,7 +395,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="button-group">
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
               onClick={() => onSearchQuerySubmit()}
@@ -394,38 +405,31 @@ const OrcaDashboardComponent = () => {
                 isSearchTermsEmpty ||
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
-              }>
+              }
+              title="Submit Search Query"
+              >
               Submit Search Query
             </button>
           </div>
 
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !filePaths.length ||
-                isUploadedFilesEmpty
-              }>
+              disabled={isDisabled}
+              title={"Preview Output"}>
               Preview
             </button>
           </div>
 
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
+              title={"Download Output"}
               onClick={onSubmit}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !filePaths.length ||
-                isUploadedFilesEmpty
-              }>
-              Download <FaDownload size="1.2em" title="Download Output" />
+              disabled={isDisabled}
+              >
+              Download <FaDownload size="1.2em"/>
             </button>
           </div>
         </div>
@@ -474,15 +478,13 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-footer">
                   <button
                     className="btn btn-primary"
+                    title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
                     onClick={onSubmit}
-                    disabled={
-                      !searchTerms.length ||
-                      !specifyLines.length ||
-                      !sections.length ||
-                      !filePaths.length ||
-                      isUploadedFilesEmpty
-                    }>
-                    <FaDownload size="1.2em" title="Download Output" />
+                    disabled={isDisabled}
+                    >
+                    <FaDownload
+                    size="1.2em"
+                    />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close
