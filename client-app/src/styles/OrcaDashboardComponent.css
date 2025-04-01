@@ -29,3 +29,8 @@ span {
   padding-left: 30px;
   padding-right: 30px;
 }
+.btn-primary:disabled {
+  background-color: #aaaaaa !important;
+  border-color: #aaaaaa !important;
+}
+

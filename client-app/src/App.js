@@ -5,6 +5,7 @@ import OrcaDashboardComponent from "./components/OrcaDashboardComponent";
 import GaussianDashboardComponent from "./components/GaussianDashboardComponent";
 import NavBarOrca from "./components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AboutComponent from "./components/AboutComponent";
 
 const App = () => {

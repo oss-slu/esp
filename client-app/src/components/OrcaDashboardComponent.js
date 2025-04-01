@@ -1,14 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { useEffect } from "react";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
 
 const OrcaDashboardComponent = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [filePath, setFilePath] = useState("");
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [filePaths, setFilePaths] = useState([]);
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState([]);
   const [sections, setSections] = useState([]);
@@ -99,52 +98,52 @@ const OrcaDashboardComponent = () => {
   };
 
   const onUpload = () => {
-    if (!selectedFile) {
-      console.error("No file selected");
+    if (!selectedFile.length) {
+      alert("Please choose a file to upload.");
       return;
     }
 
-    if (uploadedFiles.includes(selectedFile.name)) {
-      alert(`The file "${selectedFile.name}" has already been uploaded.`);
-      return;
-    }
+    selectedFile.forEach((file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      axios
+        .post(`${config.apiBaseUrl}/upload`, formData)
+        .then((response) => {
+          setUploadedFiles((prev) => [...prev, response.data.file_name]);
+          setFilePaths((prev) => [...prev, response.data.file_path]);
+          setSelectedFileName(file.name);
+        })
+        .catch((error) => console.error("Upload error:", error));
+    });
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    axios
-      .post(`${config.apiBaseUrl}/upload`, formData)
-      .then((response) => {
-        const uploadedFileName = response.data.file_name;
-        setFilePath(response.data.file_path);
-        setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, uploadedFileName]);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    setSelectedFile([]);
+    document.getElementById("fileUpload").value = "";
   };
 
   const removeUploadedFile = (file) => {
     setUploadedFiles((prevUploadedFiles) => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
-      setSelectedFile(null);
-      setSelectedFileName("No file chosen");
-      const inputElement = document.getElementById("fileInput");
-      if (inputElement) {
-        inputElement.value = "";
+      if (selectedFile && selectedFile.name === file) {
+        setSelectedFile(null);
+        setSelectedFileName("File Upload"); 
+        const inputElement = document.getElementById("fileUpload");
+        if (inputElement) {
+          inputElement.value = ""; 
+        }
       }
       return updatedFiles;
     });
   };
+  
 
   const onSubmit = () => {
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: filePath.toString(),
+      file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
@@ -171,7 +170,7 @@ const OrcaDashboardComponent = () => {
 
   const onSearchQuerySubmit = () => {
     setShowCard(false);
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     } else {
@@ -184,18 +183,19 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-
+  
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
     const searchTerm = searchTerms.join("_").slice(0, 50);
-
+  
+  
     let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
     fileName = truncateName(fileName, 100);
-
+  
     saveAs(blob, fileName);
   };
-
+  
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -261,14 +261,21 @@ const OrcaDashboardComponent = () => {
     setSameCriteria(false);
   };
 
+  const isDisabled =
+    !searchTerms.length ||
+    !specifyLines.length ||
+    !sections.length ||
+    !selectedFile ||
+    isUploadedFilesEmpty;
+
   const fetchDocumentPreview = () => {
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: filePath.toString(),
+      file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
@@ -353,6 +360,7 @@ const OrcaDashboardComponent = () => {
               id="fileUpload"
               onChange={onFileSelected}
               accept=".txt"
+              multiple
               aria-label="Upload ORCA data file"
               ref={inputSelectedFile.current}
               hidden
@@ -386,7 +394,7 @@ const OrcaDashboardComponent = () => {
         <div className="mb-3 text-start">
           <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
-            <span key={index} className="badge bg-secondary me-2 mb-2">
+            <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
               {truncateName(file, 40)}
               <button
                 type="button"
@@ -410,15 +418,18 @@ const OrcaDashboardComponent = () => {
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
-            {searchTerms.map((term, index) => (
-              <span
-                key={index}
-                className="badge bg-secondary me-2 mb-2"
-                onClick={() => removeTag(index, setSearchTerms)}>
-                {truncateName(term, 40)}
-                <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
-              </span>
+            <div className="mt-3">
+            <span>Search Terms:</span>
+              {searchTerms.map((term, index) => (
+                <span
+                  key={index}
+                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  onClick={() => removeTag(index, setSearchTerms)}>
+                  {truncateName(term, 40)}
+                  <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
+                </span>
             ))}
+            </div>
           </div>
           {searchTerms.length > 1 && (
             <div className="form-check mt-2">
@@ -460,7 +471,7 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="button-group">
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
               onClick={() => onSearchQuerySubmit()}
@@ -470,39 +481,31 @@ const OrcaDashboardComponent = () => {
                 isSearchTermsEmpty ||
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
-              }>
+              }
+              title="Submit Search Query"
+              >
               Submit Search Query
             </button>
           </div>
 
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !selectedFile ||
-                isUploadedFilesEmpty
-              }>
+              disabled={isDisabled}
+              title={"Preview Output"}>
               Preview
             </button>
           </div>
 
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
+              title={"Download Output"}
               onClick={onSubmit}
-              disabled={
-                !searchTerms.length ||
-                !specifyLines.length ||
-                !sections.length ||
-                !selectedFile ||
-                isUploadedFilesEmpty
-              }>
-              Download{" "}
-               <FaDownload size="1.2em" title="Download Output"/> 
+              disabled={isDisabled}
+              >
+              Download <FaDownload size="1.2em"/>
             </button>
           </div>
         </div>
@@ -531,7 +534,6 @@ const OrcaDashboardComponent = () => {
             </div>
           )}
 
-        
         {showPreviewModal && (
           <div
             className="modal"
@@ -552,15 +554,13 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-footer">
                   <button
                     className="btn btn-primary"
+                    title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
                     onClick={onSubmit}
-                    disabled={
-                      !searchTerms.length ||
-                      !specifyLines.length ||
-                      !sections.length ||
-                      !selectedFile ||
-                      isUploadedFilesEmpty
-                    }>
-                    <FaDownload size="1.2em" title="Download Output"/>
+                    disabled={isDisabled}
+                    >
+                    <FaDownload
+                    size="1.2em"
+                    />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close
