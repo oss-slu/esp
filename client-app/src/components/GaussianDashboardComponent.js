@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponentLegacy.css";
 import config from "../utils/config";
 
@@ -113,9 +114,16 @@ const GaussianDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from Gaussian files to Word documents</h2>
         <div className="mb-3 text-start">
-          <span>Upload your Gaussian data file</span>
+          <label htmlFor="fileUpload" className="mb-2">
+            Upload your Gaussian data file
+          </label>
           <div className="input-group">
-            <input type="file" className="form-control" onChange={onFileSelected} accept=".log" />
+            <input
+            type="file"
+            id="fileUpload"
+            className="form-control"
+            onChange={onFileSelected}
+            accept=".log" />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>
@@ -123,10 +131,11 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
+          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <input
             type="text"
             className="form-control"
+            id="searchTermInput"
             placeholder="E.g., CARTESIAN COORDINATES"
             value={searchTerms}
             onChange={(e) => setSearchTerms(e.target.value.toUpperCase())}
@@ -134,10 +143,11 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
+          <label htmlFor="specifyLinesInput" className="mb-2">Enter how you want the lines specified:</label>
           <input
             type="text"
             className="form-control"
+            id="specifyLinesInput"
             placeholder="E.g., WHOLE, FIRST X, LAST X"
             value={specifyLines}
             onChange={(e) => setSpecifyLines(e.target.value.toUpperCase())}
@@ -145,10 +155,11 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
           <input
             type="text"
             className="form-control"
+            id="numSectionsInput"
             placeholder="Input as number..."
             value={sections}
             onChange={(e) => setSections(e.target.value)}
@@ -156,10 +167,11 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Use total lines?</span>
+          <label htmlFor="useTotalLinesInput" className="mb-2">Use total lines?</label>
           <input
             type="text"
             className="form-control"
+            id="useTotalLinesInput"
             placeholder="TRUE/FALSE"
             value={useTotalLines}
             onChange={(e) => setUseTotalLines(e.target.value.toUpperCase())}
@@ -167,10 +179,11 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Total number of lines for output doc?</span>
+          <label htmlFor="numLinesInput" className="mb-2">Total number of lines for output doc?</label>
           <input
             type="text"
             className="form-control"
+            id="numLinesInput"
             placeholder="Input as number..."
             value={totalLines}
             onChange={(e) => {
@@ -179,14 +192,15 @@ const GaussianDashboardComponent = () => {
             }}
           />
         </div>
-        <button className="btn btn-primary" onClick={fetchDocumentPreview}>
-          Preview Output
-        </button>
-        <div className="buttonSpacing">
+        <div className="button-group">
+          <button className="btn btn-primary" onClick={fetchDocumentPreview}>
+            Preview
+          </button>
           <button className="btn btn-primary" onClick={onSubmit}>
-            Download Output
+            Download <FaDownload size="1.2em"/>
           </button>
         </div>
+
 
         {previewContent && (
           <div className="document-preview">
