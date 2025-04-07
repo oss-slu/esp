@@ -39,7 +39,10 @@ const OrcaDashboardComponent = () => {
   };
 
   const isSearchQueryEnabled = () => {
-    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length;
+    const line = specifyLines[0] || {};
+    const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
+    const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
+    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length && !isLineNumberMissing;
   };
 
   const handleSpecifyLineChange = (value) => {
@@ -247,12 +250,16 @@ const OrcaDashboardComponent = () => {
     setSameCriteria(false);
   };
 
+  const line = specifyLines[0] || {};
+  const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
+  const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
   const isDisabled =
     !searchTerms.length ||
     !specifyLines.length ||
     !sections.length ||
     !selectedFile ||
-    isUploadedFilesEmpty;
+    isUploadedFilesEmpty ||
+    isLineNumberMissing;
 
   const fetchDocumentPreview = () => {
     if (!filePaths.length) {
