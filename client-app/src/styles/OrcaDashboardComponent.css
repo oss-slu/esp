@@ -17,20 +17,99 @@ span {
   margin-bottom: 10px;
 }
 
-.select-btn {
-  height: 30px;
+.select-btn,
+.btn-primary {
+  height: 38px;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #b8bfc6;
+}
+
+.select-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .remove-btn {
-  border: 0;
-  background-color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #495057;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  margin-left: 2px;
 }
+
+.remove-btn:hover {
+  opacity: 0.7;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.input-file {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 500px;
+}
+
+.input-file ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.input-file li,
 .file-input {
-  padding-left: 30px;
-  padding-right: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+  margin: 0;
+  color: #495057;
+  font-size: 14px;
 }
+
+.input-file li:not(:last-child)::after {
+  content: ",";
+  margin-right: 4px;
+}
+
 .btn-primary:disabled {
   background-color: #aaaaaa !important;
   border-color: #aaaaaa !important;
 }
-

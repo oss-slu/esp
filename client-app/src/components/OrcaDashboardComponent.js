@@ -370,7 +370,7 @@ const OrcaDashboardComponent = () => {
             </button>
             <div className="input-file">
               {!selectedFiles.length ? (
-                <p className="file-input">No file chosen</p>
+                <p className="file-input">No file selected</p>
               ) : (
                 <ul>
                   {selectedFiles.map((file, index) => (
