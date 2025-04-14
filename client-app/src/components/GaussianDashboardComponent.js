@@ -131,6 +131,10 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
+          <label>Uploaded Files:</label>
+        </div>
+
+        <div className="mb-3 text-start">
           <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
           <input
             type="text"
@@ -140,29 +144,35 @@ const GaussianDashboardComponent = () => {
             value={searchTerms}
             onChange={(e) => setSearchTerms(e.target.value.toUpperCase())}
           />
+          <div className="mt-3">
+            <span>Search Terms:</span>
+          </div>
+          <div className="form-check mt-2">
+              <input
+                className="form-check-input"
+                type="checkbox"
+              />
+              <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
+                Is the search criteria same for all search terms
+              </label>
+            </div>
+        </div>
+  
+        <div className="mb-3 text-start">
+          <label htmlFor="specifyLinesSelect" className="mb-2">
+            Enter how you want the lines specified:
+          </label>
         </div>
 
         <div className="mb-3 text-start">
-          <label htmlFor="specifyLinesInput" className="mb-2">Enter how you want the lines specified:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="specifyLinesInput"
-            placeholder="E.g., WHOLE, FIRST X, LAST X"
-            value={specifyLines}
-            onChange={(e) => setSpecifyLines(e.target.value.toUpperCase())}
-          />
-        </div>
-
-        <div className="mb-3 text-start">
-          <label htmlFor="numSectionsInput" className="mb-2">Number of sections?</label>
+          <label htmlFor="numSectionsInput" className="mb-2">
+            Number of sections?
+          </label>
           <input
             type="text"
             className="form-control"
             id="numSectionsInput"
-            placeholder="Input as number..."
-            value={sections}
-            onChange={(e) => setSections(e.target.value)}
+            placeholder="ex: 1-5 or 1,2,5"
           />
         </div>
 
@@ -193,6 +203,9 @@ const GaussianDashboardComponent = () => {
           />
         </div>
         <div className="button-group">
+          <button className="btn btn-primary" title="Submit Search Query">
+            Submit Search Query
+          </button>
           <button className="btn btn-primary" onClick={fetchDocumentPreview}>
             Preview
           </button>
