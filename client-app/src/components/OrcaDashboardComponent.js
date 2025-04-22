@@ -110,6 +110,17 @@ const OrcaDashboardComponent = () => {
   const removeUploadedFile = (file) => {
     setUploadedFiles((prevUploadedFiles) => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
+
+      setFilePaths((prevFilePaths) => {
+        const index = uploadedFiles.findIndex((f) => f === file);
+        if (index !== -1) {
+          const updatedPaths = [...prevFilePaths];
+          updatedPaths.splice(index, 1);
+          return updatedPaths;
+        }
+        return prevFilePaths;
+      });
+
       if (selectedFile && selectedFile.name === file) {
         setSelectedFile(null);
         setSelectedFileName("File Upload");
