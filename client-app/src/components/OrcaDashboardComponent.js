@@ -500,14 +500,23 @@ const OrcaDashboardComponent = () => {
           )}
         </div>
         {showPreview && (
-          <div className="col-md-6">
-            <div className="d-flex justify-content-between align-items-center mb-2">
+          <div className="col-md-6 d-flex flex-column align-items-center">
+            <div className="d-flex justify-content-between align-items-center w-100 mb-2">
               <h5>Preview</h5>
               <button className="btn btn-sm btn-danger" onClick={() => setShowPreview(false)}>
                 Close
               </button>
             </div>
-            <pre style={{ maxHeight: "400px", overflowY: "auto" }}>{previewContent}</pre>
+            <div
+              style={{
+                maxHeight: "500px",
+                overflowY: "auto",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <pre style={{ textAlign: "center" }}>{previewContent}</pre>
+            </div>
           </div>
         )}
       </div>
