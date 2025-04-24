@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
 
@@ -114,18 +115,17 @@ const OrcaDashboardComponent = () => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
       if (selectedFile && selectedFile.name === file) {
         setSelectedFile(null);
-        setSelectedFileName("File Upload"); 
+        setSelectedFileName("File Upload");
         const inputElement = document.getElementById("fileUpload");
         if (inputElement) {
-          inputElement.value = ""; 
+          inputElement.value = "";
         }
       }
       return updatedFiles;
     });
   };
-  
 
-  const onSubmit = () => {
+  const onSubmitWithFormat = (format) => {
     if (!filePaths.length) {
       alert("Please select a file.");
       return;
@@ -136,6 +136,7 @@ const OrcaDashboardComponent = () => {
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
+      output_format: format
     };
 
     axios
@@ -144,7 +145,12 @@ const OrcaDashboardComponent = () => {
       })
       .then((response) => {
         const blob = new Blob([response.data]);
-        downloadDocument(blob);
+        const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+        const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
+        const searchTerm = searchTerms.join("_").slice(0, 50);
+        let fileName = `${date}_${baseFileName}_${searchTerm}.${format}`;
+        fileName = truncateName(fileName, 100);
+        saveAs(blob, fileName);
       })
       .catch((error) => {
         if (error.response) {
@@ -172,19 +178,7 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-  
-  const downloadDocument = (blob) => {
-    const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
-    const searchTerm = searchTerms.join("_").slice(0, 50);
-  
-  
-    let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
-    fileName = truncateName(fileName, 100);
-  
-    saveAs(blob, fileName);
-  };
-  
+
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -352,7 +346,7 @@ const OrcaDashboardComponent = () => {
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             <div className="mt-3">
-            <span>Search Terms:</span>
+              <span>Search Terms:</span>
               {searchTerms.map((term, index) => (
                 <span
                   key={index}
@@ -361,7 +355,7 @@ const OrcaDashboardComponent = () => {
                   {truncateName(term, 40)}
                   <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
                 </span>
-            ))}
+              ))}
             </div>
           </div>
           {searchTerms.length > 1 && (
@@ -402,105 +396,43 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="button-group">
-          <div className="button-container" title="Please fill all required fields">
+          <div className="button-container">
             <button
               className="btn btn-primary"
-              onClick={() => onSearchQuerySubmit()}
+              onClick={onSearchQuerySubmit}
               disabled={
                 !isSearchQueryEnabled() ||
                 isUploadedFilesEmpty ||
                 isSearchTermsEmpty ||
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
-              }
-              title="Submit Search Query"
-              >
+              }>
               Submit Search Query
             </button>
           </div>
 
-          <div className="button-container" title="Please fill all required fields">
+          <div className="button-container">
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={isDisabled}
-              title={"Preview Output"}>
+              disabled={isDisabled}>
               Preview
             </button>
           </div>
 
-          <div className="button-container" title="Please fill all required fields">
-            <button
-              className="btn btn-primary"
-              title={"Download Output"}
-              onClick={onSubmit}
+          <div className="button-container">
+            <DropdownButton
+              id="dropdown-download-button"
+              title={<span>Download <FaDownload size="1.2em"/></span>}
+              variant="primary"
               disabled={isDisabled}
-              >
-              Download <FaDownload size="1.2em"/>
-            </button>
+            >
+              <Dropdown.Item onClick={() => onSubmitWithFormat("docx")}>Download as .docx</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSubmitWithFormat("pdf")}>Download as .pdf</Dropdown.Item>
+              <Dropdown.Item onClick={() => onSubmitWithFormat("txt")}>Download as .txt</Dropdown.Item>
+            </DropdownButton>
           </div>
         </div>
-
-        {!isUploadedFilesEmpty &&
-          !isSearchTermsEmpty &&
-          !isSpecifyLinesEmpty &&
-          !isSectionsEmpty &&
-          showCard && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <h5 className="card-title">Search Query</h5>
-                <p className="card-text">Search Terms: {searchTerms.join(", ")}</p>
-                <p className="card-text">
-                  Specify Lines: {specifyLines[0].value !== "SELECT" && specifyLines[0].value}
-                  {specifyLines[0].lineNumber ? `, ${specifyLines[0].lineNumber}` : ""}
-                </p>
-                <p className="card-text">Sections: {sections.join(", ")}</p>
-                <div className="d-flex justify-content-end">
-                  <button className="btn btn-primary me-2">Edit</button>
-                  <button className="btn btn-danger" onClick={handleDelete}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-        {showPreviewModal && (
-          <div
-            className="modal"
-            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Document Preview</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    aria-label="Close"
-                    onClick={() => setShowPreviewModal(false)}></button>
-                </div>
-                <div className="modal-body">
-                  <pre>{previewContent}</pre>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    className="btn btn-primary"
-                    title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
-                    onClick={onSubmit}
-                    disabled={isDisabled}
-                    >
-                    <FaDownload
-                    size="1.2em"
-                    />
-                  </button>
-                  <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
