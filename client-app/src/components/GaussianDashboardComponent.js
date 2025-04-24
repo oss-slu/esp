@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import "../styles/OrcaDashboardComponentLegacy.css";
 import config from "../utils/config";
 
@@ -77,7 +78,7 @@ const GaussianDashboardComponent = () => {
     return `${truncated}...`;
   };
 
-  const onSubmit = () => {
+  const onSubmitWithFormat = (format) => {
     if (!filePaths.length) {
       alert("Please select a file.");
       return;
@@ -88,15 +89,11 @@ const GaussianDashboardComponent = () => {
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
+      output_format: format
     };
 
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
+    if (useTotalLines) data.use_total_lines = useTotalLines;
+    if (totalLines) data.total_lines = totalLines;
 
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
@@ -104,15 +101,11 @@ const GaussianDashboardComponent = () => {
       })
       .then((response) => {
         const blob = new Blob([response.data]);
-        downloadDocument(blob);
+        saveAs(blob, `output.${format}`);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  };
-
-  const downloadDocument = (blob) => {
-    saveAs(blob, "output.docx");
   };
 
   const fetchDocumentPreview = () => {
@@ -246,9 +239,15 @@ const GaussianDashboardComponent = () => {
           Preview Output
         </button>
         <div className="buttonSpacing">
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Download Output
-          </button>
+          <DropdownButton
+            id="dropdown-download-button"
+            title="Download Output"
+            variant="primary"
+          >
+            <Dropdown.Item onClick={() => onSubmitWithFormat("docx")}>Download as .docx</Dropdown.Item>
+            <Dropdown.Item onClick={() => onSubmitWithFormat("pdf")}>Download as .pdf</Dropdown.Item>
+            <Dropdown.Item onClick={() => onSubmitWithFormat("txt")}>Download as .txt</Dropdown.Item>
+          </DropdownButton>
         </div>
 
         {previewContent && (
