@@ -10,9 +10,8 @@ const GaussianDashboardComponent = () => {
   const [fileName, setFileName] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
   const [specifyLines, setSpecifyLines] = useState("");
-  const [sections, setSections] = useState("");
-  const [useTotalLines, setUseTotalLines] = useState("");
-  const [totalLines, setTotalLines] = useState("");
+  const [sections, setSections] = useState([]);
+  const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
 
   const onFileSelected = (event) => {
@@ -52,14 +51,6 @@ const GaussianDashboardComponent = () => {
       specify_lines: specifyLines.toString(),
     };
 
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
-
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
         responseType: "blob",
@@ -71,6 +62,75 @@ const GaussianDashboardComponent = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+
+  const handleSameCriteriaChange = (e) => {
+    setSameCriteria(e.target.checked);
+  };
+  
+  const handleNumSectionsBlur = (e) => {
+    const input = e.target.value;
+    let parsedSections = new Set();
+
+    input.split(",").forEach((part) => {
+      part = part.trim();
+      if (part.includes("-")) {
+        const [start, end] = part.split("-").map((num) => parseInt(num.trim(), 10));
+        if (!isNaN(start) && !isNaN(end) && start <= end) {
+          for (let i = start; i <= end; i++) {
+            parsedSections.add(i);
+          }
+        }
+      } else {
+        const num = parseInt(part, 10);
+        if (!isNaN(num)) {
+          parsedSections.add(num);
+        }
+      }
+    });
+
+    setSections(Array.from(parsedSections).sort((a, b) => a - b));
+  };
+
+  const renderSpecifyLine = () => {
+    const line = specifyLines[0] || { value: "", showInput: false };
+    return (
+      <div className="mb-2 d-flex align-items-center">
+        <select
+          className="form-select me-2"
+          id="specifyLinesSelect"
+          value={line.value}
+          onChange={(e) => handleSpecifyLineChange(e.target.value)}>
+          <option value="SELECT">SELECT</option>
+          <option value="WHOLE">WHOLE</option>
+          <option value="FIRST">FIRST</option>
+          <option value="LAST">LAST</option>
+        </select>
+        {line.showInput && (
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter line number"
+            value={line.lineNumber || ""}
+            onChange={(e) => {
+              const updatedLines = [{ ...line, lineNumber: e.target.value }];
+              setSpecifyLines(updatedLines);
+            }}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const handleSpecifyLineChange = (value) => {
+    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST" }]);
+  };
+
+  const formatSpecifyLines = () => {
+    const line = specifyLines[0];
+    return line.value === "WHOLE" || line.value === "SELECT"
+      ? line.value
+      : `${line.value} ${line.lineNumber}`;
   };
 
   const downloadDocument = (blob) => {
@@ -87,16 +147,8 @@ const GaussianDashboardComponent = () => {
       file_path: fileName.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
-      specify_lines: specifyLines.toString(),
+      specify_lines: formatSpecifyLines(),
     };
-
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
 
     axios
       .post(`${config.apiBaseUrl}/preview`, data)
@@ -147,21 +199,27 @@ const GaussianDashboardComponent = () => {
           <div className="mt-3">
             <span>Search Terms:</span>
           </div>
-          <div className="form-check mt-2">
+          {searchTerms.length > 1 && (
+            <div className="form-check mt-2">
               <input
                 className="form-check-input"
                 type="checkbox"
+                id="sameCriteriaCheckbox"
+                checked={sameCriteria}
+                onChange={handleSameCriteriaChange}
               />
               <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
                 Is the search criteria same for all search terms
               </label>
             </div>
+          )}
         </div>
-  
+
         <div className="mb-3 text-start">
           <label htmlFor="specifyLinesSelect" className="mb-2">
             Enter how you want the lines specified:
           </label>
+          {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
@@ -173,35 +231,11 @@ const GaussianDashboardComponent = () => {
             className="form-control"
             id="numSectionsInput"
             placeholder="ex: 1-5 or 1,2,5"
+            defaultValue={sections.join(", ")}
+            onBlur={handleNumSectionsBlur}
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <label htmlFor="useTotalLinesInput" className="mb-2">Use total lines?</label>
-          <input
-            type="text"
-            className="form-control"
-            id="useTotalLinesInput"
-            placeholder="TRUE/FALSE"
-            value={useTotalLines}
-            onChange={(e) => setUseTotalLines(e.target.value.toUpperCase())}
-          />
-        </div>
-
-        <div className="mb-3 text-start">
-          <label htmlFor="numLinesInput" className="mb-2">Total number of lines for output doc?</label>
-          <input
-            type="text"
-            className="form-control"
-            id="numLinesInput"
-            placeholder="Input as number..."
-            value={totalLines}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              setTotalLines(inputValue === "" ? "" : parseInt(inputValue));
-            }}
-          />
-        </div>
         <div className="button-group">
           <button className="btn btn-primary" title="Submit Search Query">
             Submit Search Query
