@@ -109,10 +109,10 @@ const OrcaDashboardComponentLegacy = () => {
   };
 
   return (
-    <div className="container py-5 d-flex justify-content-center">
-      <div className="text-center">
-        <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
-        <div className="mb-3 text-start">
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2 className="dashboard-title">Extract data from ORCA files to Word documents</h2>
+        <div className="input-group-block">
           <span>Upload your ORCA data file</span>
           <div className="input-group">
             <input type="file" className="form-control" onChange={onFileSelected} accept=".txt" />
@@ -122,7 +122,7 @@ const OrcaDashboardComponentLegacy = () => {
           </div>
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="input-group-block">
           <span>Enter the terms you wish to search for (txt only):</span>
           <input
             type="text"
@@ -133,7 +133,7 @@ const OrcaDashboardComponentLegacy = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="input-group-block">
           <span>Enter how you want the lines specified:</span>
           <input
             type="text"
@@ -144,7 +144,7 @@ const OrcaDashboardComponentLegacy = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="input-group-block">
           <span>Number of sections?</span>
           <input
             type="text"
@@ -155,7 +155,7 @@ const OrcaDashboardComponentLegacy = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="input-group-block">
           <span>Use total lines?</span>
           <input
             type="text"
@@ -166,7 +166,7 @@ const OrcaDashboardComponentLegacy = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="input-group-block">
           <span>Total number of lines for output doc?</span>
           <input
             type="text"
