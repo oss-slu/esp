@@ -11,7 +11,6 @@ const GaussianDashboardComponent = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
-  const [sameCriteria, setSameCriteria] = useState(false);
   const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState("");
   const [sections, setSections] = useState([]);
@@ -177,6 +176,29 @@ const GaussianDashboardComponent = () => {
     saveAs(blob, "output.docx");
   };
 
+  const fetchDocumentPreview = () => {
+    if (!selectedFile.length) {
+      alert("Please select a file.");
+      return;
+    }
+    const data = {
+      file_path: selectedFileName.toString(),
+      search_terms: searchTerms.split(","),
+      sections: sections.split(","),
+      specify_lines: formatSpecifyLines(),
+    };
+
+    axios
+      .post(`${config.apiBaseUrl}/preview`, data)
+      .then((response) => {
+        const documentContent = response.data.document_content;
+        setPreviewContent(documentContent);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+    
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -210,34 +232,6 @@ const GaussianDashboardComponent = () => {
       updatedTerms.splice(index, 1);
       return updatedTerms;
     });
-  };
-
-  const handleSameCriteriaChange = (e) => {
-    setSameCriteria(e.target.checked);
-  };
-
-  const fetchDocumentPreview = () => {
-    if (!selectedFile.length) {
-      alert("Please select a file.");
-      return;
-    }
-
-    const data = {
-      file_path: selectedFileName.toString(),
-      search_terms: searchTerms,
-      sections: sections.split(","),
-      specify_lines: formatSpecifyLines(),
-    };
-
-    axios
-      .post(`${config.apiBaseUrl}/preview`, data)
-      .then((response) => {
-        const documentContent = response.data.document_content;
-        setPreviewContent(documentContent);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   };
 
   return (
@@ -287,7 +281,7 @@ const GaussianDashboardComponent = () => {
               type="text"
               className="form-control"
               id="searchTermInput"
-            placeholder="E.g., CARTESIAN COORDINATES"
+              placeholder="E.g., CARTESIAN COORDINATES"
               onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
@@ -303,23 +297,6 @@ const GaussianDashboardComponent = () => {
                 </span>
             ))}
             </div>
-          </div>
-          {searchTerms.length > 1 && (
-            <div className="form-check mt-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="sameCriteriaCheckbox"
-                checked={sameCriteria}
-                onChange={handleSameCriteriaChange}
-              />
-              <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
-                Is the search criteria same for all search terms
-              </label>
-            </div>
-          )}
-          <div className="mt-3">
-            <span>Search Terms:</span>
           </div>
           {searchTerms.length > 1 && (
             <div className="form-check mt-2">
