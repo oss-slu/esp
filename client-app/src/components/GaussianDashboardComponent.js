@@ -6,8 +6,11 @@ import "../styles/OrcaDashboardComponentLegacy.css";
 import config from "../utils/config";
 
 const GaussianDashboardComponent = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [filePaths, setFilePaths] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [selectedFileName, setSelectedFileName] = useState("No file chosen");
+
   const [searchTerms, setSearchTerms] = useState("");
   const [specifyLines, setSpecifyLines] = useState("");
   const [sections, setSections] = useState([]);
@@ -15,37 +18,73 @@ const GaussianDashboardComponent = () => {
   const [previewContent, setPreviewContent] = useState("");
 
   const onFileSelected = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const files = Array.from(event.target.files);
+    const validFiles = files.filter((file) => {
+      if (!file.name.toLowerCase().endsWith(".log")) {
+        alert(`Invalid file type: ${file.name}. Only .log files are allowed for Gaussian.`);
+        return false;
+      }
+      if (uploadedFiles.includes(file.name)) {
+        alert(`The file "${file.name}" has already been uploaded.`);
+        return false;
+      }
+      return true;
+    });
+    setSelectedFile(validFiles);
   };
 
   const onUpload = () => {
-    if (!selectedFile) {
-      console.error("No file selected");
+    if (!selectedFile.length) {
+      alert("Please choose a file to upload.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
+    selectedFile.forEach((file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      axios
+        .post(`${config.apiBaseUrl}/upload`, formData)
+        .then((response) => {
+          setUploadedFiles((prev) => [...prev, response.data.file_name]);
+          setFilePaths((prev) => [...prev, response.data.file_path]);
+          setSelectedFileName(file.name);
+        })
+        .catch((error) => console.error("Upload error:", error));
+    });
 
-    axios
-      .post(`${config.apiBaseUrl}/upload`, formData)
-      .then((response) => {
-        console.log("File uploaded successfully:", response);
-        setFileName(response.data.filename);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    setSelectedFile([]);
+    document.getElementById("fileUpload").value = "";
+  };
+
+  const removeUploadedFile = (file) => {
+    setUploadedFiles((prevUploadedFiles) => {
+      const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
+      if (selectedFile && selectedFile.name === file) {
+        setSelectedFile(null);
+        setSelectedFileName("File Upload"); 
+        const inputElement = document.getElementById("fileUpload");
+        if (inputElement) {
+          inputElement.value = ""; 
+        }
+      }
+      return updatedFiles;
+    });
+  };
+  
+  const truncateName = (fileName, maxLength = 70) => {
+    if (fileName.length <= maxLength) return fileName;
+    const truncated = fileName.substring(0, maxLength - 3);
+    return `${truncated}...`;
   };
 
   const onSubmit = () => {
-    if (!selectedFile) {
+    if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: selectedFileName.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
@@ -138,13 +177,13 @@ const GaussianDashboardComponent = () => {
   };
 
   const fetchDocumentPreview = () => {
-    if (!selectedFile) {
+    if (!selectedFile.length) {
       alert("Please select a file.");
       return;
     }
 
     const data = {
-      file_path: fileName.toString(),
+      file_path: selectedFileName.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
       specify_lines: formatSpecifyLines(),
@@ -166,16 +205,19 @@ const GaussianDashboardComponent = () => {
       <div className="text-center">
         <h2 className="mb-4">Extract data from Gaussian files to Word documents</h2>
         <div className="mb-3 text-start">
-          <label htmlFor="fileUpload" className="mb-2">
-            Upload your Gaussian data file
+        <label htmlFor="fileUpload" className="mb-2">
+          Upload your Gaussian data file
           </label>
           <div className="input-group">
             <input
-            type="file"
-            id="fileUpload"
-            className="form-control"
-            onChange={onFileSelected}
-            accept=".log" />
+             className="form-control" 
+             type="file" 
+             id="fileUpload"
+             onChange={onFileSelected} 
+             accept=".log" 
+             multiple
+             aria-label="Upload Gaussian data file"
+            />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>
@@ -184,10 +226,20 @@ const GaussianDashboardComponent = () => {
 
         <div className="mb-3 text-start">
           <label>Uploaded Files:</label>
+          {uploadedFiles.map((file, index) => (
+            <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
+              {truncateName(file, 40)}
+              <button
+                type="button"
+                className="btn-close ms-1"
+                aria-label="Remove"
+                onClick={() => removeUploadedFile(file)}></button>
+            </span>
+          ))}
         </div>
 
         <div className="mb-3 text-start">
-          <label htmlFor="searchTermInput" className="mb-2">Enter the terms you wish to search for (txt only):</label>
+          <span>Enter the terms you wish to search for (txt only):</span>
           <input
             type="text"
             className="form-control"
