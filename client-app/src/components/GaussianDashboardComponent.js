@@ -61,16 +61,16 @@ const GaussianDashboardComponent = () => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
       if (selectedFile && selectedFile.name === file) {
         setSelectedFile(null);
-        setSelectedFileName("File Upload"); 
+        setSelectedFileName("File Upload");
         const inputElement = document.getElementById("fileUpload");
         if (inputElement) {
-          inputElement.value = ""; 
+          inputElement.value = "";
         }
       }
       return updatedFiles;
     });
   };
-  
+
   const truncateName = (fileName, maxLength = 70) => {
     if (fileName.length <= maxLength) return fileName;
     const truncated = fileName.substring(0, maxLength - 3);
@@ -90,13 +90,8 @@ const GaussianDashboardComponent = () => {
       specify_lines: specifyLines.toString(),
     };
 
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
+    if (useTotalLines) data.use_total_lines = useTotalLines;
+    if (totalLines) data.total_lines = totalLines;
 
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
@@ -106,9 +101,7 @@ const GaussianDashboardComponent = () => {
         const blob = new Blob([response.data]);
         downloadDocument(blob);
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      .catch((error) => console.error("Error:", error));
   };
 
   const downloadDocument = (blob) => {
@@ -128,42 +121,37 @@ const GaussianDashboardComponent = () => {
       specify_lines: specifyLines.toString(),
     };
 
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
+    if (useTotalLines) data.use_total_lines = useTotalLines;
+    if (totalLines) data.total_lines = totalLines;
 
     axios
       .post(`${config.apiBaseUrl}/preview`, data)
       .then((response) => {
-        const documentContent = response.data.document_content;
-        setPreviewContent(documentContent);
+        setPreviewContent(response.data.document_content);
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      .catch((error) => console.error("Error:", error));
   };
 
   return (
-    <div className="container py-5 d-flex justify-content-center">
-      <div className="text-center">
-        <h2 className="mb-4">Extract data from Gaussian files to Word documents</h2>
-        <div className="mb-3 text-start">
-        <label htmlFor="fileUpload" className="mb-2">
-          Upload your Gaussian data file
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2 className="dashboard-title">
+          Extract data from Gaussian files to Word documents
+        </h2>
+
+        <div className="input-group-block">
+          <label htmlFor="fileUpload" className="input-label">
+            Upload your Gaussian data file
           </label>
           <div className="input-group">
             <input
-             className="form-control" 
-             type="file" 
-             id="fileUpload"
-             onChange={onFileSelected} 
-             accept=".log" 
-             multiple
-             aria-label="Upload Gaussian data file"
+              className="form-control"
+              type="file"
+              id="fileUpload"
+              onChange={onFileSelected}
+              accept=".log"
+              multiple
+              aria-label="Upload Gaussian data file"
             />
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
@@ -171,8 +159,8 @@ const GaussianDashboardComponent = () => {
           </div>
         </div>
 
-        <div className="mb-3 text-start">
-          <label>Uploaded Files:</label>
+        <div className="input-group-block">
+          <label className="input-label">Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
             <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
               {truncateName(file, 40)}
@@ -180,13 +168,14 @@ const GaussianDashboardComponent = () => {
                 type="button"
                 className="btn-close ms-1"
                 aria-label="Remove"
-                onClick={() => removeUploadedFile(file)}></button>
+                onClick={() => removeUploadedFile(file)}
+              ></button>
             </span>
           ))}
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
+        <div className="input-group-block">
+          <label className="input-label">Enter the terms you wish to search for (txt only):</label>
           <input
             type="text"
             className="form-control"
@@ -196,8 +185,8 @@ const GaussianDashboardComponent = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
+        <div className="input-group-block">
+          <label className="input-label">Enter how you want the lines specified:</label>
           <input
             type="text"
             className="form-control"
@@ -207,8 +196,8 @@ const GaussianDashboardComponent = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+        <div className="input-group-block">
+          <label className="input-label">Number of sections?</label>
           <input
             type="text"
             className="form-control"
@@ -218,8 +207,8 @@ const GaussianDashboardComponent = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Use total lines?</span>
+        <div className="input-group-block">
+          <label className="input-label">Use total lines?</label>
           <input
             type="text"
             className="form-control"
@@ -229,8 +218,8 @@ const GaussianDashboardComponent = () => {
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Total number of lines for output doc?</span>
+        <div className="input-group-block">
+          <label className="input-label">Total number of lines for output doc?</label>
           <input
             type="text"
             className="form-control"
@@ -242,10 +231,12 @@ const GaussianDashboardComponent = () => {
             }}
           />
         </div>
+
         <button className="btn btn-primary" onClick={fetchDocumentPreview}>
           Preview Output
         </button>
-        <div className="buttonSpacing">
+
+        <div className="button-spacing">
           <button className="btn btn-primary" onClick={onSubmit}>
             Download Output
           </button>

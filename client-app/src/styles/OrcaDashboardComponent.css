@@ -1,8 +1,26 @@
+.dashboard-container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-header {
+  text-align: center;
+}
+
+.dashboard-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
 input::placeholder {
   color: gray;
   font-style: italic;
   font-size: 12px;
 }
+
 span {
   text-align: start;
 }
@@ -27,4 +45,67 @@ span {
   gap: 10px;
   justify-content: center;
   margin-bottom: 10px;
+}
+
+.dashboard-container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-content {
+  text-align: center;
+}
+
+.section-heading {
+  margin-bottom: 1.5rem;
+}
+
+.form-section {
+  margin-bottom: 1rem;
+  text-align: start;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.tag-container {
+  margin-top: 0.75rem;
+}
+
+.file-tag,
+.search-tag {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag-text {
+  max-width: 40ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.preview-modal {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.preview-modal-dialog {
+  max-width: 80vw;
+}
+
+.preview-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.search-criteria-card {
+  margin-top: 1rem;
 }
