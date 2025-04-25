@@ -37,21 +37,35 @@ def preview_document():
 def find_sections():
     '''
     This method defines the API endpoint to find the sections
-    based on the search input and to download the output as
-    word document
+    based on the search input and to download the output in
+    .docx, .pdf, or .txt format
     '''
     data = request.get_json(force=True)
+    output_format = data.get("output_format", "docx").lower()
+
     response = find_sections_use_case(data)
     if isinstance(response, ResponseSuccess):
-        docx_content = response.value
-        response = make_response(docx_content)
-        response.headers.set('Content-Type',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        response.headers.set('Content-Disposition', 'attachment', filename='output.docx')
+        content = response.value
+
+        if output_format == "pdf":
+            mimetype = "application/pdf"
+            filename = "output.pdf"
+        elif output_format == "txt":
+            mimetype = "text/plain"
+            filename = "output.txt"
+        else:
+            mimetype = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            filename = "output.docx"
+
+        response = make_response(content)
+        response.headers.set("Content-Type", mimetype)
+        response.headers.set("Content-Disposition", "attachment", filename=filename)
         return response
+
     elif isinstance(response, ResponseFailure):
         return Response(
             json.dumps(response.value),
             mimetype="application/json",
             status=HTTP_STATUS_CODES_MAPPING[response.response_type],
         )
+

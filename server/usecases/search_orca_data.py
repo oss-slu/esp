@@ -1,7 +1,9 @@
 from responses import ResponseSuccess, ResponseFailure, ResponseTypes
 from docx import Document
+from fpdf import FPDF
 from services.file_search_operations import extract_sections, save_document_to_bytes
 import os
+import io
 
 
 def preview_document_use_case(data):
@@ -49,7 +51,7 @@ def preview_document_use_case(data):
 def find_sections_use_case(data):
     '''
     Finds and returns a document with the specified data based on the 
-    provided search query.
+    provided search query and desired output format.
     '''
     file_paths = data.get('file_paths')
     search_terms = data.get('search_terms', [])
@@ -57,6 +59,7 @@ def find_sections_use_case(data):
     temp_specify_lines = data.get('specify_lines')
     use_total_lines = data.get('use_total_lines', False)
     total_lines = data.get('total_lines', 2000)
+    output_format = data.get('output_format', 'docx').lower()
 
     if not all([file_paths, search_terms, sections, temp_specify_lines]):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Missing required fields')
@@ -65,7 +68,7 @@ def find_sections_use_case(data):
         sections = list(map(int, sections))
         specify_lines = [temp_specify_lines] * len(sections)
 
-        document = Document()
+        combined_text = ""
         has_content = False
         for file_path in file_paths:
             file_name = os.path.basename(file_path)
@@ -76,14 +79,32 @@ def find_sections_use_case(data):
 
             if document_content:
                 has_content = True
-                document.add_paragraph(f"===== File: {file_name} =====").bold = True
-                for paragraph in document_content.strip().split('\n'):
-                    document.add_paragraph(paragraph.strip())
-        
+                combined_text += f"===== File: {file_name} =====\n{document_content.strip()}\n\n"
+
         if not has_content:
-            return ResponseFailure(ResponseTypes.NOT_FOUND, 'No data found for the provided search term.')     
-        docx_bytes = save_document_to_bytes(document)
-        return ResponseSuccess(docx_bytes)
+            return ResponseFailure(ResponseTypes.NOT_FOUND, 'No data found for the provided search term.')
+
+        if output_format == "txt":
+            return ResponseSuccess(combined_text.encode("utf-8"))
+
+        elif output_format == "pdf":
+            pdf = FPDF()
+            pdf.set_auto_page_break(auto=True, margin=10)
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            for line in combined_text.splitlines():
+                pdf.multi_cell(0, 10, line)
+            pdf_bytes = pdf.output(dest='S').encode('latin1')
+            return ResponseSuccess(pdf_bytes)
+
+        else:
+            document = Document()
+            for block in combined_text.strip().split('\n'):
+                document.add_paragraph(block.strip())
+            docx_bytes = save_document_to_bytes(document)
+            return ResponseSuccess(docx_bytes)
+
+        
     except FileNotFoundError as e:
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, f'File not found: {str(e)}')
     except PermissionError as e:
