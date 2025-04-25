@@ -4,9 +4,9 @@ import "../styles/AboutComponent.css";
 
 const AboutComponent = () => {
   return (
-    <Container className="d-flex justify-content-center mb-4">
-      <div className="text-left mb-3 min-vh-100">
-        <h2 className="mb-4">About Electronic Structure Parser</h2>
+    <Container className="about-container">
+      <div className="about-content">
+        <h2 className="section-heading">About Electronic Structure Parser</h2>
         <p>
           Our web application specializes in extracting specific details from chemistry log files.
           Users can effortlessly search for information by entering a search term, enabling
@@ -27,8 +27,8 @@ const AboutComponent = () => {
 
         <h3>Example Inputs and Outputs</h3>
         <ul className="examples-list">
-        <li>
-            <strong>Input 1:</strong> 
+          <li>
+            <strong>Input 1:</strong>
             <ul>
               <li><strong>Uploaded File:</strong> ORCA log file (`.txt`)</li>
               <li><strong>Search Terms:</strong> `CARTESIAN COORDINATES`</li>
@@ -38,7 +38,7 @@ const AboutComponent = () => {
             <strong>Output:</strong> Extracted data in `output.docx` containing the first occurrence of `CARTESIAN COORDINATES` in section 1.
           </li>
           <li>
-            <strong>Input 2:</strong> 
+            <strong>Input 2:</strong>
             <ul>
               <li><strong>Uploaded File:</strong> ORCA log file with molecular energy data</li>
               <li><strong>Search Terms:</strong> `TOTAL ENERGY, FINAL GRADIENT`</li>
@@ -48,16 +48,16 @@ const AboutComponent = () => {
             <strong>Output:</strong> Extracted data in `output.docx` containing all lines with `TOTAL ENERGY` and `FINAL GRADIENT` from sections 1 and 2.
           </li>
         </ul>
-        
+
         <h3>Step-by-Step Guide</h3>
         <ol className="how-to-guide">
           <li>Upload a `.txt` file containing ORCA log data using the file upload option.</li>
-          <li>Enter keywords in the search field (e.g., `CARTESIAN COORDINATES`). Press **Enter** or use commas to add multiple terms.</li>
+          <li>Enter keywords in the search field (e.g., `CARTESIAN COORDINATES`). Press <strong>Enter</strong> or use commas to add multiple terms.</li>
           <li>Select how to specify lines (e.g., `FIRST`, `LAST`, `WHOLE`) and provide additional details like line numbers if required.</li>
           <li>Define sections to search within (e.g., `1-2` or `1,2`).</li>
           <li>Submit the search query to review and validate your criteria.</li>
-          <li>Preview the extracted data using the **Preview** button.</li>
-          <li>Download the results as a Word document by clicking the **Download Output** button.</li>
+          <li>Preview the extracted data using the <strong>Preview</strong> button.</li>
+          <li>Download the results as a Word document by clicking the <strong>Download Output</strong> button.</li>
         </ol>
 
         <h3>Key Features</h3>

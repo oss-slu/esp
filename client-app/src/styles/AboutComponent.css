@@ -2,9 +2,22 @@
   min-height: 100vh;
 }
 
+.about-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
 .about-content {
   font-size: 1.25rem;
   line-height: 1.5;
+  text-align: left;
+  margin-bottom: 1rem;
+  min-height: 100vh;
+}
+
+.section-heading {
+  margin-bottom: 1.5rem;
 }
 
 .examples-list {
