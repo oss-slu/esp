@@ -469,6 +469,29 @@ const OrcaDashboardComponent = () => {
             </DropdownButton>
           </div>
         </div>
+        {!isUploadedFilesEmpty &&
+          !isSearchTermsEmpty &&
+          !isSpecifyLinesEmpty &&
+          !isSectionsEmpty &&
+          showCard && (
+            <div className="card mt-3">
+              <div className="card-body">
+                <h5 className="card-title">Search Query</h5>
+                <p className="card-text">Search Terms: {searchTerms.join(", ")}</p>
+                <p className="card-text">
+                  Specify Lines: {specifyLines[0].value !== "SELECT" && specifyLines[0].value}
+                  {specifyLines[0].lineNumber ? `, ${specifyLines[0].lineNumber}` : ""}
+                </p>
+                <p className="card-text">Sections: {sections.join(", ")}</p>
+                <div className="d-flex justify-content-end">
+                  <button className="btn btn-primary me-2">Edit</button>
+                  <button className="btn btn-danger" onClick={handleDelete}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+        )}
       </div>
     </div>
   );
