@@ -11,7 +11,7 @@ const GaussianDashboardComponent = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
-  const [searchTerms, setSearchTerms] = useState("");
+  const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState("");
   const [sections, setSections] = useState([]);
   const [sameCriteria, setSameCriteria] = useState(false);
@@ -85,7 +85,7 @@ const GaussianDashboardComponent = () => {
 
     const data = {
       file_path: selectedFileName.toString(),
-      search_terms: searchTerms.split(","),
+      search_terms: searchTerms,
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
     };
@@ -181,7 +181,6 @@ const GaussianDashboardComponent = () => {
       alert("Please select a file.");
       return;
     }
-
     const data = {
       file_path: selectedFileName.toString(),
       search_terms: searchTerms.split(","),
@@ -198,6 +197,41 @@ const GaussianDashboardComponent = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+    
+  const handleKeyPress = (e, setterFunc) => {
+    if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
+      e.preventDefault();
+      const value = e.target.value.trim();
+      if (value) {
+        const values = value.split(",");
+        setterFunc((prevValue) => {
+          const updated = [...prevValue, ...values.map((val) => val.trim().toUpperCase())];
+          return updated;
+        });
+        e.target.value = "";
+      }
+    }
+  };
+
+  const handleSearchTermBlur = (e, setterFunc) => {
+    const value = e.target.value.trim();
+    if (value) {
+      const values = value.split(",");
+      setterFunc((prevValue) => {
+        const updated = [...prevValue, ...values.map((val) => val.trim().toUpperCase())];
+        return updated;
+      });
+      e.target.value = "";
+    }
+  };
+
+  const removeTag = (index, setterFunc) => {
+    setterFunc((prevTerms) => {
+      const updatedTerms = [...prevTerms];
+      updatedTerms.splice(index, 1);
+      return updatedTerms;
+    });
   };
 
   return (
@@ -239,17 +273,30 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
-          <input
-            type="text"
-            className="form-control"
-            id="searchTermInput"
-            placeholder="E.g., CARTESIAN COORDINATES"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value.toUpperCase())}
-          />
-          <div className="mt-3">
+          <label htmlFor="searchTermInput" className="mb-2">
+            Enter the terms you wish to search for (txt only):
+          </label>
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              id="searchTermInput"
+              placeholder="E.g., CARTESIAN COORDINATES"
+              onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
+              onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
+            />
+            <div className="mt-3">
             <span>Search Terms:</span>
+              {searchTerms.map((term, index) => (
+                <span
+                  key={index}
+                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  onClick={() => removeTag(index, setSearchTerms)}>
+                  {truncateName(term, 70)}
+                  <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
+                </span>
+            ))}
+            </div>
           </div>
           {searchTerms.length > 1 && (
             <div className="form-check mt-2">
