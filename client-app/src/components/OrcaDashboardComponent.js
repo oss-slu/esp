@@ -114,16 +114,16 @@ const OrcaDashboardComponent = () => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
       if (selectedFile && selectedFile.name === file) {
         setSelectedFile(null);
-        setSelectedFileName("File Upload"); 
+        setSelectedFileName("File Upload");
         const inputElement = document.getElementById("fileUpload");
         if (inputElement) {
-          inputElement.value = ""; 
+          inputElement.value = "";
         }
       }
       return updatedFiles;
     });
   };
-  
+
 
   const onSubmit = () => {
     if (!filePaths.length) {
@@ -172,19 +172,19 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-  
+
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
     const searchTerm = searchTerms.join("_").slice(0, 50);
-  
-  
+
+
     let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
     fileName = truncateName(fileName, 100);
-  
+
     saveAs(blob, fileName);
   };
-  
+
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -304,7 +304,7 @@ const OrcaDashboardComponent = () => {
     <div className="container py-5 d-flex justify-content-center">
       <div className="text-center">
         <h2 className="mb-4">Extract data from ORCA files to Word documents</h2>
-        <div className="mb-3 text-start">
+        <div className="form-group">
           <label htmlFor="fileUpload" className="mb-2">
             Upload your ORCA data file:
           </label>
@@ -324,10 +324,10 @@ const OrcaDashboardComponent = () => {
           </div>
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="form-group">
           <label>Uploaded Files:</label>
           {uploadedFiles.map((file, index) => (
-            <span key={index} className="badge bg-secondary ms-1 me-1 mb-2">
+            <span key={index} className="file-badge">
               {truncateName(file, 40)}
               <button
                 type="button"
@@ -338,7 +338,7 @@ const OrcaDashboardComponent = () => {
           ))}
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="form-group">
           <label htmlFor="searchTermInput" className="mb-2">
             Enter the terms you wish to search for (txt only):
           </label>
@@ -352,16 +352,16 @@ const OrcaDashboardComponent = () => {
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             <div className="mt-3">
-            <span>Search Terms:</span>
+              <span>Search Terms:</span>
               {searchTerms.map((term, index) => (
                 <span
                   key={index}
-                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  className="file-badge"
                   onClick={() => removeTag(index, setSearchTerms)}>
                   {truncateName(term, 40)}
                   <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
                 </span>
-            ))}
+              ))}
             </div>
           </div>
           {searchTerms.length > 1 && (
@@ -380,14 +380,14 @@ const OrcaDashboardComponent = () => {
           )}
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="form-group">
           <label htmlFor="specifyLinesSelect" className="mb-2">
             Enter how you want the lines specified:
           </label>
           {renderSpecifyLine()}
         </div>
 
-        <div className="mb-3 text-start">
+        <div className="form-group">
           <label htmlFor="numSectionsInput" className="mb-2">
             Number of sections?
           </label>
@@ -414,7 +414,7 @@ const OrcaDashboardComponent = () => {
                 isSectionsEmpty
               }
               title="Submit Search Query"
-              >
+            >
               Submit Search Query
             </button>
           </div>
@@ -435,8 +435,8 @@ const OrcaDashboardComponent = () => {
               title={"Download Output"}
               onClick={onSubmit}
               disabled={isDisabled}
-              >
-              Download <FaDownload size="1.2em"/>
+            >
+              Download <FaDownload size="1.2em" />
             </button>
           </div>
         </div>
@@ -466,10 +466,8 @@ const OrcaDashboardComponent = () => {
           )}
 
         {showPreviewModal && (
-          <div
-            className="modal"
-            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
+          <div className="preview-modal">
+            <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Document Preview</h5>
@@ -488,10 +486,8 @@ const OrcaDashboardComponent = () => {
                     title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
                     onClick={onSubmit}
                     disabled={isDisabled}
-                    >
-                    <FaDownload
-                    size="1.2em"
-                    />
+                  >
+                    <FaDownload size="1.2em" />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close

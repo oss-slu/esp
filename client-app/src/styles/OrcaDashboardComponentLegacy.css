@@ -3,6 +3,7 @@ input::placeholder {
   font-style: italic;
   font-size: 12px;
 }
+
 span {
   text-align: start;
 }
@@ -42,6 +43,29 @@ span {
   gap: 10px;
   justify-content: center;
   margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  text-align: start;
+}
+
+.file-badge,
+.term-badge {
+  display: inline-block;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 0.25rem;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.5rem;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
 }
 
 /* :host ::ng-deep .custom-ms 
