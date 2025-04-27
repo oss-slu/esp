@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponentLegacy.css";
 import config from "../utils/config";
 
@@ -11,11 +11,10 @@ const GaussianDashboardComponent = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
 
-  const [searchTerms, setSearchTerms] = useState("");
+  const [searchTerms, setSearchTerms] = useState([]);
   const [specifyLines, setSpecifyLines] = useState("");
-  const [sections, setSections] = useState("");
-  const [useTotalLines, setUseTotalLines] = useState("");
-  const [totalLines, setTotalLines] = useState("");
+  const [sections, setSections] = useState([]);
+  const [sameCriteria, setSameCriteria] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
 
   const onFileSelected = (event) => {
@@ -78,7 +77,7 @@ const GaussianDashboardComponent = () => {
     return `${truncated}...`;
   };
 
-  const onSubmitWithFormat = (format) => {
+  const onSubmit = () => {
     if (!filePaths.length) {
       alert("Please select a file.");
       return;
@@ -86,14 +85,10 @@ const GaussianDashboardComponent = () => {
 
     const data = {
       file_path: selectedFileName.toString(),
-      search_terms: searchTerms.split(","),
+      search_terms: searchTerms,
       sections: sections.split(","),
       specify_lines: specifyLines.toString(),
-      output_format: format
     };
-
-    if (useTotalLines) data.use_total_lines = useTotalLines;
-    if (totalLines) data.total_lines = totalLines;
 
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
@@ -101,11 +96,84 @@ const GaussianDashboardComponent = () => {
       })
       .then((response) => {
         const blob = new Blob([response.data]);
-        saveAs(blob, `output.${format}`);
+        downloadDocument(blob);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+
+  const handleSameCriteriaChange = (e) => {
+    setSameCriteria(e.target.checked);
+  };
+  
+  const handleNumSectionsBlur = (e) => {
+    const input = e.target.value;
+    let parsedSections = new Set();
+
+    input.split(",").forEach((part) => {
+      part = part.trim();
+      if (part.includes("-")) {
+        const [start, end] = part.split("-").map((num) => parseInt(num.trim(), 10));
+        if (!isNaN(start) && !isNaN(end) && start <= end) {
+          for (let i = start; i <= end; i++) {
+            parsedSections.add(i);
+          }
+        }
+      } else {
+        const num = parseInt(part, 10);
+        if (!isNaN(num)) {
+          parsedSections.add(num);
+        }
+      }
+    });
+
+    setSections(Array.from(parsedSections).sort((a, b) => a - b));
+  };
+
+  const renderSpecifyLine = () => {
+    const line = specifyLines[0] || { value: "", showInput: false };
+    return (
+      <div className="mb-2 d-flex align-items-center">
+        <select
+          className="form-select me-2"
+          id="specifyLinesSelect"
+          value={line.value}
+          onChange={(e) => handleSpecifyLineChange(e.target.value)}>
+          <option value="SELECT">SELECT</option>
+          <option value="WHOLE">WHOLE</option>
+          <option value="FIRST">FIRST</option>
+          <option value="LAST">LAST</option>
+        </select>
+        {line.showInput && (
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter line number"
+            value={line.lineNumber || ""}
+            onChange={(e) => {
+              const updatedLines = [{ ...line, lineNumber: e.target.value }];
+              setSpecifyLines(updatedLines);
+            }}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const handleSpecifyLineChange = (value) => {
+    setSpecifyLines([{ value, showInput: value === "FIRST" || value === "LAST" }]);
+  };
+
+  const formatSpecifyLines = () => {
+    const line = specifyLines[0];
+    return line.value === "WHOLE" || line.value === "SELECT"
+      ? line.value
+      : `${line.value} ${line.lineNumber}`;
+  };
+
+  const downloadDocument = (blob) => {
+    saveAs(blob, "output.docx");
   };
 
   const fetchDocumentPreview = () => {
@@ -113,21 +181,12 @@ const GaussianDashboardComponent = () => {
       alert("Please select a file.");
       return;
     }
-
     const data = {
       file_path: selectedFileName.toString(),
       search_terms: searchTerms.split(","),
       sections: sections.split(","),
-      specify_lines: specifyLines.toString(),
+      specify_lines: formatSpecifyLines(),
     };
-
-    if (useTotalLines) {
-      data.use_total_lines = useTotalLines;
-    }
-
-    if (totalLines) {
-      data.total_lines = totalLines;
-    }
 
     axios
       .post(`${config.apiBaseUrl}/preview`, data)
@@ -138,6 +197,41 @@ const GaussianDashboardComponent = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+    
+  const handleKeyPress = (e, setterFunc) => {
+    if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
+      e.preventDefault();
+      const value = e.target.value.trim();
+      if (value) {
+        const values = value.split(",");
+        setterFunc((prevValue) => {
+          const updated = [...prevValue, ...values.map((val) => val.trim().toUpperCase())];
+          return updated;
+        });
+        e.target.value = "";
+      }
+    }
+  };
+
+  const handleSearchTermBlur = (e, setterFunc) => {
+    const value = e.target.value.trim();
+    if (value) {
+      const values = value.split(",");
+      setterFunc((prevValue) => {
+        const updated = [...prevValue, ...values.map((val) => val.trim().toUpperCase())];
+        return updated;
+      });
+      e.target.value = "";
+    }
+  };
+
+  const removeTag = (index, setterFunc) => {
+    setterFunc((prevTerms) => {
+      const updatedTerms = [...prevTerms];
+      updatedTerms.splice(index, 1);
+      return updatedTerms;
+    });
   };
 
   return (
@@ -179,76 +273,80 @@ const GaussianDashboardComponent = () => {
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter the terms you wish to search for (txt only):</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="E.g., CARTESIAN COORDINATES"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value.toUpperCase())}
-          />
+          <label htmlFor="searchTermInput" className="mb-2">
+            Enter the terms you wish to search for (txt only):
+          </label>
+          <div>
+            <input
+              type="text"
+              className="form-control"
+              id="searchTermInput"
+              placeholder="E.g., CARTESIAN COORDINATES"
+              onKeyPress={(e) => handleKeyPress(e, setSearchTerms)}
+              onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
+            />
+            <div className="mt-3">
+            <span>Search Terms:</span>
+              {searchTerms.map((term, index) => (
+                <span
+                  key={index}
+                  className="badge bg-secondary ms-1 me-1 mb-2"
+                  onClick={() => removeTag(index, setSearchTerms)}>
+                  {truncateName(term, 70)}
+                  <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
+                </span>
+            ))}
+            </div>
+          </div>
+          {searchTerms.length > 1 && (
+            <div className="form-check mt-2">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="sameCriteriaCheckbox"
+                checked={sameCriteria}
+                onChange={handleSameCriteriaChange}
+              />
+              <label className="form-check-label" htmlFor="sameCriteriaCheckbox">
+                Is the search criteria same for all search terms
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="mb-3 text-start">
-          <span>Enter how you want the lines specified:</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="E.g., WHOLE, FIRST X, LAST X"
-            value={specifyLines}
-            onChange={(e) => setSpecifyLines(e.target.value.toUpperCase())}
-          />
+          <label htmlFor="specifyLinesSelect" className="mb-2">
+            Enter how you want the lines specified:
+          </label>
+          {renderSpecifyLine()}
         </div>
 
         <div className="mb-3 text-start">
-          <span>Number of sections?</span>
+          <label htmlFor="numSectionsInput" className="mb-2">
+            Number of sections?
+          </label>
           <input
             type="text"
             className="form-control"
-            placeholder="Input as number..."
-            value={sections}
-            onChange={(e) => setSections(e.target.value)}
+            id="numSectionsInput"
+            placeholder="ex: 1-5 or 1,2,5"
+            defaultValue={sections.join(", ")}
+            onBlur={handleNumSectionsBlur}
           />
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Use total lines?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="TRUE/FALSE"
-            value={useTotalLines}
-            onChange={(e) => setUseTotalLines(e.target.value.toUpperCase())}
-          />
+        <div className="button-group">
+          <button className="btn btn-primary" title="Submit Search Query">
+            Submit Search Query
+          </button>
+          <button className="btn btn-primary" onClick={fetchDocumentPreview}>
+            Preview
+          </button>
+          <button className="btn btn-primary" onClick={onSubmit}>
+            Download <FaDownload size="1.2em"/>
+          </button>
         </div>
 
-        <div className="mb-3 text-start">
-          <span>Total number of lines for output doc?</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Input as number..."
-            value={totalLines}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              setTotalLines(inputValue === "" ? "" : parseInt(inputValue));
-            }}
-          />
-        </div>
-        <button className="btn btn-primary" onClick={fetchDocumentPreview}>
-          Preview Output
-        </button>
-        <div className="buttonSpacing">
-          <DropdownButton
-            id="dropdown-download-button"
-            title="Download Output"
-            variant="primary"
-          >
-            <Dropdown.Item onClick={() => onSubmitWithFormat("docx")}>Download as .docx</Dropdown.Item>
-            <Dropdown.Item onClick={() => onSubmitWithFormat("pdf")}>Download as .pdf</Dropdown.Item>
-            <Dropdown.Item onClick={() => onSubmitWithFormat("txt")}>Download as .txt</Dropdown.Item>
-          </DropdownButton>
-        </div>
 
         {previewContent && (
           <div className="document-preview">
