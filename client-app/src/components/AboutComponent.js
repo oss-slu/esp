@@ -70,6 +70,8 @@ const AboutComponent = () => {
           <li><strong>User-Friendly Interface:</strong> Interactive design with badges, dropdowns, and modals for seamless navigation.</li>
         </ul>
 
+        //wip updated video
+        
         <h3>Tutorial Video</h3>
         <div className="tutorial-video">
           <p>Watch this video to learn how to use the application:</p>
