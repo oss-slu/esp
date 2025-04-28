@@ -3,7 +3,9 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
+// import { RxCross1 } from "react-icons/rx";
 import config from "../utils/config";
+import { RxCross2 } from "react-icons/rx";
 
 const OrcaDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState([]);
@@ -393,31 +395,8 @@ const OrcaDashboardComponent = () => {
                         className="remove-btn"
                         onClick={() => removeFile(index)}
                         aria-label="Remove file">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <line
-                            x1="5"
-                            y1="5"
-                            x2="15"
-                            y2="15"
-                            stroke="#343a40"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                          />
-                          <line
-                            x1="15"
-                            y1="5"
-                            x2="5"
-                            y2="15"
-                            stroke="#343a40"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                          />
-                        </svg>
+                        {/* <RxCross1 /> */}
+                        <RxCross2 />
                       </button>
                     </li>
                   ))}
