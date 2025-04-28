@@ -2,102 +2,30 @@
   min-height: 100vh;
 }
 
-ul, ol {
-  padding-left: 1.5rem;
+.about-content {
+  font-size: 1.25rem;
+  line-height: 1.5;
 }
 
-ul li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 1rem;
-}
-
-.card-title {
-  font-weight: 600;
-  color: #007bff;
-}
-
-.card {
-  border-radius: 10px;
-  border: none;
-}
-
-video {
-  border-radius: 10px;
-}
-
-.glow {
-  animation: glowAnimation 1.5s infinite alternate;
-}
-
-@keyframes glowAnimation {
-  from {
-    box-shadow: 0 0 5px #17a2b8, 0 0 10px #17a2b8, 0 0 15px #17a2b8;
-  }
-  to {
-    box-shadow: 0 0 10px #17a2b8, 0 0 20px #17a2b8, 0 0 30px #17a2b8;
-  }
-}
-
-.highlight-badge {
-  display: inline-block;
-  vertical-align: middle;
-  font-weight: bold;
-  color: #5a4b00;
-  background-color: rgba(255, 223, 0, 0.7);
-  box-shadow: 0 0 8px rgba(255, 223, 0, 0.8);
-  animation: highlightGlow 2s infinite alternate;
-  white-space: nowrap;
-  text-align: center;
-  padding: 0.3rem 0.6rem;
-}
-
-.fixed-width-badge {
-  min-width: 280px;
-  text-align: center;
-}
-
-@keyframes highlightGlow {
-  from {
-    box-shadow: 0 0 8px rgba(255, 223, 0, 0.8), 0 0 15px rgba(255, 223, 0, 0.6);
-  }
-  to {
-    box-shadow: 0 0 15px rgba(255, 223, 0, 1), 0 0 20px rgba(255, 223, 0, 0.9);
-  }
-}
-
-.feature-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.feature-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-
-.small-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-}
-
-.sleek-guide .step {
-  margin-bottom: 1.25rem;
-}
-
-.sleek-guide .step-title {
-  font-weight: 600;
+.examples-list {
+  margin-top: 1rem;
   font-size: 1rem;
 }
 
-.sleek-guide .step-desc {
-  color: #6c757d;
-  font-size: 0.9rem;
-  margin-top: 0.2rem;
+.how-to-guide {
+  margin-top: 1rem;
+  list-style: decimal inside;
 }
 
+.logo-title {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+a.logo-title:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
