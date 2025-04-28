@@ -91,22 +91,32 @@ span {
   align-items: center;
 }
 
-.input-file li,
-.file-input {
+.input-file li {
+  background: #6c757d;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 4px 14px 4px 10px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 0;
-  background: none;
-  border: none;
-  margin: 0;
-  color: #495057;
-  font-size: 14px;
+  font-size: 16px;
+  margin-right: 6px;
 }
 
-.input-file li:not(:last-child)::after {
-  content: ",";
-  margin-right: 4px;
+.input-file li .remove-btn {
+  font-size: 20px;
+  margin-left: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.input-file li .remove-btn:hover {
+  opacity: 1;
 }
 
 .btn-primary:disabled {

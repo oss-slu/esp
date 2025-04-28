@@ -55,8 +55,15 @@ const OrcaDashboardComponent = () => {
   const isSearchQueryEnabled = () => {
     const line = specifyLines[0] || {};
     const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
-    const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
-    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length && !isLineNumberMissing;
+    const isLineNumberMissing =
+      lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
+    return (
+      !isUploadedFilesEmpty &&
+      searchTerms.length &&
+      specifyLines.length &&
+      sections.length &&
+      !isLineNumberMissing
+    );
   };
 
   const handleSpecifyLineChange = (value) => {
@@ -128,16 +135,15 @@ const OrcaDashboardComponent = () => {
       const updatedFiles = prevUploadedFiles.filter((f) => f !== file);
       if (selectedFile && selectedFile.name === file) {
         setSelectedFile(null);
-        setSelectedFileName("File Upload"); 
+        setSelectedFileName("File Upload");
         const inputElement = document.getElementById("fileUpload");
         if (inputElement) {
-          inputElement.value = ""; 
+          inputElement.value = "";
         }
       }
       return updatedFiles;
     });
   };
-  
 
   const onSubmit = () => {
     if (!filePaths.length) {
@@ -186,19 +192,18 @@ const OrcaDashboardComponent = () => {
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
   };
-  
+
   const downloadDocument = (blob) => {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
     const searchTerm = searchTerms.join("_").slice(0, 50);
-  
-  
+
     let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
     fileName = truncateName(fileName, 100);
-  
+
     saveAs(blob, fileName);
   };
-  
+
   const handleKeyPress = (e, setterFunc) => {
     if (e.key === "Enter" || e.key === "," || e.key === "Tab") {
       e.preventDefault();
@@ -266,7 +271,8 @@ const OrcaDashboardComponent = () => {
 
   const line = specifyLines[0] || {};
   const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
-  const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
+  const isLineNumberMissing =
+    lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
   const isDisabled =
     !searchTerms.length ||
     !specifyLines.length ||
@@ -383,8 +389,35 @@ const OrcaDashboardComponent = () => {
                   {selectedFiles.map((file, index) => (
                     <li key={index}>
                       {file.name}
-                      <button className="remove-btn" onClick={() => removeFile(index)}>
-                        ✖
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeFile(index)}
+                        aria-label="Remove file">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <line
+                            x1="5"
+                            y1="5"
+                            x2="15"
+                            y2="15"
+                            stroke="#343a40"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                          />
+                          <line
+                            x1="15"
+                            y1="5"
+                            x2="5"
+                            y2="15"
+                            stroke="#343a40"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
                       </button>
                     </li>
                   ))}
@@ -426,7 +459,7 @@ const OrcaDashboardComponent = () => {
               onBlur={(e) => handleSearchTermBlur(e, setSearchTerms)}
             />
             <div className="mt-3">
-            <span>Search Terms:</span>
+              <span>Search Terms:</span>
               {searchTerms.map((term, index) => (
                 <span
                   key={index}
@@ -435,7 +468,7 @@ const OrcaDashboardComponent = () => {
                   {truncateName(term, 40)}
                   <button type="button" className="btn-close ms-1" aria-label="Remove"></button>
                 </span>
-            ))}
+              ))}
             </div>
           </div>
           {searchTerms.length > 1 && (
@@ -489,8 +522,7 @@ const OrcaDashboardComponent = () => {
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
               }
-              title="Submit Search Query"
-              >
+              title="Submit Search Query">
               Submit Search Query
             </button>
           </div>
@@ -510,9 +542,8 @@ const OrcaDashboardComponent = () => {
               className="btn btn-primary"
               title={"Download Output"}
               onClick={onSubmit}
-              disabled={isDisabled}
-              >
-              Download <FaDownload size="1.2em"/>
+              disabled={isDisabled}>
+              Download <FaDownload size="1.2em" />
             </button>
           </div>
         </div>
@@ -561,13 +592,14 @@ const OrcaDashboardComponent = () => {
                 <div className="modal-footer">
                   <button
                     className="btn btn-primary"
-                    title={isDisabled ? "Please fill all required fields before submitting" : "Download Output"}
+                    title={
+                      isDisabled
+                        ? "Please fill all required fields before submitting"
+                        : "Download Output"
+                    }
                     onClick={onSubmit}
-                    disabled={isDisabled}
-                    >
-                    <FaDownload
-                    size="1.2em"
-                    />
+                    disabled={isDisabled}>
+                    <FaDownload size="1.2em" />
                   </button>
                   <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
                     Close
