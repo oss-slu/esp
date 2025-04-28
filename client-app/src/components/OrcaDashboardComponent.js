@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
 import { RxCross2 } from "react-icons/rx";
@@ -146,26 +147,39 @@ const OrcaDashboardComponent = () => {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmitWithFormat = (format) => {
     if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
-
+  
     const data = {
       file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
+      output_format: format
     };
-
+  
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
         responseType: "blob",
       })
       .then((response) => {
-        const blob = new Blob([response.data]);
-        downloadDocument(blob);
+        const mimeMap = {
+          docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          pdf: "application/pdf",
+          txt: "text/plain"
+        };
+  
+        const blob = new Blob([response.data], { type: mimeMap[format] || "application/octet-stream" });
+  
+        const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+        const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
+        const searchTerm = searchTerms.join("_").slice(0, 50);
+        let fileName = `${date}_${baseFileName}_${searchTerm}.${format}`;
+        fileName = truncateName(fileName, 100);
+        saveAs(blob, fileName);
       })
       .catch((error) => {
         if (error.response) {
@@ -174,9 +188,12 @@ const OrcaDashboardComponent = () => {
           } else {
             alert(`Error ${error.response.status}: ${error.response.statusText}`);
           }
+        } else {
+          alert("Download failed. Check console.");
+          console.error("Download error:", error);
         }
       });
-  };
+  };  
 
   const onSearchQuerySubmit = () => {
     setShowCard(false);
@@ -278,37 +295,36 @@ const OrcaDashboardComponent = () => {
     !searchTerms.length ||
     !specifyLines.length ||
     !sections.length ||
-    !selectedFile ||
     isUploadedFilesEmpty ||
     isLineNumberMissing;
 
-  const fetchDocumentPreview = () => {
-    if (!filePaths.length) {
-      alert("Please select a file.");
-      return;
-    }
-
-    const data = {
-      file_paths: filePaths,
-      search_terms: searchTerms,
-      sections: sections,
-      specify_lines: formatSpecifyLines(),
-    };
-
-    axios
-      .post(`${config.apiBaseUrl}/preview`, data)
-      .then((response) => {
-        setPreviewContent(response.data.document_content);
-        setShowPreviewModal(true);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          alert("There is no data for the provided search term");
-        } else {
-          console.error("Error fetching preview:", error);
-        }
-      });
-  };
+    const fetchDocumentPreview = () => {
+      if (!filePaths.length) {
+        alert("Please select a file.");
+        return;
+      }
+    
+      const data = {
+        file_paths: filePaths,
+        search_terms: searchTerms,
+        sections: sections,
+        specify_lines: formatSpecifyLines(),
+      };
+    
+      axios
+        .post(`${config.apiBaseUrl}/preview`, data)
+        .then((response) => {
+          setPreviewContent(response.data.document_content);
+          setShowPreviewModal(true);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            alert("There is no data for the provided search term");
+          } else {
+            console.error("Error fetching preview:", error);
+          }
+        });
+    };    
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -488,10 +504,10 @@ const OrcaDashboardComponent = () => {
         </div>
 
         <div className="button-group">
-          <div className="button-container" title="Please fill all required fields">
+          <div className="button-container">
             <button
               className="btn btn-primary"
-              onClick={() => onSearchQuerySubmit()}
+              onClick={onSearchQuerySubmit}
               disabled={
                 !isSearchQueryEnabled() ||
                 isUploadedFilesEmpty ||
@@ -502,14 +518,40 @@ const OrcaDashboardComponent = () => {
               title="Submit Search Query">
               Submit Search Query
             </button>
-          </div>
-
-          <div className="button-container" title="Please fill all required fields">
+          </div> 
+          {showPreviewModal && (
+            <div
+              className="modal"
+              style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+              <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Document Preview</h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      aria-label="Close"
+                      onClick={() => setShowPreviewModal(false)}></button>
+                  </div>
+                  <div className="modal-body">
+                    <pre>{previewContent}</pre>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setShowPreviewModal(false)}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="button-container">
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={isDisabled}
-              title={"Preview Output"}>
+              disabled={isDisabled}>
               Preview
             </button>
           </div>
@@ -524,7 +566,6 @@ const OrcaDashboardComponent = () => {
             </button>
           </div>
         </div>
-
         {!isUploadedFilesEmpty &&
           !isSearchTermsEmpty &&
           !isSpecifyLinesEmpty &&

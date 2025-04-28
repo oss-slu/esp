@@ -8,7 +8,7 @@ def file_upload_use_case(file):
     if file.filename == '':
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'No selected file')
 
-    if file.mimetype != 'text/plain':
+    if file.mimetype != 'text/plain' and not file.filename.lower().endswith('.log'):
         return ResponseFailure(ResponseTypes.PARAMETER_ERROR, 'Invalid file type')
 
     try:
