@@ -109,12 +109,12 @@ const OrcaDashboardComponent = () => {
   };
 
   const onUpload = () => {
-    if (!selectedFile.length) {
+    if (!selectedFiles.length) {
       alert("Please choose a file to upload.");
       return;
     }
 
-    selectedFile.forEach((file) => {
+    selectedFiles.forEach((file) => {
       const formData = new FormData();
       formData.append("file", file);
       axios
@@ -127,7 +127,7 @@ const OrcaDashboardComponent = () => {
         .catch((error) => console.error("Upload error:", error));
     });
 
-    setSelectedFile([]);
+    setSelectedFiles([]);
     document.getElementById("fileUpload").value = "";
   };
 
