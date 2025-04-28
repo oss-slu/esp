@@ -3,7 +3,6 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
 import "../styles/OrcaDashboardComponent.css";
-// import { RxCross1 } from "react-icons/rx";
 import config from "../utils/config";
 import { RxCross2 } from "react-icons/rx";
 
@@ -395,7 +394,6 @@ const OrcaDashboardComponent = () => {
                         className="remove-btn"
                         onClick={() => removeFile(index)}
                         aria-label="Remove file">
-                        {/* <RxCross1 /> */}
                         <RxCross2 />
                       </button>
                     </li>
