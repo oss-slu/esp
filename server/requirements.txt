@@ -4,3 +4,4 @@ pytest
 coverage
 python-docx
 pytest
+fpdf
