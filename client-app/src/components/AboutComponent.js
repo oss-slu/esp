@@ -9,10 +9,11 @@ const AboutComponent = () => {
         <h2>About Electronic Structure Parser</h2>
         <p>
           Our web application specializes in extracting specific details from chemistry log files.
-          Users can effortlessly search for information by entering a search term, enabling
-          efficient data retrieval. Additionally, our application offers the convenience of
-          downloading the extracted data as a Word document, ensuring seamless accessibility and
-          usability.
+          Users can now upload multiple files simultaneously and search for multiple terms at once,
+          making batch data extraction more efficient. Each result is clearly labeled and organized
+          by file and section for easier review. Additionally, the application includes a preview
+          feature for verifying results before download and supports exporting data in .txt, .docx,
+          or .pdf formats, ensuring maximum flexibility and accessibility.
         </p>
         <p>
           Access the application here:{" "}
@@ -87,8 +88,8 @@ const AboutComponent = () => {
             Preview the extracted data using the <strong>Preview</strong> button.
           </li>
           <li>
-            Download the results as a Word document by clicking the <strong>Download Output</strong>{" "}
-            button.
+            Download the results as a .txt, .docx, or .pdf file by clicking the{" "}
+            <strong>Download Output</strong> button.
           </li>
         </ol>
       </div>
@@ -113,8 +114,8 @@ const AboutComponent = () => {
             downloading.
           </li>
           <li>
-            <strong>Output Generation:</strong> Creates a Word document (`output.docx`) with the
-            extracted results.
+            <strong>Output Generation:</strong> Allows users to download extracted results in
+            multiple formats, including .txt, .docx, and .pdf for broader accessibility.
           </li>
           <li>
             <strong>User-Friendly Interface:</strong> Interactive design with badges, dropdowns, and
