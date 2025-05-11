@@ -128,7 +128,7 @@ const AboutComponent = () => {
         <h3>Tutorial Video</h3>
         <p>Watch this video to learn how to use the application:</p>
         <video width="100%" height="auto" controls>
-          <source src="/tutorialVideo.mov" type="video/mp4" />
+          <source src="/tutorialVideo1.mov" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
