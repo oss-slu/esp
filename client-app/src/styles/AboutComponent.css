@@ -1,31 +1,56 @@
-.min-vh-100 {
-  min-height: 100vh;
-}
-
-.about-content {
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
-.examples-list {
-  margin-top: 1rem;
+.about-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c2f33;
   font-size: 1rem;
 }
 
+.about-section {
+  background-color: #f9f9fb;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.about-section h2,
+.about-section h3 {
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.about-section p,
+.about-section li {
+  line-height: 1.6;
+}
+
+.examples-list,
 .how-to-guide {
-  margin-top: 1rem;
-  list-style: decimal inside;
+  padding-left: 1.2rem;
 }
 
-.logo-title {
-  text-decoration: none;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+.examples-list ul {
+  list-style-type: circle;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-a.logo-title:hover {
-  text-decoration: underline;
+.about-section a {
   color: #007bff;
+  text-decoration: none;
+}
+
+.about-section a:hover {
+  text-decoration: underline;
+}
+
+.tutorial-video video {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 1rem;
+  max-width: 100%;
+  height: auto;
 }
