@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import { FaDownload } from "react-icons/fa6";
-import { Dropdown, DropdownButton } from "react-bootstrap";
 import "../styles/OrcaDashboardComponent.css";
 import config from "../utils/config";
+import { RxCross2 } from "react-icons/rx";
 
 const OrcaDashboardComponent = () => {
   const [selectedFile, setSelectedFile] = useState([]);
@@ -22,28 +22,49 @@ const OrcaDashboardComponent = () => {
   const [previewContent, setPreviewContent] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const inputSelectedFile = useRef();
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
   const onFileSelected = (event) => {
-    const files = Array.from(event.target.files);
-    const validFiles = files.filter((file) => {
-      if (file.type !== "text/plain") {
-        alert(`Invalid file type: ${file.name}`);
-        return false;
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
+    if (selectedFile.type !== "text/plain") {
+      alert("Invalid file type. Please upload a .txt file.");
+      return;
+    }
+    event.target.value = "";
+
+    if (uploadedFiles.includes(selectedFile.name)) {
+      alert(`The file "${selectedFile.name}" has already been uploaded.`);
+      return;
+    }
+    setSelectedFiles((prevFiles) => {
+      const isFileAlreadySelected = prevFiles.some((file) => file.name === selectedFile.name);
+
+      if (isFileAlreadySelected) {
+        return prevFiles;
       }
-      if (uploadedFiles.includes(file.name)) {
-        alert(`The file "${file.name}" has already been uploaded.`);
-        return false;
-      }
-      return true;
+
+      return [...prevFiles, selectedFile];
     });
-    setSelectedFile(validFiles);
+    setSelectedFileName(selectedFile.name);
+    setSelectedFile(selectedFile);
   };
 
   const isSearchQueryEnabled = () => {
     const line = specifyLines[0] || {};
     const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
-    const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
-    return !isUploadedFilesEmpty && searchTerms.length && specifyLines.length && sections.length && !isLineNumberMissing;
+    const isLineNumberMissing =
+      lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
+    return (
+      !isUploadedFilesEmpty &&
+      searchTerms.length &&
+      specifyLines.length &&
+      sections.length &&
+      !isLineNumberMissing
+    );
   };
 
   const handleSpecifyLineChange = (value) => {
@@ -88,12 +109,12 @@ const OrcaDashboardComponent = () => {
   };
 
   const onUpload = () => {
-    if (!selectedFile.length) {
+    if (!selectedFiles.length) {
       alert("Please choose a file to upload.");
       return;
     }
 
-    selectedFile.forEach((file) => {
+    selectedFiles.forEach((file) => {
       const formData = new FormData();
       formData.append("file", file);
       axios
@@ -106,7 +127,7 @@ const OrcaDashboardComponent = () => {
         .catch((error) => console.error("Upload error:", error));
     });
 
-    setSelectedFile([]);
+    setSelectedFiles([]);
     document.getElementById("fileUpload").value = "";
   };
 
@@ -125,39 +146,26 @@ const OrcaDashboardComponent = () => {
     });
   };
 
-  const onSubmitWithFormat = (format) => {
+  const onSubmit = () => {
     if (!filePaths.length) {
       alert("Please select a file.");
       return;
     }
-  
+
     const data = {
       file_paths: filePaths,
       search_terms: searchTerms,
       sections: sections,
       specify_lines: formatSpecifyLines(),
-      output_format: format
     };
-  
+
     axios
       .post(`${config.apiBaseUrl}/find-sections`, data, {
         responseType: "blob",
       })
       .then((response) => {
-        const mimeMap = {
-          docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          pdf: "application/pdf",
-          txt: "text/plain"
-        };
-  
-        const blob = new Blob([response.data], { type: mimeMap[format] || "application/octet-stream" });
-  
-        const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-        const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
-        const searchTerm = searchTerms.join("_").slice(0, 50);
-        let fileName = `${date}_${baseFileName}_${searchTerm}.${format}`;
-        fileName = truncateName(fileName, 100);
-        saveAs(blob, fileName);
+        const blob = new Blob([response.data]);
+        downloadDocument(blob);
       })
       .catch((error) => {
         if (error.response) {
@@ -166,12 +174,9 @@ const OrcaDashboardComponent = () => {
           } else {
             alert(`Error ${error.response.status}: ${error.response.statusText}`);
           }
-        } else {
-          alert("Download failed. Check console.");
-          console.error("Download error:", error);
         }
       });
-  };  
+  };
 
   const onSearchQuerySubmit = () => {
     setShowCard(false);
@@ -187,6 +192,17 @@ const OrcaDashboardComponent = () => {
     if (fileName.length <= maxLength) return fileName;
     const truncated = fileName.substring(0, maxLength - 3);
     return `${truncated}...`;
+  };
+
+  const downloadDocument = (blob) => {
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const baseFileName = selectedFileName.replace(/\.[^/.]+$/, "");
+    const searchTerm = searchTerms.join("_").slice(0, 50);
+
+    let fileName = `${date}_${baseFileName}_${searchTerm}.docx`;
+    fileName = truncateName(fileName, 100);
+
+    saveAs(blob, fileName);
   };
 
   const handleKeyPress = (e, setterFunc) => {
@@ -256,41 +272,43 @@ const OrcaDashboardComponent = () => {
 
   const line = specifyLines[0] || {};
   const lineNumberRequired = line.value === "FIRST" || line.value === "LAST";
-  const isLineNumberMissing = lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
+  const isLineNumberMissing =
+    lineNumberRequired && (!line.lineNumber || line.lineNumber.trim() === "");
   const isDisabled =
     !searchTerms.length ||
     !specifyLines.length ||
     !sections.length ||
+    !selectedFile ||
     isUploadedFilesEmpty ||
     isLineNumberMissing;
 
-    const fetchDocumentPreview = () => {
-      if (!filePaths.length) {
-        alert("Please select a file.");
-        return;
-      }
-    
-      const data = {
-        file_paths: filePaths,
-        search_terms: searchTerms,
-        sections: sections,
-        specify_lines: formatSpecifyLines(),
-      };
-    
-      axios
-        .post(`${config.apiBaseUrl}/preview`, data)
-        .then((response) => {
-          setPreviewContent(response.data.document_content);
-          setShowPreviewModal(true);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("There is no data for the provided search term");
-          } else {
-            console.error("Error fetching preview:", error);
-          }
-        });
-    };    
+  const fetchDocumentPreview = () => {
+    if (!filePaths.length) {
+      alert("Please select a file.");
+      return;
+    }
+
+    const data = {
+      file_paths: filePaths,
+      search_terms: searchTerms,
+      sections: sections,
+      specify_lines: formatSpecifyLines(),
+    };
+
+    axios
+      .post(`${config.apiBaseUrl}/preview`, data)
+      .then((response) => {
+        setPreviewContent(response.data.document_content);
+        setShowPreviewModal(true);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          alert("There is no data for the provided search term");
+        } else {
+          console.error("Error fetching preview:", error);
+        }
+      });
+  };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -302,6 +320,44 @@ const OrcaDashboardComponent = () => {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  const handleSelectFile = () => document.getElementById("fileUpload").click();
+  const removeFile = (index) => {
+    setSelectedFiles((prevFiles) => {
+      const updatedFiles = prevFiles.filter((_, i) => i !== index);
+
+      if (updatedFiles.length === 0) {
+        setSelectedFile(null);
+        setSelectedFileName("No file chosen");
+
+        if (inputSelectedFile.current) {
+          inputSelectedFile.current.value = "";
+        }
+      } else {
+        setSelectedFile(updatedFiles[0]);
+        setSelectedFileName(updatedFiles[0].name);
+      }
+
+      return updatedFiles;
+    });
+  };
+  const handleNumSection = (e) => {
+    const value = e.target.value;
+
+    if (value === "") {
+      setInputValue("");
+      setError("");
+      return;
+    }
+
+    const number = Number(value);
+    if (!isNaN(number) && Number.isInteger(number) && number > 0) {
+      setInputValue(value);
+      setError("");
+    } else {
+      setError("Please enter a positive whole number");
+    }
+  };
 
   return (
     <div className="container py-5 d-flex justify-content-center">
@@ -320,7 +376,32 @@ const OrcaDashboardComponent = () => {
               accept=".txt"
               multiple
               aria-label="Upload ORCA data file"
+              ref={inputSelectedFile.current}
+              hidden
             />
+            <button className="select-btn" onClick={handleSelectFile}>
+              Choose file
+            </button>
+            <div className="input-file">
+              {!selectedFiles.length ? (
+                <p className="file-input">No file selected</p>
+              ) : (
+                <ul>
+                  {selectedFiles.map((file, index) => (
+                    <li key={index}>
+                      {file.name}
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeFile(index)}
+                        aria-label="Remove file">
+                        <RxCross2 />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <button className="btn btn-primary" onClick={onUpload}>
               Upload
             </button>
@@ -398,77 +479,52 @@ const OrcaDashboardComponent = () => {
             type="text"
             className="form-control"
             id="numSectionsInput"
-            placeholder="ex: 1-5 or 1,2,5"
-            defaultValue={sections.join(", ")}
+            placeholder="Enter a whole number (e.g., 1, 2, 3)"
+            value={inputValue}
             onBlur={handleNumSectionsBlur}
+            onChange={handleNumSection}
           />
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
 
         <div className="button-group">
-          <div className="button-container">
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
-              onClick={onSearchQuerySubmit}
+              onClick={() => onSearchQuerySubmit()}
               disabled={
                 !isSearchQueryEnabled() ||
                 isUploadedFilesEmpty ||
                 isSearchTermsEmpty ||
                 isSpecifyLinesEmpty ||
                 isSectionsEmpty
-              }>
+              }
+              title="Submit Search Query">
               Submit Search Query
             </button>
-          </div> 
-          {showPreviewModal && (
-            <div
-              className="modal"
-              style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-              <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Document Preview</h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      aria-label="Close"
-                      onClick={() => setShowPreviewModal(false)}></button>
-                  </div>
-                  <div className="modal-body">
-                    <pre>{previewContent}</pre>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => setShowPreviewModal(false)}>
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="button-container">
+          </div>
+
+          <div className="button-container" title="Please fill all required fields">
             <button
               className="btn btn-primary"
               onClick={fetchDocumentPreview}
-              disabled={isDisabled}>
+              disabled={isDisabled}
+              title={"Preview Output"}>
               Preview
             </button>
           </div>
 
-          <div className="button-container">
-            <DropdownButton
-              id="dropdown-download-button"
-              title={<span>Download <FaDownload size="1.2em"/></span>}
-              variant="primary"
-              disabled={isDisabled}
-            >
-              <Dropdown.Item onClick={() => onSubmitWithFormat("docx")}>Download as .docx</Dropdown.Item>
-              <Dropdown.Item onClick={() => onSubmitWithFormat("pdf")}>Download as .pdf</Dropdown.Item>
-              <Dropdown.Item onClick={() => onSubmitWithFormat("txt")}>Download as .txt</Dropdown.Item>
-            </DropdownButton>
+          <div className="button-container" title="Please fill all required fields">
+            <button
+              className="btn btn-primary"
+              title={"Download Output"}
+              onClick={onSubmit}
+              disabled={isDisabled}>
+              Download <FaDownload size="1.2em" />
+            </button>
           </div>
         </div>
+
         {!isUploadedFilesEmpty &&
           !isSearchTermsEmpty &&
           !isSpecifyLinesEmpty &&
@@ -491,6 +547,44 @@ const OrcaDashboardComponent = () => {
                 </div>
               </div>
             </div>
+          )}
+
+        {showPreviewModal && (
+          <div
+            className="modal"
+            style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            <div className="modal-dialog" style={{ maxWidth: "80vw" }}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Document Preview</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowPreviewModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <pre>{previewContent}</pre>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-primary"
+                    title={
+                      isDisabled
+                        ? "Please fill all required fields before submitting"
+                        : "Download Output"
+                    }
+                    onClick={onSubmit}
+                    disabled={isDisabled}>
+                    <FaDownload size="1.2em" />
+                  </button>
+                  <button className="btn btn-secondary" onClick={() => setShowPreviewModal(false)}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
